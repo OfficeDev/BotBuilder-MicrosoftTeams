@@ -1,0 +1,425 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "version": "v3",
+    "title": "Microsoft Bot Connector API - Microsoft Teams Extensions - v3.0",
+    "description": "﻿﻿The Bot Connector REST API extension for Microsoft Teams allows your bot to perform extended operations on to Microsoft Teams channel configured in the\r\n[Bot Framework Developer Portal](https://dev.botframework.com). The Connector service uses industry-standard REST and JSON over HTTPS.\r\n\r\nClient libraries for this REST API are available. See below for a list.\r\n\r\n\r\n\r\nAuthentication for both the Bot Connector and Bot State REST APIs is accomplished with JWT Bearer tokens, and is\r\ndescribed in detail in the [Connector Authentication](https://docs.botframework.com/en-us/restapi/authentication) document.\r\n\r\n# Client Libraries for the Bot Connector REST API\r\n\r\n* [Bot Builder for C#](https://docs.botframework.com/en-us/csharp/builder/sdkreference/)\r\n* [Bot Builder for Node.js](https://docs.botframework.com/en-us/node/builder/overview/)\r\n\r\n© 2016 Microsoft",
+    "termsOfService": "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx",
+    "contact": {
+      "name": "Bot Framework",
+      "url": "https://botframework.com",
+      "email": "botframework@microsoft.com"
+    },
+    "license": {
+      "name": "The MIT License (MIT)",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "api.botframework.com",
+  "schemes": [ "https" ],
+  "paths": {
+    "/v3/teams/{teamsId}/conversations": {
+      "get": {
+        "tags": [ "Teams" ],
+        "summary": "Fetches channel list for a given team",
+        "description": "Fetch the channel list.",
+        "operationId": "Teams_FetchChannelList",
+        "consumes": [ ],
+        "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+        "parameters": [
+          {
+            "name": "teamsId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "﻿An attachmentInfo object is returned which describes the:\r\n* type of the attachment\r\n* name of the attachment\r\n\r\n\r\nand an array of views:\r\n* Size - size of the object\r\n* ViewId - View Id which can be used to fetch a variation on the content (ex: original or thumbnail)",
+            "schema": {
+              "$ref": "#/definitions/ConversationList"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "ChannelInfo": {
+      "description": "A channel info object which decribes the channel.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier representing a channel"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the channel"
+        }
+      }
+    },
+
+    "ConversationList": {
+      "description": "List of channels under a team",
+      "type": "object",
+      "properties": {
+        "conversations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChannelInfo"
+          }
+        }
+      }
+    },
+
+    "TeamsChannelData": {
+      "description": "List of channels under a team",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "object",
+          "$ref": "#/definitions/ChannelInfo"
+        },
+        "eventType": {
+          "type": "string",
+          "description": "Type of event."
+        },
+        "team": {
+          "type": "object",
+          "$ref": "#/definitions/TeamInfo"
+        },
+        "tenant": {
+          "type": "object",
+          "$ref": "#/definitions/TenantInfo"
+        }
+      }
+    },
+
+    "TeamInfo": {
+      "description": "Describes a team",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier representing a team"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of team."
+        }
+      }
+    },
+
+    "TenantInfo": {
+      "description": "Describes a tenant",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier representing a tenant"
+        }
+      }
+    },
+
+    "Object": {
+      "type": "object",
+      "properties": { }
+    },
+
+    "CardAction": {
+      "description": "An action on a card",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Defines the type of action implemented by this button.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Text description which appear on the button.",
+          "type": "string"
+        },
+        "image": {
+          "description": "URL Picture which will appear on the button, next to text label.",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/Object",
+          "description": "Supplementary parameter for action. Content of this property depends on the ActionType"
+        }
+      }
+    },
+
+    "ListCard": {
+      "description": "A list card",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Title of the card",
+          "type": "string"
+        },
+        "items": {
+          "description": "Array of items",
+          "type": "array",
+          "items": { "$ref": "#/definitions/ListItemBase" }
+        },
+        "buttons": {
+          "description": "Set of actions applicable to the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/CardAction" }
+        }
+      }
+    },
+
+    "ListItemBase": {
+      "description": "A list card item base.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Type of the item",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of the item",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the item",
+          "type": "string"
+        },
+        "subtitle": {
+          "description": "Subtitle of the item",
+          "type": "string"
+        },
+        "tap": {
+          "$ref": "#/definitions/CardAction"
+        }
+      }
+    },
+
+    "FileListItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ListItemBase"
+        },
+        {
+          "type": "object",
+          "description": "File list item.",
+          "properties": {
+          }
+        }
+      ]
+    },
+
+    "PersonListItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ListItemBase"
+        },
+        {
+          "type": "object",
+          "description": "Person list item.",
+          "properties": {
+          }
+        }
+      ]
+    },
+
+    "SectionListItem": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ListItemBase"
+        },
+        {
+          "type": "object",
+          "description": "Section list item.",
+          "properties": {
+          }
+        }
+      ]
+    },
+
+    "PersonCard": {
+      "description": "Card representing a person.",
+      "type": "object",
+      "properties": {
+        "upn": {
+          "description": "UPN of the user",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text for the card",
+          "type": "string"
+        },
+        "images": {
+          "description": "Array of images",
+          "type": "array",
+          "items": { "$ref": "#/definitions/CardImage" }
+        },
+        "buttons": {
+          "description": "Set of actions applicable to the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/CardAction" }
+        },
+        "tap": {
+          "$ref": "#/definitions/CardAction"
+        }
+      }
+    },
+
+    "CardImage": {
+      "description": "An image on a card",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "URL Thumbnail image for major content property.",
+          "type": "string"
+        },
+        "alt": {
+          "description": "Image description intended for screen readers",
+          "type": "string"
+        },
+        "tap": {
+          "$ref": "#/definitions/CardAction",
+          "description": "Action assigned to specific Attachment.E.g.navigate to specific URL or play/open media content"
+        }
+      }
+    },
+
+    "O365ConnectorCard": {
+      "description": "O365 connector card",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Title of the item",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text for the card",
+          "type": "string"
+        },
+        "summary": {
+          "description": "Summary for the card",
+          "type": "string"
+        },
+        "themeColor": {
+          "description": "Theme color for the card",
+          "type": "string"
+        },
+        "sections": {
+          "description": "Set of sections for the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/O365ConnectorCardSection" }
+        }
+      }
+    },
+
+    "O365ConnectorCardSection": {
+      "description": "O365 connector card section",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "Title of the section",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text for the section",
+          "type": "string"
+        },
+        "activityTitle": {
+          "description": "Activity title",
+          "type": "string"
+        },
+        "activitySubtitle": {
+          "description": "Activity subtitle",
+          "type": "string"
+        },
+        "activityText": {
+          "description": "Activity text",
+          "type": "string"
+        },
+        "activityImage": {
+          "description": "Activity image",
+          "type": "string"
+        },
+        "facts": {
+          "description": "Set of sections for the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/O365ConnectorCardFact" }
+        },
+        "images": {
+          "description": "Set of sections for the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/O365ConnectorCardImage" }
+        },
+        "potentialAction": {
+          "description": "Set of sections for the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/O365ConnectorCardActionBase" }
+        }
+      }
+    },
+
+    "O365ConnectorCardFact": {
+      "description": "O365 connector card fact",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the fact",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value for the fact",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardImage": {
+      "description": "O365 connector card image",
+      "type": "object",
+      "properties": {
+        "image": {
+          "description": "URL for the image",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardActionBase": {
+      "description": "O365 connector card action base",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "description": "Type of the item",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardViewAction": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardActionBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Name of the action",
+              "type": "string"
+            },
+            "target": {
+              "description": "Target urls",
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
