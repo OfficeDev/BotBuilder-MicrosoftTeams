@@ -3,11 +3,11 @@
 var restify = require('restify'); 
 var builder = require('botbuilder');  
 var util = require('util');
-var teamsAPI = require('./teamsAPI/TeamsConnector');
-var teamsHelper = require('./teamsAPI/TeamsActivityHelper');
-var teamsModels = require('./teamsAPI/TeamsModels');
-var TenantFilter = require('./teamsAPI/TenantFilter');
-var teamsDialogHelper = require('./teamsAPI/TeamsDialogHelper');
+var teamsAPI = require('../teamsAPI/TeamsConnector');
+var teamsHelper = require('../teamsAPI/TeamsActivityHelper');
+var teamsModels = require('../teamsAPI/TeamsModels');
+var TenantFilter = require('../teamsAPI/TenantFilter');
+var teamsDialogHelper = require('../teamsAPI/TeamsDialogHelper');
 
 var msRest = require('ms-rest');
 var client = msRest.ServiceClient;
@@ -119,9 +119,7 @@ bot.dialog('/', function (session) {
 
   var mentionedMsg = teamsHelper.AddMetionToText(msg, toMention);
 
-  // var generalMessage = teamsHelper.RouteReplyToGeneralChannel(mentionedMsg);
-
-  var generalMessage = mentionedMsg;
+  var generalMessage = teamsHelper.RouteReplyToGeneralChannel(mentionedMsg);
 
   session.send(generalMessage);
   }
