@@ -1,20 +1,20 @@
 {
-  "name": "bot-test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "name": "botbuilder-teams",
+  "version": "0.1",
+  "description": "Microsoft Teams Botbuilder extension SDK",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Microsoft Corp",
+  "license": "MIT",
   "dependencies": {
-    "botbuilder": "^3.7.0",
+    "botbuilder": "^3.8.0-beta6",
     "ms-rest": "^1.15.7",
     "restify": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
-    "typescript": "^2.2.1"
+    "typescript": "^2.2.1",
+    "mocha": "^2.4.5"
   }
 }
