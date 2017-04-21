@@ -59,7 +59,7 @@ export class TeamsMessage extends builder.Message {
 		var toMention = !mentionText? mentionedUser.name : mentionText;
 		var mentionEntityText = '<at>'+toMention+'</at>';
 
-		super.data.text = !this.data.text? '' : this.data.text;
+		this.data.text = !this.data.text? '' : this.data.text;
 
 		if (textLocation == MentionTextLocation.AppendText) {
 			this.text(this.data.text + " " + mentionEntityText);
@@ -152,7 +152,7 @@ export class TeamsMessage extends builder.Message {
 	}
 
 	public routeReplyToGeneralChannel(): TeamsMessage {
-		var team = this.data.sourceEvent.team;
+		var team = this.session.message.sourceEvent.team;
 		if (!team) return null;
 		var teamId = team.id;
 		var conversation = this.data.address.conversation;
@@ -174,7 +174,7 @@ export class TeamsMessage extends builder.Message {
 	}
 
 	private static populateMembers(members: Array<any>): Array<ChannelAccount> {
-		var ret = [];
+		var ret: ChannelAccount[] = [];
 		if (!members) return ret;
 		for (var i in members) {
 			var member = members[i];

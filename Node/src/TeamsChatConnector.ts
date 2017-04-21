@@ -36,46 +36,52 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { TenantFilter } from './TenantFilter';
 
 var WebResource = msRest.WebResource;
 
 export class TeamsChatConnector extends builder.ChatConnector {
 
+  private allowedTenants: string[];
+
 	constructor(private settings: builder.IChatConnectorSettings = {}) {
 		super(settings)
+    this.allowedTenants = null;
 	}
 
-	public fetchChannelList(teamId: string, options: msRest.RequestOptions, callback: msRest.ServiceCallback<Object>) : void {
-		var restClient = new RestClient('https://smba.trafficmanager.net/apis', null);
-		var remoteQuery = new RemoteQuery(restClient);
-		remoteQuery.fetchChannelList(teamId, options, callback);
+	public fetchChannelList(teamId: string, callback: (err: any, result: any, request: any, response: any) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
+		var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchChannelList(teamId, options, callback);
+        } else {  
+          throw new Error('Failed to authorize request');
+        }
+    });
 	}
 
-	public listenAllowedTenant(tenantFilter: TenantFilter): IWebMiddleware {
-		return (req, res) => {
-      if (req.body) {
-        this.verifyBotFramework(req, res);
-      } else {
-        var requestData = '';
-        req.on('data', (chunk) => {
-          requestData += chunk
-        });
-        req.on('end', () => {
-          req.body = JSON.parse(requestData);
-          if (req.body && req.body.channelData) {
-          	var channelData = req.body.channelData;
-          	if (channelData.tenant && channelData.tenant.id) {
-          		var tenantId = channelData.tenant.id;
-          		if (!tenantFilter.isAllowedTenant(tenantId)) {
-          			console.log('Tenant: '+tenantId+' not allowed. Please update tenant filter.')
-          			return res.end();
-          		}
-          	}
-          }
-          this.verifyBotFramework(req, res);
-        });
+  public setAllowedTenants(tenants: string[]) {
+    if (tenants != null) this.allowedTenants = tenants;
+  }
+
+  public resetAllowedTenants() {
+    this.allowedTenants = null;
+  }
+
+  protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
+    if (this.allowedTenants) {
+      var filteredEvents: builder.IEvent[] = [];
+      for (var event of events) {
+        if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) filteredEvents.push(event);
       }
-    };
-	}
+      super.onDispatchEvents(filteredEvents, callback);
+    }
+    else {
+      super.onDispatchEvents(events, callback);
+    }
+  }
 }

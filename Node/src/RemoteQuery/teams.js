@@ -41,15 +41,18 @@ var WebResource = msRest.WebResource;
 /**
  * @class
  * Teams
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MicrosoftBotConnectorAPIMicrosoftTeamsExtensionsV30.
  * Initializes a new instance of the Teams class.
  * @constructor
  *
- * @param {MicrosoftBotConnectorAPIMicrosoftTeamsExtensionsV30} client Reference to the service client.
+ * @param {RestClient} client Reference to the service client.
  */
-function Teams(client) {
-  this.client = client;
+
+class Teams {
+  constructor (client) {
+    this.client = client;
+  } 
+
+  fetchChannelList(teamsId, options, callback);
 }
 
 /**
@@ -76,6 +79,7 @@ function Teams(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
+
 Teams.prototype.fetchChannelList = function (teamsId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
@@ -171,7 +175,6 @@ Teams.prototype.fetchChannelList = function (teamsId, options, callback) {
 
     return callback(null, result, httpRequest, response);
   });
-};
-
+}
 
 module.exports = Teams;
