@@ -20,7 +20,6 @@ var TeamsChatConnector = (function (_super) {
     function TeamsChatConnector(settings) {
         if (settings === void 0) { settings = {}; }
         var _this = _super.call(this, settings) || this;
-        _this.settings = settings;
         _this.allowedTenants = null;
         return _this;
     }
