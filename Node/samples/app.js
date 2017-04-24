@@ -107,7 +107,7 @@ bot.dialog('StartNew1on1Chat', function (session) {
      bot:
       { id: appId,
         name: appName },
-     serviceUrl: 'https://smba.trafficmanager.net/amer-client-ss.msg/',
+     serviceUrl: session.message.address.serviceUrl,
      useAuth: true
     }
   	bot.beginDialog(address, '/');
