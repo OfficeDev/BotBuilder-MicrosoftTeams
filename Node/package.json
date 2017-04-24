@@ -1,0 +1,23 @@
+{
+  "name": "botbuilder-teams",
+  "version": "0.1.0",
+  "description": "Microsoft Teams Botbuilder extension SDK",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Microsoft Corp",
+  "license": "MIT",
+  "dependencies": {
+    "botbuilder": "^3.8.0-beta6",
+    "http": "0.0.0",
+    "moment": "^2.18.1",
+    "ms-rest": "^1.15.7",
+    "restify": "^4.3.0",
+    "stream": "0.0.2",
+    "@types/node": "^7.0.8",
+    "typescript": "^2.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}

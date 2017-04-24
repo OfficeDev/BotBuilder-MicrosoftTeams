@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "allowJs": true,
+        "module": "commonjs",
+        "sourceMap": false,
+        "noImplicitAny": true,
+        "outDir": "../lib",
+        "noEmitOnError": true,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "exclude": [
+    ]
+}
