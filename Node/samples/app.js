@@ -15,9 +15,11 @@ var TeamsMessage = require('../lib/TeamsMessage').TeamsMessage;
 var TeamsModels = require('../lib/models');
 
 // Put your registered bot here, to register bot, go to bot framework
+var appName = 'app name';
 var appId = 'app id';
 var appPassword = 'app password';
 var userId = 'user id';
+var tenantId = 'tenant id';
 
 var server = restify.createServer(); 
 server.listen(process.env.port || process.env.PORT || 3978, function () {    
@@ -93,11 +95,22 @@ bot.dialog('MentionUser', function (session) {
 });
 
 bot.dialog('StartNew1on1Chat', function (session) {
-	// user name/user id
-	var toMention = new TeamsModels.ChannelAccount('Bill Zeng', userId);
-	var msg = new TeamsMessage(session).text(TeamsMessage.getTenantId(session.message));
-	var mentionedMsg = msg.addMentionToText(toMention);
-	session.send(mentionedMsg);
+	var address = 
+   { 
+     channelId: 'msteams',
+     user: { id: userId },
+     channelData: {
+      tenant:{
+        id: tenantId
+      }
+     },
+     bot:
+      { id: appId,
+        name: appName },
+     serviceUrl: 'https://smba.trafficmanager.net/amer-client-ss.msg/',
+     useAuth: true
+    }
+  	bot.beginDialog(address, '/');
 });
 
 bot.dialog('RouteMessageToGeneral', function (session) {
