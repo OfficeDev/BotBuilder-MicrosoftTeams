@@ -43,7 +43,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
   private allowedTenants: string[];
 
-	constructor(private settings: builder.IChatConnectorSettings = {}) {
+	constructor(settings: builder.IChatConnectorSettings = {}) {
 		super(settings)
     this.allowedTenants = null;
 	}
