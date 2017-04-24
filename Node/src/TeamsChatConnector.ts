@@ -43,13 +43,13 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
   private allowedTenants: string[];
 
-	constructor(settings: builder.IChatConnectorSettings = {}) {
-		super(settings)
+  constructor(settings: builder.IChatConnectorSettings = {}) {
+    super(settings)
     this.allowedTenants = null;
-	}
+  }
 
-	public fetchChannelList(teamId: string, callback: (err: any, result: any, request: any, response: any) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
-		var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+  public fetchChannelList(teamId: string, callback: (err: any, result: any, request: any, response: any) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
@@ -62,7 +62,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           throw new Error('Failed to authorize request');
         }
     });
-	}
+  }
 
   public setAllowedTenants(tenants: string[]) {
     if (tenants != null) this.allowedTenants = tenants;
