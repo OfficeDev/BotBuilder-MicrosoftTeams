@@ -36,6 +36,7 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
+import { ChannelInfo } from './models';
 
 var WebResource = msRest.WebResource;
 
@@ -48,7 +49,13 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.allowedTenants = null;
   }
 
-  public fetchChannelList(teamId: string, callback: (err: any, result: any, request: any, response: any) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
+  /**
+  *  Return a list of conversations in a team
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  */
+  public fetchChannelList(teamId: string, callback: (err: Error, result: ChannelInfo[]) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
     var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
@@ -64,10 +71,17 @@ export class TeamsChatConnector extends builder.ChatConnector {
     });
   }
 
+  /**
+  *  Set if tenant is allowed
+  *  @param {array} tenants - A string list which contains allowed tenants for connector.
+  */
   public setAllowedTenants(tenants: string[]) {
     if (tenants != null) this.allowedTenants = tenants;
   }
 
+  /**
+  *  Reset allowed tenants, ask connector to receive every message sent from any source.
+  */
   public resetAllowedTenants() {
     this.allowedTenants = null;
   }

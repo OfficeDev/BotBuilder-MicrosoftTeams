@@ -47,6 +47,12 @@ export class TeamsMessage extends builder.Message {
     super(session);
   }
 
+  /**
+  *  Enable bot to send a message to mention user
+  *  @param {ChannelAccount} mentionedUser - The team id, you can look it up in session object.
+  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
+  *  @param {string} mentionText - text to mention
+  */
   public addMentionToText(mentionedUser: ChannelAccount, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
@@ -80,6 +86,10 @@ export class TeamsMessage extends builder.Message {
     return this;
   }
 
+  /**
+  *  Return conversation update related event 
+  *  @param {IConversationUpdate} activity - user activity like adding member to channel, rename etc
+  */
   public static getConversationUpdateData(activity: builder.IConversationUpdate): TeamEventBase {
     if (activity.sourceEvent) {
       var channelData = activity.sourceEvent;
@@ -137,6 +147,10 @@ export class TeamsMessage extends builder.Message {
     }
   }
 
+  /**
+  *  Get message related team info
+  *  @param {IMessage} activity - The message sent to bot.
+  */
   public static getGeneralChannel(activity: builder.IMessage): ChannelInfo {
     if (activity.sourceEvent) {
       var channelData = activity.sourceEvent;
@@ -151,6 +165,9 @@ export class TeamsMessage extends builder.Message {
     return null;
   }
 
+  /**
+  *  Route message to general channel
+  */
   public routeReplyToGeneralChannel(): TeamsMessage {
     var team = this.session.message.sourceEvent.team;
     if (!team) return null;
@@ -161,6 +178,10 @@ export class TeamsMessage extends builder.Message {
     return this;
   }
 
+  /**
+  *  Get message related tenant id
+  *  @param {IMessage} activity - The message sent to bot.
+  */
   public static getTenantId(activity: builder.IMessage): string {
     if (!activity) return null;
     var channelData = activity.sourceEvent;
