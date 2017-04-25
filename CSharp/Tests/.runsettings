@@ -2,11 +2,6 @@
 <!-- File name extension must be .runsettings -->
 <RunSettings>
   <!-- Configurations that affect the Test Framework -->
-  <RunConfiguration>
-    <!-- [x86] | x64  
-      - You can also change it from menu Test, Test Settings, Default Processor Architecture -->
-    <TargetPlatform>x64</TargetPlatform>
-  </RunConfiguration>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
