@@ -201,6 +201,23 @@ export class TeamsMessage extends builder.Message {
     return null;
   }
 
+  /**
+  *  Retrun message without mentions
+  *  @param {IMessage} message - The message with mentions
+  */
+  public static getTextWithoutMentions(message: builder.IMessage): string {
+    var text = message.text;
+    if (message.entities) {
+      message.entities
+        .filter(entity => entity.type === "mention")
+        .forEach(entity => {
+          text = text.replace(entity.text, "");
+        });
+      text = text.trim();
+    }
+    return text;
+  }
+
   private static populateMembers(members: Array<any>): Array<ChannelAccount> {
     var ret: ChannelAccount[] = [];
     if (!members) return ret;
