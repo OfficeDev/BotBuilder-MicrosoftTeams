@@ -36,6 +36,7 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
+import { ChannelInfo } from './models';
 
 var WebResource = msRest.WebResource;
 
@@ -43,13 +44,19 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
   private allowedTenants: string[];
 
-	constructor(settings: builder.IChatConnectorSettings = {}) {
-		super(settings)
+  constructor(settings: builder.IChatConnectorSettings = {}) {
+    super(settings)
     this.allowedTenants = null;
-	}
+  }
 
-	public fetchChannelList(teamId: string, callback: (err: any, result: any, request: any, response: any) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
-		var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+  /**
+  *  Return a list of conversations in a team
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  */
+  public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
@@ -59,15 +66,24 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
         } else {  
-          throw new Error('Failed to authorize request');
+          callback(new Error('Failed to authorize request'), null);
         }
     });
-	}
-
-  public setAllowedTenants(tenants: string[]) {
-    if (tenants != null) this.allowedTenants = tenants;
   }
 
+  /**
+  *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
+  *  @param {array} tenants - Ids of allowed tenants.
+  */
+  public setAllowedTenants(tenants: string[]) {
+    if (tenants != null) {
+      this.allowedTenants = tenants;
+    }
+  }
+
+  /**
+  *  Reset allowed tenants, ask connector to receive every message sent from any source.
+  */
   public resetAllowedTenants() {
     this.allowedTenants = null;
   }
@@ -76,7 +92,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
       for (var event of events) {
-        if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) filteredEvents.push(event);
+        if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) {
+          filteredEvents.push(event);
+        }
       }
       super.onDispatchEvents(filteredEvents, callback);
     }

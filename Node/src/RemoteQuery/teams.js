@@ -173,7 +173,7 @@ Teams.prototype.fetchChannelList = function (teamsId, options, callback) {
       }
     }
 
-    return callback(null, result, httpRequest, response);
+    return callback(null, result['conversations'], httpRequest, response);
   });
 }
 

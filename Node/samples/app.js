@@ -74,8 +74,9 @@ bot.on('conversationUpdate', function (message) {
 bot.dialog('FetchChannelList', function (session) {
 	var teamId = session.message.sourceEvent.team.id;
 	connector.fetchChannelList(
+		session.message.address.serviceUrl,
 		teamId,
-		(err, result, req, res) => {
+		(err, result) => {
 			if (err) {
 				session.endDialog('There is some error');
 			}

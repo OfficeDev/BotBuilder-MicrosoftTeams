@@ -52,18 +52,18 @@ var TeamsMessage = (function (_super) {
         });
         return this;
     };
-    TeamsMessage.getConversationUpdateData = function (activity) {
-        if (activity.sourceEvent) {
-            var channelData = activity.sourceEvent;
+    TeamsMessage.getConversationUpdateData = function (message) {
+        if (message.sourceEvent) {
+            var channelData = message.sourceEvent;
             if (channelData.eventType) {
                 var team = this.populateTeam(channelData);
                 var tenant = this.populateTenant(channelData);
                 switch (channelData.eventType) {
                     case 'teamMemberAdded':
-                        var members = this.populateMembers(activity.membersAdded);
+                        var members = this.populateMembers(message.membersAdded);
                         return new ConversationUpdate_1.MembersAddedEvent(members, team, tenant);
                     case 'teamMemberRemoved':
-                        var members = this.populateMembers(activity.membersRemoved);
+                        var members = this.populateMembers(message.membersRemoved);
                         return new ConversationUpdate_1.MembersRemovedEvent(members, team, tenant);
                     case 'channelCreated':
                         var channel = this.populateChannel(channelData);
@@ -78,15 +78,18 @@ var TeamsMessage = (function (_super) {
                         return new ConversationUpdate_1.TeamRenamedEvent(team, tenant);
                 }
             }
-            throw Error('EventType missing in ChannelData');
+            throw new Error('EventType missing in ChannelData');
         }
         else {
-            throw Error('ChannelData missing in message');
+            throw new Error('ChannelData missing in message');
         }
     };
-    TeamsMessage.getGeneralChannel = function (activity) {
-        if (activity.sourceEvent) {
-            var channelData = activity.sourceEvent;
+    TeamsMessage.getGeneralChannel = function (message) {
+        if (!message) {
+            throw new Error('Message can not be null');
+        }
+        if (message.sourceEvent) {
+            var channelData = message.sourceEvent;
             var team = this.populateTeam(channelData);
             if (team) {
                 return new models_1.ChannelInfo(team.name, team.id);
@@ -96,18 +99,19 @@ var TeamsMessage = (function (_super) {
     };
     TeamsMessage.prototype.routeReplyToGeneralChannel = function () {
         var team = this.session.message.sourceEvent.team;
-        if (!team)
-            return null;
+        if (!team) {
+            throw new Error('Team cannot be null, session message is not correct.');
+        }
         var teamId = team.id;
         var conversation = this.data.address.conversation;
-        var messageId = conversation.id.split(';')[1];
         this.data.address.conversation.id = teamId;
         return this;
     };
-    TeamsMessage.getTenantId = function (activity) {
-        if (!activity)
-            return null;
-        var channelData = activity.sourceEvent;
+    TeamsMessage.getTenantId = function (message) {
+        if (!message) {
+            throw new Error('Message can not be null');
+        }
+        var channelData = message.sourceEvent;
         if (channelData) {
             var tenant = this.populateTenant(channelData);
             if (tenant) {

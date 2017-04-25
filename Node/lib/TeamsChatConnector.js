@@ -23,8 +23,7 @@ var TeamsChatConnector = (function (_super) {
         _this.allowedTenants = null;
         return _this;
     }
-    TeamsChatConnector.prototype.fetchChannelList = function (teamId, callback, serverUrl) {
-        if (serverUrl === void 0) { serverUrl = 'https://smba.trafficmanager.net/amer-client-ss.msg'; }
+    TeamsChatConnector.prototype.fetchChannelList = function (serverUrl, teamId, callback) {
         var options = { customHeaders: {}, jar: false };
         var restClient = new RestClient(serverUrl, null);
         var remoteQuery = new RemoteQuery(restClient);
@@ -36,13 +35,14 @@ var TeamsChatConnector = (function (_super) {
                 remoteQuery.fetchChannelList(teamId, options, callback);
             }
             else {
-                throw new Error('Failed to authorize request');
+                callback(new Error('Failed to authorize request'), null);
             }
         });
     };
     TeamsChatConnector.prototype.setAllowedTenants = function (tenants) {
-        if (tenants != null)
+        if (tenants != null) {
             this.allowedTenants = tenants;
+        }
     };
     TeamsChatConnector.prototype.resetAllowedTenants = function () {
         this.allowedTenants = null;
@@ -52,8 +52,9 @@ var TeamsChatConnector = (function (_super) {
             var filteredEvents = [];
             for (var _i = 0, events_1 = events; _i < events_1.length; _i++) {
                 var event = events_1[_i];
-                if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1)
+                if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) {
                     filteredEvents.push(event);
+                }
             }
             _super.prototype.onDispatchEvents.call(this, filteredEvents, callback);
         }
