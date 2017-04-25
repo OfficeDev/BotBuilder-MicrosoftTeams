@@ -20,10 +20,10 @@
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
+  <!--<PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
     <DocumentationFile>bin\$(Configuration)\netstandard1.6\Microsoft.Bot.Connector.Teams.xml</DocumentationFile>
     <SignAssembly>True</SignAssembly>
     <DelaySign>True</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\Build\272MSSharedLibSN2048.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+  </PropertyGroup> -->
 </Project>
