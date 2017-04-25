@@ -62,10 +62,10 @@ export class TeamsMessage extends builder.Message {
       throw new Error('Either mentioned user name or mentionText must have a value');
     }
 
-    var toMention = !mentionText? mentionedUser.name : mentionText;
+    var toMention = !mentionText ? mentionedUser.name : mentionText;
     var mentionEntityText = '<at>'+toMention+'</at>';
 
-    this.data.text = !this.data.text? '' : this.data.text;
+    this.data.text = !this.data.text ? '' : this.data.text;
 
     if (textLocation == MentionTextLocation.AppendText) {
       this.text(this.data.text + " " + mentionEntityText);
@@ -88,24 +88,24 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Return conversation update related event 
-  *  @param {IConversationUpdate} activity - user activity like adding member to channel, rename etc
+  *  @param {IConversationUpdate} message - user message like adding member to channel, rename etc
   */
-  public static getConversationUpdateData(activity: builder.IConversationUpdate): TeamEventBase {
-    if (activity.sourceEvent) {
-      var channelData = activity.sourceEvent;
+  public static getConversationUpdateData(message: builder.IConversationUpdate): TeamEventBase {
+    if (message.sourceEvent) {
+      var channelData = message.sourceEvent;
       if (channelData.eventType) {
         var team = this.populateTeam(channelData);
         var tenant = this.populateTenant(channelData);
         switch (channelData.eventType) {
           case 'teamMemberAdded':
-            var members = this.populateMembers(activity.membersAdded);
+            var members = this.populateMembers(message.membersAdded);
             return new MembersAddedEvent(
               members,
               team,
               tenant
             );
           case 'teamMemberRemoved':
-            var members = this.populateMembers(activity.membersRemoved);
+            var members = this.populateMembers(message.membersRemoved);
             return new MembersRemovedEvent(
               members,
               team,
@@ -149,11 +149,15 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Get message related team info
-  *  @param {IMessage} activity - The message sent to bot.
+  *  @param {IMessage} message - The message sent to bot.
   */
-  public static getGeneralChannel(activity: builder.IMessage): ChannelInfo {
-    if (activity.sourceEvent) {
-      var channelData = activity.sourceEvent;
+  public static getGeneralChannel(message: builder.IMessage): ChannelInfo {
+    if (!message) {
+      throw new Error('Message can not be null');
+    }
+    
+    if (message.sourceEvent) {
+      var channelData = message.sourceEvent;
       var team = this.populateTeam(channelData);
       if (team) {
         return new ChannelInfo(
@@ -179,11 +183,13 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Get message related tenant id
-  *  @param {IMessage} activity - The message sent to bot.
+  *  @param {IMessage} message - The message sent to bot.
   */
-  public static getTenantId(activity: builder.IMessage): string {
-    if (!activity) return null;
-    var channelData = activity.sourceEvent;
+  public static getTenantId(message: builder.IMessage): string {
+    if (!message) {
+      throw new Error('Message can not be null');
+    }
+    var channelData = message.sourceEvent;
     if (channelData) {
       var tenant = this.populateTenant(channelData);
       if (tenant) {
