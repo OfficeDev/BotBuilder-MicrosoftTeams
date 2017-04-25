@@ -149,13 +149,13 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Get message related team info
-  *  @param {IMessage} message - The message sent to bot.
+  *  @param {IEvent} message - The message sent to bot.
   */
-  public static getGeneralChannel(message: builder.IMessage): ChannelInfo {
+  public static getGeneralChannel(message: builder.IEvent): ChannelInfo {
     if (!message) {
       throw new Error('Message can not be null');
     }
-    
+
     if (message.sourceEvent) {
       var channelData = message.sourceEvent;
       var team = this.populateTeam(channelData);
@@ -174,7 +174,9 @@ export class TeamsMessage extends builder.Message {
   */
   public routeReplyToGeneralChannel(): TeamsMessage {
     var team = this.session.message.sourceEvent.team;
-    if (!team) return null;
+    if (!team) {
+      throw new Error('Team cannot be null, session message is not correct.');
+    }
     var teamId = team.id;
     var conversation = this.data.address.conversation;
     this.data.address.conversation.id = teamId;
@@ -183,9 +185,9 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Get message related tenant id
-  *  @param {IMessage} message - The message sent to bot.
+  *  @param {IEvent} message - The message sent to bot.
   */
-  public static getTenantId(message: builder.IMessage): string {
+  public static getTenantId(message: builder.IEvent): string {
     if (!message) {
       throw new Error('Message can not be null');
     }

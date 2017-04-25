@@ -99,8 +99,9 @@ var TeamsMessage = (function (_super) {
     };
     TeamsMessage.prototype.routeReplyToGeneralChannel = function () {
         var team = this.session.message.sourceEvent.team;
-        if (!team)
-            return null;
+        if (!team) {
+            throw new Error('Team cannot be null, session message is not correct.');
+        }
         var teamId = team.id;
         var conversation = this.data.address.conversation;
         this.data.address.conversation.id = teamId;
