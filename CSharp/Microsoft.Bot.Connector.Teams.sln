@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA3220AD
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Bot.Connector.Teams.Tests.Shared", "Tests\Microsoft.Bot.Connector.Teams.Tests.Shared\Microsoft.Bot.Connector.Teams.Tests.Shared.shproj", "{8E7D4C7E-7D02-4E8A-AFD5-1BE8879BB8A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Connector.Teams.Tests.NetFramework", "Tests\Microsoft.Bot.Connector.Teams.Tests.NetFramework\Microsoft.Bot.Connector.Teams.Tests.NetFramework.csproj", "{D63AF194-744A-4207-A223-B6CFB5A0D6C5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Packager", "Packager\Packager.csproj", "{AEC7B503-FA3F-49B3-A719-437F04710C71}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D0B48872-F81B-47CD-988C-9A92DC6BCCAE} = {D0B48872-F81B-47CD-988C-9A92DC6BCCAE}
@@ -32,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Connector.Tea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Connector.Teams.SampleBot.ASPCore", "Samples\Microsoft.Bot.Connector.Teams.SampleBot.ASPCore\Microsoft.Bot.Connector.Teams.SampleBot.ASPCore.csproj", "{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Connector.Teams.Tests.NetFramework", "Tests\Microsoft.Bot.Connector.Teams.Tests.NetFramework\Microsoft.Bot.Connector.Teams.Tests.NetFramework.csproj", "{D63AF194-744A-4207-A223-B6CFB5A0D6C5}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Library\Microsoft.Bot.Connector.Teams.Shared\Microsoft.Bot.Connector.Teams.Shared.projitems*{5d5f91d9-d2b4-4ef5-b0e4-39b9125a9018}*SharedItemsImports = 13
@@ -44,10 +44,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AEC7B503-FA3F-49B3-A719-437F04710C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AEC7B503-FA3F-49B3-A719-437F04710C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEC7B503-FA3F-49B3-A719-437F04710C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,17 +64,21 @@ Global
 		{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D63AF194-744A-4207-A223-B6CFB5A0D6C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8E7D4C7E-7D02-4E8A-AFD5-1BE8879BB8A6} = {DA3220AD-3DBA-4102-B1D4-3ED8C39CC42D}
-		{D63AF194-744A-4207-A223-B6CFB5A0D6C5} = {DA3220AD-3DBA-4102-B1D4-3ED8C39CC42D}
 		{F7AE9994-F816-4C28-BD15-8882205BFE08} = {EE047F8D-EAF6-4816-AE85-4FC6AD73656A}
 		{5D5F91D9-D2B4-4EF5-B0E4-39B9125A9018} = {EE047F8D-EAF6-4816-AE85-4FC6AD73656A}
 		{D0B48872-F81B-47CD-988C-9A92DC6BCCAE} = {EE047F8D-EAF6-4816-AE85-4FC6AD73656A}
 		{D3261462-9CCB-430C-A63D-4ADA0103D0AC} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
 		{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
+		{D63AF194-744A-4207-A223-B6CFB5A0D6C5} = {DA3220AD-3DBA-4102-B1D4-3ED8C39CC42D}
 	EndGlobalSection
 EndGlobal

@@ -18,9 +18,12 @@
 
   <PropertyGroup>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\netstandard1.6\Microsoft.Bot.Connector.Teams.xml</DocumentationFile>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>True</DelaySign>
+    <AssemblyOriginatorKeyFile>..\..\Build\272MSSharedLibSN2048.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup> 
 </Project>

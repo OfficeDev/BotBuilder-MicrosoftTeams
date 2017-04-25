@@ -73,102 +73,102 @@
             });
         }
 
-        /// <summary>
-        /// Person card test.
-        /// </summary>
-        [TestMethod]
-        public void CardTests_PersonCard()
-        {
-            string upn = "testperson@test.com";
-            var attachment = new Attachment
-            {
-                ContentType = PersonCard.ContentType,
-                Content = new PersonCard
-                {
-                    Upn = upn,
-                    Text = "TestText",
-                    Buttons = new List<CardAction>()
-                        {
-                            new CardAction() { Title = "Availability", Type = ActionTypes.ImBack, Value = "availability " + upn },
-                            new CardAction() { Title = "Reports To", Type = ActionTypes.ImBack, Value = "reportsto " + upn },
-                            new CardAction() { Title = "Recent Files", Type = ActionTypes.ImBack, Value = "recentfiles " + upn },
-                            new CardAction() { Title = "Works With", Type = ActionTypes.ImBack, Value = "workswith " + upn },
-                        },
-                }
-            };
+        /////// <summary>
+        /////// Person card test.
+        /////// </summary>
+        ////[TestMethod]
+        ////public void CardTests_PersonCard()
+        ////{
+        ////    string upn = "testperson@test.com";
+        ////    var attachment = new Attachment
+        ////    {
+        ////        ContentType = PersonCard.ContentType,
+        ////        Content = new PersonCard
+        ////        {
+        ////            Upn = upn,
+        ////            Text = "TestText",
+        ////            Buttons = new List<CardAction>()
+        ////                {
+        ////                    new CardAction() { Title = "Availability", Type = ActionTypes.ImBack, Value = "availability " + upn },
+        ////                    new CardAction() { Title = "Reports To", Type = ActionTypes.ImBack, Value = "reportsto " + upn },
+        ////                    new CardAction() { Title = "Recent Files", Type = ActionTypes.ImBack, Value = "recentfiles " + upn },
+        ////                    new CardAction() { Title = "Works With", Type = ActionTypes.ImBack, Value = "workswith " + upn },
+        ////                },
+        ////        }
+        ////    };
 
-            this.TestCard(attachment);
-        }
+        ////    this.TestCard(attachment);
+        ////}
 
-        /// <summary>
-        /// File list card test.
-        /// </summary>
-        [TestMethod]
-        public void CardTests_FileList()
-        {
-            string[] urls =
-            {
-                "https://test.sharepoint.com/personal/test_test_com/next/test.pptx",
-                "https://test.sharepoint.com/personal/test_test_com/next/test1.pptx",
-                "https://test.sharepoint.com/personal/test_test_com/next/test2.pptx",
-                "https://test.sharepoint.com/personal/test_test_com/next/test3.pptx",
-            };
+        /////// <summary>
+        /////// File list card test.
+        /////// </summary>
+        ////[TestMethod]
+        ////public void CardTests_FileList()
+        ////{
+        ////    string[] urls =
+        ////    {
+        ////        "https://test.sharepoint.com/personal/test_test_com/next/test.pptx",
+        ////        "https://test.sharepoint.com/personal/test_test_com/next/test1.pptx",
+        ////        "https://test.sharepoint.com/personal/test_test_com/next/test2.pptx",
+        ////        "https://test.sharepoint.com/personal/test_test_com/next/test3.pptx",
+        ////    };
 
-            var attachment = new Attachment()
-            {
-                ContentType = ListCard.ContentType,
-                Content = new ListCard
-                {
-                    Title = "Larry Jin Recent Files",
-                    Items = new List<ListItemBase>()
-                        {
-                            new FileListItem() { Type = FileListItem.ContentType, Id = urls[0], Title = "Framework", Subtitle = "teams > Framework", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[0] } },
-                            new FileListItem() { Type = FileListItem.ContentType, Id = urls[1], Title = "Bots", Subtitle = "teams > Bots", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[1] } },
-                            new FileListItem() { Type = FileListItem.ContentType, Id = urls[2], Title = "Actions", Subtitle = "teams > Actions", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[2] } },
-                            new FileListItem() { Type = FileListItem.ContentType, Id = urls[3], Title = "Responses", Subtitle = "teams > Responses", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[3] } }
-                        },
-                    Buttons = new List<CardAction>()
-                        {
-                            new CardAction() { Title = "Open Online", Type = ActionTypes.ImBack, Value = "editOnline" },
-                            new CardAction() { Title = "Open in Office", Type = ActionTypes.ImBack, Value = "editInOffice" }
-                        },
-                }
-            };
+        ////    var attachment = new Attachment()
+        ////    {
+        ////        ContentType = ListCard.ContentType,
+        ////        Content = new ListCard
+        ////        {
+        ////            Title = "Larry Jin Recent Files",
+        ////            Items = new List<ListItemBase>()
+        ////                {
+        ////                    new FileListItem() { Type = FileListItem.ContentType, Id = urls[0], Title = "Framework", Subtitle = "teams > Framework", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[0] } },
+        ////                    new FileListItem() { Type = FileListItem.ContentType, Id = urls[1], Title = "Bots", Subtitle = "teams > Bots", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[1] } },
+        ////                    new FileListItem() { Type = FileListItem.ContentType, Id = urls[2], Title = "Actions", Subtitle = "teams > Actions", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[2] } },
+        ////                    new FileListItem() { Type = FileListItem.ContentType, Id = urls[3], Title = "Responses", Subtitle = "teams > Responses", Tap = new CardAction() { Type = ActionTypes.OpenUrl, Value = urls[3] } }
+        ////                },
+        ////            Buttons = new List<CardAction>()
+        ////                {
+        ////                    new CardAction() { Title = "Open Online", Type = ActionTypes.ImBack, Value = "editOnline" },
+        ////                    new CardAction() { Title = "Open in Office", Type = ActionTypes.ImBack, Value = "editInOffice" }
+        ////                },
+        ////        }
+        ////    };
 
-            this.TestCard(attachment);
-        }
+        ////    this.TestCard(attachment);
+        ////}
 
-        /// <summary>
-        /// Person list card.
-        /// </summary>
-        [TestMethod]
-        public void CardTests_PersonList()
-        {
-            var attachment = new Attachment()
-            {
-                ContentType = ListCard.ContentType,
-                Content = new ListCard
-                {
-                    Title = "Test Team",
-                    Items = new List<ListItemBase>()
-                        {
-                            new SectionListItem() { Title = "Manager", Type = SectionListItem.ContentType },
-                            new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test1@test.com", Title = "Test 1", Subtitle = "PPP", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test1@test.com" } },
-                            new SectionListItem() { Title = "Direct Reports", Type = SectionListItem.ContentType },
-                            new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test2@test.com", Title = "Test 2", Subtitle = "SSS", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test2@test.com" } },
-                            new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test3@test.com", Title = "Test 3", Subtitle = "TTT", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test3@test.com" } },
-                            new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test4@test.com", Title = "Test 4", Subtitle = "RRR", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test4@test.com" } },
-                            new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test5@test.com", Title = "Test 5", Subtitle = "UUU", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test5@test.com" } }
-                        },
-                    Buttons = new List<CardAction>()
-                        {
-                            new CardAction() { Title = "Select", Type = ActionTypes.ImBack, Value = "whois" }
-                        },
-                }
-            };
+        /////// <summary>
+        /////// Person list card.
+        /////// </summary>
+        ////[TestMethod]
+        ////public void CardTests_PersonList()
+        ////{
+        ////    var attachment = new Attachment()
+        ////    {
+        ////        ContentType = ListCard.ContentType,
+        ////        Content = new ListCard
+        ////        {
+        ////            Title = "Test Team",
+        ////            Items = new List<ListItemBase>()
+        ////                {
+        ////                    new SectionListItem() { Title = "Manager", Type = SectionListItem.ContentType },
+        ////                    new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test1@test.com", Title = "Test 1", Subtitle = "PPP", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test1@test.com" } },
+        ////                    new SectionListItem() { Title = "Direct Reports", Type = SectionListItem.ContentType },
+        ////                    new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test2@test.com", Title = "Test 2", Subtitle = "SSS", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test2@test.com" } },
+        ////                    new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test3@test.com", Title = "Test 3", Subtitle = "TTT", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test3@test.com" } },
+        ////                    new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test4@test.com", Title = "Test 4", Subtitle = "RRR", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test4@test.com" } },
+        ////                    new PersonListItem() { Type = PersonListItem.ContentType, Id = "Test5@test.com", Title = "Test 5", Subtitle = "UUU", Tap = new CardAction() { Type = ActionTypes.ImBack, Value = "whois Test5@test.com" } }
+        ////                },
+        ////            Buttons = new List<CardAction>()
+        ////                {
+        ////                    new CardAction() { Title = "Select", Type = ActionTypes.ImBack, Value = "whois" }
+        ////                },
+        ////        }
+        ////    };
 
-            this.TestCard(attachment);
-        }
+        ////    this.TestCard(attachment);
+        ////}
 
         /// <summary>
         /// Tests card attachment before and after sending match.
