@@ -82,7 +82,8 @@ bot.dialog('FetchChannelList', function (session) {
 			else {
 				session.endDialog('%s', JSON.stringify(result));
 			}
-		}
+		},
+		session.message.address.serviceUrl
 	);
 });
 
