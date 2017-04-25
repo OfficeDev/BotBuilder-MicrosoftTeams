@@ -140,10 +140,10 @@ export class TeamsMessage extends builder.Message {
         }
       }
       
-      throw Error('EventType missing in ChannelData');
+      throw new Error('EventType missing in ChannelData');
     }
     else {
-      throw Error('ChannelData missing in message');
+      throw new Error('ChannelData missing in message');
     }
   }
 

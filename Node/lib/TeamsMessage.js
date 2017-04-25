@@ -78,10 +78,10 @@ var TeamsMessage = (function (_super) {
                         return new ConversationUpdate_1.TeamRenamedEvent(team, tenant);
                 }
             }
-            throw Error('EventType missing in ChannelData');
+            throw new Error('EventType missing in ChannelData');
         }
         else {
-            throw Error('ChannelData missing in message');
+            throw new Error('ChannelData missing in message');
         }
     };
     TeamsMessage.getGeneralChannel = function (message) {
