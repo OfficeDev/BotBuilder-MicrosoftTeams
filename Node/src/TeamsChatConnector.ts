@@ -66,7 +66,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
         } else {  
-          throw new Error('Failed to authorize request');
+          callback(new Error('Failed to authorize request'), null);
         }
     });
   }
