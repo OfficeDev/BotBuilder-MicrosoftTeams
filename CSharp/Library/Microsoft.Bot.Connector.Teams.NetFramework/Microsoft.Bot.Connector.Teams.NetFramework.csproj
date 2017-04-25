@@ -31,11 +31,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <!--<PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'True'">
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\Build\272MSSharedLibSN2048.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>-->
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bot.Connector.Common, Version=3.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bot.Connector.Common.3.6.0.0-alpha\lib\net461\Microsoft.Bot.Connector.Common.dll</HintPath>
