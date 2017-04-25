@@ -1,18 +1,9 @@
 'use strict';
 exports.ChannelInfo = require('./channelInfo');
-exports.ChannelAccount = require('./channelAccount');
 exports.ConversationList = require('./conversationList');
 exports.TeamInfo = require('./teamInfo');
 exports.TenantInfo = require('./tenantInfo');
 exports.TeamsChannelData = require('./teamsChannelData');
-exports.CardAction = require('./cardAction');
-exports.ListItemBase = require('./listItemBase');
-exports.ListCard = require('./listCard');
-exports.FileListItem = require('./fileListItem');
-exports.PersonListItem = require('./personListItem');
-exports.SectionListItem = require('./sectionListItem');
-exports.CardImage = require('./cardImage');
-exports.PersonCard = require('./personCard');
 exports.O365ConnectorCardFact = require('./o365ConnectorCardFact');
 exports.O365ConnectorCardImage = require('./o365ConnectorCardImage');
 exports.O365ConnectorCardActionBase = require('./o365ConnectorCardActionBase');

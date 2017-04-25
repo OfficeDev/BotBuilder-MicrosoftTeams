@@ -34,7 +34,7 @@
 
 import * as builder from 'botbuilder';
 import { TeamEventBase, MembersAddedEvent, MembersRemovedEvent, TeamRenamedEvent, ChannelCreatedEvent, ChannelDeletedEvent, ChannelRenamedEvent } from './ConversationUpdate'
-import { ChannelInfo, ChannelAccount, TeamInfo, TenantInfo } from './models';
+import { ChannelInfo, TeamInfo, TenantInfo } from './models';
 
 export enum MentionTextLocation {
   PrependText,
@@ -49,11 +49,11 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Enable bot to send a message to mention user
-  *  @param {ChannelAccount} mentionedUser - The team id, you can look it up in session object.
+  *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
-  public addMentionToText(mentionedUser: ChannelAccount, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
+  public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
     }
@@ -218,16 +218,16 @@ export class TeamsMessage extends builder.Message {
     return text;
   }
 
-  private static populateMembers(members: Array<any>): Array<ChannelAccount> {
-    var ret: ChannelAccount[] = [];
+  private static populateMembers(members: Array<any>): Array<builder.IIdentity> {
+    var ret: builder.IIdentity[] = [];
     if (!members) return ret;
     for (var i in members) {
       var member = members[i];
       if (!member.id && !member.name) continue;
-      var account = new ChannelAccount (
-        member.name, 
-        member.id
-      );
+      var account = {
+        name: member.name,
+        id: member.id
+      }
       ret.push(account);
     }
     return ret;

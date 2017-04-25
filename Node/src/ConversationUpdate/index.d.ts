@@ -31,8 +31,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
-import { ChannelInfo, ChannelAccount, TeamInfo, TenantInfo } from '../models';
+import * as builder from 'botbuilder';
+import { ChannelInfo, TeamInfo, TenantInfo } from '../models';
 
 export declare class TeamEventBase {
 	constructor(team: TeamInfo, tenant: TenantInfo);
@@ -51,11 +51,11 @@ export declare class ChannelRenamedEvent {
 }
 
 export declare class MembersAddedEvent {
-	constructor(membersAdded: Array<ChannelAccount>, team: TeamInfo, tenant: TenantInfo);
+	constructor(membersAdded: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
 }
 
 export declare class MembersRemovedEvent {
-	constructor(membersRemoved: Array<ChannelAccount>, team: TeamInfo, tenant: TenantInfo);
+	constructor(membersRemoved: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
 }
 
 export declare class TeamRenamedEvent {
