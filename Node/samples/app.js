@@ -74,6 +74,7 @@ bot.on('conversationUpdate', function (message) {
 bot.dialog('FetchChannelList', function (session) {
 	var teamId = session.message.sourceEvent.team.id;
 	connector.fetchChannelList(
+		session.message.address.serviceUrl,
 		teamId,
 		(err, result) => {
 			if (err) {
@@ -82,8 +83,7 @@ bot.dialog('FetchChannelList', function (session) {
 			else {
 				session.endDialog('%s', JSON.stringify(result));
 			}
-		},
-		session.message.address.serviceUrl
+		}
 	);
 });
 
