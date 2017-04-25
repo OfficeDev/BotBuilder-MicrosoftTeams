@@ -23,7 +23,7 @@ var TeamsChatConnector = (function (_super) {
         _this.allowedTenants = null;
         return _this;
     }
-    TeamsChatConnector.prototype.fetchChannelList = function (teamId, callback, serverUrl) {
+    TeamsChatConnector.prototype.fetchChannelList = function (serverUrl, teamId, callback) {
         var options = { customHeaders: {}, jar: false };
         var restClient = new RestClient(serverUrl, null);
         var remoteQuery = new RemoteQuery(restClient);

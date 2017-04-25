@@ -55,7 +55,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   */
-  public fetchChannelList(teamId: string, callback: (err: Error, result: ChannelInfo[]) => void, serverUrl: string) : void {
+  public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void {
     var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
