@@ -436,4 +436,83 @@ describe('TeamsMessage', function () {
 			assert('tenantId', tenantId);
 		});
 	});
+
+	describe('#getTextWithoutMentions', function (done) {
+		it('should return text without mentions', function () {
+			var messageToExtract = {
+			    "text": "<at>zel-bot-getcc</at>  this is a test message  <at>zel-bot-getcc</at>  yes it is  <at>zel-bot-getcc</at>",
+			    "textFormat": "plain",
+			    "attachments": [
+			        {
+			            "contentType": "text/html",
+			            "content": "<div><span contenteditable=\"false\" itemscope=\"\" itemtype=\"http://schema.skype.com/Mention\" itemid=\"0\">zel-bot-getcc</span>&#160;this is a test message <span contenteditable=\"false\" itemscope=\"\" itemtype=\"http://schema.skype.com/Mention\" itemid=\"1\">zel-bot-getcc</span>&#160;yes it is <span contenteditable=\"false\" itemscope=\"\" itemtype=\"http://schema.skype.com/Mention\" itemid=\"2\">zel-bot-getcc</span></div>"
+			        }
+			    ],
+			    "type": "message",
+			    "timestamp": "2017-04-25T19:52:02.61Z",
+			    "id": "1493149922893",
+			    "channelId": "msteams",
+			    "serviceUrl": "https://smba.trafficmanager.net/amer-client-ss.msg/",
+			    "from": {
+			        "id": "user id",
+			        "name": "Bill Zeng"
+			    },
+			    "conversation": {
+			        "isGroup": true,
+			        "id": "group id"
+			    },
+			    "recipient": {
+			        "id": "28:3ac5850f-8e82-430b-812c-bee26f5adf77",
+			        "name": "zel-bot-getcc"
+			    },
+			    "entities": [
+			        {
+			            "mentioned": {
+			                "id": "bot id",
+			                "name": "zel-bot-getcc"
+			            },
+			            "text": "<at>zel-bot-getcc</at>",
+			            "type": "mention"
+			        },
+			        {
+			            "mentioned": {
+			                "id": "bot id",
+			                "name": "zel-bot-getcc"
+			            },
+			            "text": "<at>zel-bot-getcc</at>",
+			            "type": "mention"
+			        },
+			        {
+			            "mentioned": {
+			                "id": "bot id",
+			                "name": "zel-bot-getcc"
+			            },
+			            "text": "<at>zel-bot-getcc</at>",
+			            "type": "mention"
+			        },
+			        {
+			            "locale": "en-US",
+			            "country": "US",
+			            "platform": "Windows",
+			            "type": "clientInfo"
+			        }
+			    ],
+			    "channelData": {
+			        "teamsChannelId": "thread id",
+			        "teamsTeamId": "thread id",
+			        "channel": {
+			            "id": "thread id"
+			        },
+			        "team": {
+			            "id": "thread id"
+			        },
+			        "tenant": {
+			            "id": "tenant id"
+			        }
+			    }
+			}
+			var cleanText = TeamsMessage.getTextWithoutMentions(messageToExtract);
+			assert('this is a test message yes it is', cleanText);
+		});
+	});
 });

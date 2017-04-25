@@ -120,6 +120,18 @@ var TeamsMessage = (function (_super) {
         }
         return null;
     };
+    TeamsMessage.getTextWithoutMentions = function (message) {
+        var text = message.text;
+        if (message.entities) {
+            message.entities
+                .filter(function (entity) { return entity.type === "mention"; })
+                .forEach(function (entity) {
+                text = text.replace(entity.text, "");
+            });
+            text = text.trim();
+        }
+        return text;
+    };
     TeamsMessage.populateMembers = function (members) {
         var ret = [];
         if (!members)
