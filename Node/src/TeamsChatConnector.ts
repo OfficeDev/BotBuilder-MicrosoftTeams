@@ -55,7 +55,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   */
-  public fetchChannelList(teamId: string, callback: (err: Error, result: ChannelInfo[]) => void, serverUrl: string = 'https://smba.trafficmanager.net/amer-client-ss.msg') : void {
+  public fetchChannelList(teamId: string, callback: (err: Error, result: ChannelInfo[]) => void, serverUrl: string) : void {
     var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
@@ -72,8 +72,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
-  *  Set if tenant is allowed
-  *  @param {array} tenants - A string list which contains allowed tenants for connector.
+  *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
+  *  @param {array} tenants - Ids of allowed tenants.
   */
   public setAllowedTenants(tenants: string[]) {
     if (tenants != null) this.allowedTenants = tenants;
