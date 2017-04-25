@@ -76,7 +76,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {array} tenants - Ids of allowed tenants.
   */
   public setAllowedTenants(tenants: string[]) {
-    if (tenants != null) this.allowedTenants = tenants;
+    if (tenants != null) {
+      this.allowedTenants = tenants;
+    }
   }
 
   /**
@@ -90,7 +92,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
       for (var event of events) {
-        if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) filteredEvents.push(event);
+        if (event.sourceEvent.tenant && this.allowedTenants.indexOf(event.sourceEvent.tenant.id) > -1) {
+          filteredEvents.push(event);
+        }
       }
       super.onDispatchEvents(filteredEvents, callback);
     }
