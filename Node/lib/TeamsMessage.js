@@ -100,7 +100,6 @@ var TeamsMessage = (function (_super) {
             return null;
         var teamId = team.id;
         var conversation = this.data.address.conversation;
-        var messageId = conversation.id.split(';')[1];
         this.data.address.conversation.id = teamId;
         return this;
     };
