@@ -31,59 +31,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
-'use strict';
-
-/**
- * @class
- * Initializes a new instance of the ChannelAccount class.
- * @constructor
- * An action on a card
- *
- * @member {string} [name] Defines the user name
- * button.
- *
- * @member {string} [id] Defines the user id
- *
- */
-class ChannelAccount {
-  constructor(name, id) {
-    this.name = name;
-    this.id = id;
-  }
-
-  /**
-   * Defines the metadata of ChannelAccount
-   *
-   * @returns {object} metadata of ChannelAccount
-   *
-   */
-  mapper() {
-    return {
-      required: false,
-      serializedName: 'ChannelAccount',
-      type: {
-        name: 'Composite',
-        className: 'ChannelAccount',
-        modelProperties: {
-          id: {
-            required: false,
-            serializedName: 'id',
-            type: {
-              name: 'String'
-            }
-          },
-          name: {
-            required: false,
-            serializedName: 'name',
-            type: {
-              name: 'String'
-            }
-          }
-        }
-      }
-    };
-  }
-}
-
-module.exports = ChannelAccount;
+export { TeamsChatConnector } from './TeamsChatConnector';
+export { TeamsMessage } from './TeamsMessage';
+export { ChannelInfo } from './models';
+export { ConversationList } from './models';
+export { TeamInfo } from './models';
+export { TenantInfo } from './models';
+export { TeamsChannelData } from './models';
+export { O365ConnectorCardFact } from './models';
+export { O365ConnectorCardImage } from './models';
+export { O365ConnectorCardActionBase } from './models';
+export { O365ConnectorCardSection } from './models';
+export { O365ConnectorCard } from './models';
+export { O365ConnectorCardViewAction } from './models';
+export { TeamEventBase } from './ConversationUpdate';
+export { MembersAddedEvent } from './ConversationUpdate';
+export { MembersRemovedEvent } from './ConversationUpdate';
+export { ChannelCreatedEvent } from './ConversationUpdate';
+export { ChannelDeletedEvent } from './ConversationUpdate';
+export { ChannelRenamedEvent } from './ConversationUpdate';
+export { TeamRenamedEvent } from './ConversationUpdate';

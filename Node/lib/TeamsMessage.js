@@ -140,7 +140,10 @@ var TeamsMessage = (function (_super) {
             var member = members[i];
             if (!member.id && !member.name)
                 continue;
-            var account = new models_1.ChannelAccount(member.name, member.id);
+            var account = {
+                name: member.name,
+                id: member.id
+            };
             ret.push(account);
         }
         return ret;

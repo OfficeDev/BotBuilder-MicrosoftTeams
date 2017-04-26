@@ -7,6 +7,7 @@
   },
   "author": "Microsoft Corp",
   "license": "MIT",
+  "main": "./lib/botbuilder-teams.js",
   "dependencies": {
     "botbuilder": "^3.8.0-beta6",
     "http": "0.0.0",
