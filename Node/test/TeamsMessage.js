@@ -462,7 +462,7 @@ describe('TeamsMessage', function () {
 			        "id": "group id"
 			    },
 			    "recipient": {
-			        "id": "28:3ac5850f-8e82-430b-812c-bee26f5adf77",
+			        "id": "bot id",
 			        "name": "zel-bot-getcc"
 			    },
 			    "entities": [
