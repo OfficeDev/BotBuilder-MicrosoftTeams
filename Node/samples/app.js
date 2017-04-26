@@ -119,7 +119,10 @@ bot.dialog('StartNew1on1Chat', function (session) {
 
 bot.dialog('RouteMessageToGeneral', function (session) {
 	// user name/user id
-	var toMention = new TeamsModels.ChannelAccount('Bill Zeng', userId);
+	var toMention = {
+	  name: 'Bill Zeng',
+	  id: userId
+	};
 	var msg = new TeamsMessage(session).text(TeamsMessage.getTenantId(session.message));
 	var mentionedMsg = msg.addMentionToText(toMention);
 	var generalMessage = mentionedMsg.routeReplyToGeneralChannel();
