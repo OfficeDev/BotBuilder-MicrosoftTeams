@@ -31,29 +31,55 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-export { TeamsChatConnector } from './TeamsChatConnector';
-export { TeamsMessage } from './TeamsMessage';
-export { ChannelInfo } from './models';
-export { ConversationList } from './models';
-export { TeamInfo } from './models';
-export { TenantInfo } from './models';
-export { TeamsChannelData } from './models';
-export { O365ConnectorCardFact } from './models';
-export { O365ConnectorCardImage } from './models';
-export { O365ConnectorCardActionBase } from './models';
-export { O365ConnectorCardSection } from './models';
-export { O365ConnectorCard } from './models';
-export { O365ConnectorCardViewAction } from './models';
-export { ComposeExtensionAttachment } from './models';
-export { ComposeExtensionParameter } from './models';
-export { ComposeExtensionQuery } from './models';
-export { ComposeExtensionQueryOptions } from './models';
-export { ComposeExtensionResponse } from './models';
-export { ComposeExtensionResult } from './models';
-export { TeamEventBase } from './ConversationUpdate';
-export { MembersAddedEvent } from './ConversationUpdate';
-export { MembersRemovedEvent } from './ConversationUpdate';
-export { ChannelCreatedEvent } from './ConversationUpdate';
-export { ChannelDeletedEvent } from './ConversationUpdate';
-export { ChannelRenamedEvent } from './ConversationUpdate';
-export { TeamRenamedEvent } from './ConversationUpdate';
+'use strict';
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionParameter class.
+ * @constructor
+ * Compose extension query parameters
+ *
+ * @member {string} [name] Name of the parameter
+ *
+ * @member {object} [value] Value of the parameter
+ *
+ */
+class ComposeExtensionParameter {
+  constructor() {
+  }
+
+  /**
+   * Defines the metadata of ComposeExtensionParameter
+   *
+   * @returns {object} metadata of ComposeExtensionParameter
+   *
+   */
+  mapper() {
+    return {
+      required: false,
+      serializedName: 'ComposeExtensionParameter',
+      type: {
+        name: 'Composite',
+        className: 'ComposeExtensionParameter',
+        modelProperties: {
+          name: {
+            required: false,
+            serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          value: {
+            required: false,
+            serializedName: 'value',
+            type: {
+              name: 'Object'
+            }
+          }
+        }
+      }
+    };
+  }
+}
+
+module.exports = ComposeExtensionParameter;

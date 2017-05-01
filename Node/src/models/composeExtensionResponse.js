@@ -31,29 +31,56 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-export { TeamsChatConnector } from './TeamsChatConnector';
-export { TeamsMessage } from './TeamsMessage';
-export { ChannelInfo } from './models';
-export { ConversationList } from './models';
-export { TeamInfo } from './models';
-export { TenantInfo } from './models';
-export { TeamsChannelData } from './models';
-export { O365ConnectorCardFact } from './models';
-export { O365ConnectorCardImage } from './models';
-export { O365ConnectorCardActionBase } from './models';
-export { O365ConnectorCardSection } from './models';
-export { O365ConnectorCard } from './models';
-export { O365ConnectorCardViewAction } from './models';
-export { ComposeExtensionAttachment } from './models';
-export { ComposeExtensionParameter } from './models';
-export { ComposeExtensionQuery } from './models';
-export { ComposeExtensionQueryOptions } from './models';
-export { ComposeExtensionResponse } from './models';
-export { ComposeExtensionResult } from './models';
-export { TeamEventBase } from './ConversationUpdate';
-export { MembersAddedEvent } from './ConversationUpdate';
-export { MembersRemovedEvent } from './ConversationUpdate';
-export { ChannelCreatedEvent } from './ConversationUpdate';
-export { ChannelDeletedEvent } from './ConversationUpdate';
-export { ChannelRenamedEvent } from './ConversationUpdate';
-export { TeamRenamedEvent } from './ConversationUpdate';
+'use strict';
+
+const models = require('./index');
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionResponse class.
+ * @constructor
+ * Compose extension response
+ *
+ * @member {object} [composeExtension]
+ *
+ * @member {string} [composeExtension.attachmentLayout] Hint for how to deal
+ * with multiple attachments.
+ *
+ * @member {string} [composeExtension.type] The type of the result
+ *
+ * @member {array} [composeExtension.attachments] Attachments
+ *
+ */
+class ComposeExtensionResponse {
+  constructor() {
+  }
+
+  /**
+   * Defines the metadata of ComposeExtensionResponse
+   *
+   * @returns {object} metadata of ComposeExtensionResponse
+   *
+   */
+  mapper() {
+    return {
+      required: false,
+      serializedName: 'ComposeExtensionResponse',
+      type: {
+        name: 'Composite',
+        className: 'ComposeExtensionResponse',
+        modelProperties: {
+          composeExtension: {
+            required: false,
+            serializedName: 'composeExtension',
+            type: {
+              name: 'Composite',
+              className: 'ComposeExtensionResult'
+            }
+          }
+        }
+      }
+    };
+  }
+}
+
+module.exports = ComposeExtensionResponse;

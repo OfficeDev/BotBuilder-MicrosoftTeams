@@ -31,29 +31,55 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-export { TeamsChatConnector } from './TeamsChatConnector';
-export { TeamsMessage } from './TeamsMessage';
-export { ChannelInfo } from './models';
-export { ConversationList } from './models';
-export { TeamInfo } from './models';
-export { TenantInfo } from './models';
-export { TeamsChannelData } from './models';
-export { O365ConnectorCardFact } from './models';
-export { O365ConnectorCardImage } from './models';
-export { O365ConnectorCardActionBase } from './models';
-export { O365ConnectorCardSection } from './models';
-export { O365ConnectorCard } from './models';
-export { O365ConnectorCardViewAction } from './models';
-export { ComposeExtensionAttachment } from './models';
-export { ComposeExtensionParameter } from './models';
-export { ComposeExtensionQuery } from './models';
-export { ComposeExtensionQueryOptions } from './models';
-export { ComposeExtensionResponse } from './models';
-export { ComposeExtensionResult } from './models';
-export { TeamEventBase } from './ConversationUpdate';
-export { MembersAddedEvent } from './ConversationUpdate';
-export { MembersRemovedEvent } from './ConversationUpdate';
-export { ChannelCreatedEvent } from './ConversationUpdate';
-export { ChannelDeletedEvent } from './ConversationUpdate';
-export { ChannelRenamedEvent } from './ConversationUpdate';
-export { TeamRenamedEvent } from './ConversationUpdate';
+'use strict';
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionQueryOptions class.
+ * @constructor
+ * Compose extensions query options
+ *
+ * @member {number} [skip] Number of entities to skip
+ *
+ * @member {number} [count] Number of entities to fetch
+ *
+ */
+class ComposeExtensionQueryOptions {
+  constructor() {
+  }
+
+  /**
+   * Defines the metadata of ComposeExtensionQueryOptions
+   *
+   * @returns {object} metadata of ComposeExtensionQueryOptions
+   *
+   */
+  mapper() {
+    return {
+      required: false,
+      serializedName: 'ComposeExtensionQueryOptions',
+      type: {
+        name: 'Composite',
+        className: 'ComposeExtensionQueryOptions',
+        modelProperties: {
+          skip: {
+            required: false,
+            serializedName: 'skip',
+            type: {
+              name: 'Number'
+            }
+          },
+          count: {
+            required: false,
+            serializedName: 'count',
+            type: {
+              name: 'Number'
+            }
+          }
+        }
+      }
+    };
+  }
+}
+
+module.exports = ComposeExtensionQueryOptions;

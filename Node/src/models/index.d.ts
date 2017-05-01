@@ -33,7 +33,7 @@
 
 
 import * as moment from "moment";
-
+import * as builder from 'botbuilder';
 
 /**
  * @class
@@ -243,6 +243,127 @@ export interface O365ConnectorCardViewAction extends O365ConnectorCardActionBase
   name?: string;
   target?: string[];
 }
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionQueryOptions class.
+ * @constructor
+ * Compose extensions query options
+ *
+ * @member {number} [skip] Number of entities to skip
+ *
+ * @member {number} [count] Number of entities to fetch
+ *
+ */
+export interface ComposeExtensionQueryOptions {
+  skip?: number;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionParameter class.
+ * @constructor
+ * Compose extension query parameters
+ *
+ * @member {string} [name] Name of the parameter
+ *
+ * @member {object} [value] Value of the parameter
+ *
+ */
+export interface ComposeExtensionParameter {
+  name?: string;
+  value?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionQuery class.
+ * @constructor
+ * Compose extension query
+ *
+ * @member {string} [commandId] Id of the command assigned by Bot
+ *
+ * @member {array} [parameters] Parameters for the query
+ *
+ * @member {object} [queryOptions]
+ *
+ * @member {number} [queryOptions.skip] Number of entities to skip
+ *
+ * @member {number} [queryOptions.count] Number of entities to fetch
+ *
+ */
+export interface ComposeExtensionQuery {
+  commandId?: string;
+  parameters?: ComposeExtensionParameter[];
+  queryOptions?: ComposeExtensionQueryOptions;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionAttachment class.
+ * @constructor
+ * Compose extension attachment.
+ *
+ *
+ * @member {string} [contentType] mimetype/Contenttype for the file
+ *
+ * @member {string} [contentUrl] Content Url
+ *
+ * @member {object} [content] Embedded content
+ *
+ * @member {string} [name] (OPTIONAL) The name of the attachment
+ *
+ * @member {string} [thumbnailUrl] (OPTIONAL) Thumbnail associated with
+ * attachment
+ *
+ */
+export interface ComposeExtensionAttachment extends builder.IIsAttachment  {
+  name?: string;
+  thumbnailUrl?: string;
+  toAttachment(): builder.IAttachment;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionResult class.
+ * @constructor
+ * Compose extension result
+ *
+ * @member {string} [attachmentLayout] Hint for how to deal with multiple
+ * attachments.
+ *
+ * @member {string} [type] The type of the result
+ *
+ * @member {array} [attachments] Attachments
+ *
+ */
+export interface ComposeExtensionResult {
+  attachmentLayout?: string;
+  type?: string;
+  attachments?: ComposeExtensionAttachment[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionResponse class.
+ * @constructor
+ * Compose extension response
+ *
+ * @member {object} [composeExtension]
+ *
+ * @member {string} [composeExtension.attachmentLayout] Hint for how to deal
+ * with multiple attachments.
+ *
+ * @member {string} [composeExtension.type] The type of the result
+ *
+ * @member {array} [composeExtension.attachments] Attachments
+ *
+ */
+export interface ComposeExtensionResponse {
+  composeExtension?: ComposeExtensionResult;
+}
+
 
 export declare class ChannelInfo {
   constructor(name: string, id: string);
