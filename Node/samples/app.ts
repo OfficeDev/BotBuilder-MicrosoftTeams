@@ -16,17 +16,11 @@ import * as https from 'https';
 import { TeamsChatConnector, TeamsMessage, TeamsModels } from 'botbuilder-teams';
 
 // Put your registered bot here, to register bot, go to bot framework
-// var appName: string = 'app name';
-// var appId: string = 'app id';
-// var appPassword: string = 'app password';
-// var userId: string = 'user id';
-// var tenantId: string = 'tenant id';
-
-var appName: string = 'zel-bot-getcc';
-var appId: string = '3ac5850f-8e82-430b-812c-bee26f5adf77';
-var appPassword: string = 'OgFmsCEi7ydz7M11kFDTZrd';
-var userId: string = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
-var tenantId: string = '72f988bf-86f1-41af-91ab-2d7cd011db47';
+var appName: string = 'app name';
+var appId: string = 'app id';
+var appPassword: string = 'app password';
+var userId: string = 'user id';
+var tenantId: string = 'tenant id';
 
 var server = restify.createServer(); 
 server.listen(3978, function () {    
