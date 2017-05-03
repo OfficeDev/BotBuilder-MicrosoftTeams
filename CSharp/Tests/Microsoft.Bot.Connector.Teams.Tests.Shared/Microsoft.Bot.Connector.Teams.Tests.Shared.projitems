@@ -9,7 +9,8 @@
     <Import_RootNamespace>Microsoft.Bot.Connector.Teams.Tests.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AddMentionTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ComposeExtensionTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MentionTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CardTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChannelDataTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorExtensionTests.cs" />
@@ -39,5 +40,19 @@
     <None Include="$(MSBuildThisFileDirectory)Jsons\SampleActivityTeamRenamed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleActivity2AtMentions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleActivityComposeExtension.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleActivityInvoke.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleActivityNoMentions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

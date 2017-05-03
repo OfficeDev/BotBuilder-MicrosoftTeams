@@ -24,7 +24,7 @@
         "summary": "Fetches channel list for a given team",
         "description": "Fetch the channel list.",
         "operationId": "Teams_FetchChannelList",
-        "consumes": [ ],
+        "consumes": [],
         "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
         "parameters": [
           {
@@ -37,7 +37,7 @@
         ],
         "responses": {
           "200": {
-            "description": "﻿An attachmentInfo object is returned which describes the:\r\n* type of the attachment\r\n* name of the attachment\r\n\r\n\r\nand an array of views:\r\n* Size - size of the object\r\n* ViewId - View Id which can be used to fetch a variation on the content (ex: original or thumbnail)",
+            "description": "﻿List of channels in the team.",
             "schema": {
               "$ref": "#/definitions/ConversationList"
             }
@@ -127,7 +127,7 @@
 
     "Object": {
       "type": "object",
-      "properties": { }
+      "properties": {}
     },
 
     "CardAction": {
@@ -299,6 +299,133 @@
               "description": "Target urls",
               "type": "array",
               "items": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+
+    "ComposeExtensionQueryOptions": {
+      "description": "Compose extensions query options",
+      "type": "object",
+      "properties": {
+        "skip": {
+          "format": "int32",
+          "description": "Number of entities to skip",
+          "type": "integer"
+        },
+        "count": {
+          "format": "int32",
+          "description": "Number of entities to fetch",
+          "type": "integer"
+        }
+      }
+    },
+
+    "ComposeExtensionParameter": {
+      "description": "Compose extension query parameters",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the parameter",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value of the parameter",
+          "$ref": "#/definitions/Object"
+        }
+      }
+    },
+
+    "ComposeExtensionQuery": {
+      "description": "Compose extension query",
+      "type": "object",
+      "properties": {
+        "commandId": {
+          "description": "Id of the command assigned by Bot",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Parameters for the query",
+          "type": "array",
+          "items": { "$ref": "#/definitions/ComposeExtensionParameter" }
+        },
+        "queryOptions": {
+          "$ref": "#/definitions/ComposeExtensionQueryOptions"
+        }
+      }
+    },
+
+    "Attachment": {
+      "description": "An attachment within an activity",
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "description": "mimetype/Contenttype for the file",
+          "type": "string"
+        },
+        "contentUrl": {
+          "description": "Content Url",
+          "type": "string"
+        },
+        "content": {
+          "$ref": "#/definitions/Object",
+          "description": "Embedded content"
+        },
+        "name": {
+          "description": "(OPTIONAL) The name of the attachment",
+          "type": "string"
+        },
+        "thumbnailUrl": {
+          "description": "(OPTIONAL) Thumbnail associated with attachment",
+          "type": "string"
+        }
+      }
+    },
+
+    "ComposeExtensionResponse": {
+      "description": "Compose extension response",
+      "type": "object",
+      "properties": {
+        "composeExtension": {
+          "$ref": "#/definitions/ComposeExtensionResult"
+        }
+      }
+    },
+
+    "ComposeExtensionResult": {
+      "description": "Compose extension result",
+      "type": "object",
+      "properties": {
+        "attachmentLayout": {
+          "description": "Hint for how to deal with multiple attachments.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the result",
+          "type": "string"
+        },
+        "attachments": {
+          "description": "Attachments",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComposeExtensionAttachment"
+          }
+        }
+      }
+    },
+
+    "ComposeExtensionAttachment": {
+      "description": "Compose extension attachment.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Attachment"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "preview": {
+              "$ref": "#/definitions/Attachment"
             }
           }
         }

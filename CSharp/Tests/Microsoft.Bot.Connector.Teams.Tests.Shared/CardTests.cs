@@ -186,7 +186,6 @@
                 Attachments = new List<Attachment>() { attachment },
             };
 
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test");
 
             using (ShimsContext.Create())
