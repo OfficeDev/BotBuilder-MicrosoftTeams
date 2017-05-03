@@ -299,30 +299,6 @@ export interface ComposeExtensionQuery {
   queryOptions?: ComposeExtensionQueryOptions;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionAttachment class.
- * @constructor
- * Compose extension attachment.
- *
- *
- * @member {string} [contentType] mimetype/Contenttype for the file
- *
- * @member {string} [contentUrl] Content Url
- *
- * @member {object} [content] Embedded content
- *
- * @member {string} [name] (OPTIONAL) The name of the attachment
- *
- * @member {string} [thumbnailUrl] (OPTIONAL) Thumbnail associated with
- * attachment
- *
- */
-export interface ComposeExtensionAttachment extends builder.IIsAttachment  {
-  name?: string;
-  thumbnailUrl?: string;
-  toAttachment(): builder.IAttachment;
-}
 
 /**
  * @class
@@ -341,7 +317,7 @@ export interface ComposeExtensionAttachment extends builder.IIsAttachment  {
 export interface ComposeExtensionResult {
   attachmentLayout?: string;
   type?: string;
-  attachments?: ComposeExtensionAttachment[];
+  attachments?: (builder.IAttachment|builder.IIsAttachment)[];
 }
 
 /**
@@ -363,7 +339,6 @@ export interface ComposeExtensionResult {
 export interface ComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
-
 
 export declare class ChannelInfo {
   constructor(name: string, id: string);

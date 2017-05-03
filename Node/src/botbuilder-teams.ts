@@ -44,7 +44,6 @@ export { O365ConnectorCardActionBase } from './models';
 export { O365ConnectorCardSection } from './models';
 export { O365ConnectorCard } from './models';
 export { O365ConnectorCardViewAction } from './models';
-export { ComposeExtensionAttachment } from './models';
 export { ComposeExtensionParameter } from './models';
 export { ComposeExtensionQuery } from './models';
 export { ComposeExtensionQueryOptions } from './models';
