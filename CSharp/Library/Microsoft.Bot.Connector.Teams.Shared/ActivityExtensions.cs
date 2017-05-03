@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Models;
     using Newtonsoft.Json.Linq;
 
@@ -254,6 +255,61 @@
             {
                 throw new ArgumentNullException("ChannelData missing in Activity");
             }
+        }
+
+        /// <summary>
+        /// Gets the activity text without mentions.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>Text without mentions.</returns>
+        public static string GetTextWithoutMentions(this Activity activity)
+        {
+            // Case 1. No entities.
+            if (activity.Entities?.Count == 0)
+            {
+                return activity.Text;
+            }
+
+            var mentionEntities = activity.Entities.Where(entity => entity.Type.Equals("mention", StringComparison.OrdinalIgnoreCase));
+
+            // Case 2. No Mention entities.
+            if (!mentionEntities.Any())
+            {
+                return activity.Text;
+            }
+
+            // Case 3. Mention entities.
+            string strippedText = activity.Text;
+
+            mentionEntities.ToList()
+                .ForEach(entity =>
+                {
+                    strippedText = strippedText.Replace(entity.GetAs<Mention>().Text, string.Empty);
+                });
+
+            return strippedText.Trim();
+        }
+
+        /// <summary>
+        /// Checks if the activity is a compose extension query.
+        /// </summary>
+        /// <param name="activity">Incoming activity.</param>
+        /// <returns>True is activity is a compose extension query, false otherwise.</returns>
+        public static bool IsComposeExtensionQuery(this Activity activity)
+        {
+            return activity.Type == ActivityTypes.Invoke &&
+                !string.IsNullOrEmpty(activity.Name) &&
+                activity.Name.StartsWith("composeExtension", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Gets the compose extension query data.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>Compose extension query data.</returns>
+        public static ComposeExtensionQuery GetComposeExtensionQueryData(this Activity activity)
+        {
+            return JObject.FromObject(activity.Value).ToObject<ComposeExtensionQuery>();
         }
     }
 }

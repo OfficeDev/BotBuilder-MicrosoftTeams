@@ -150,6 +150,46 @@
                     }
 
                     break;
+
+                case ActivityTypes.Invoke:
+
+                    // Check if the Activity if of type compose extension.
+                    if (activity.IsComposeExtensionQuery())
+                    {
+                        // Get Compose extension query data.
+                        ComposeExtensionQuery composeExtensionQuery = activity.GetComposeExtensionQueryData();
+
+                        // Process data and return the response.
+                        ComposeExtensionResponse response = new ComposeExtensionResponse
+                        {
+                            ComposeExtension = new ComposeExtensionResult
+                            {
+                                Attachments = new List<ComposeExtensionAttachment>
+                                {
+                                    new HeroCard
+                                    {
+                                        Buttons = new List<CardAction>
+                                        {
+                                            new CardAction
+                                            {
+                                                 Image = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Bing_logo_%282016%29.svg/160px-Bing_logo_%282016%29.svg.png",
+                                                 Type = ActionTypes.OpenUrl,
+                                                 Title = "Bing",
+                                                 Value = "https://www.bing.com"
+                                            },
+                                        },
+                                        Title = "SampleHeroCard",
+                                        Subtitle = "BingHeroCard",
+                                        Text = "Bing.com"
+                                    }.ToAttachment().ToComposeExtensionAttachment()
+                                },
+                                Type = "result",
+                                AttachmentLayout = "list"
+                            }
+                        };
+                    }
+
+                    break;
                 case ActivityTypes.ContactRelationUpdate:
                 case ActivityTypes.Typing:
                 case ActivityTypes.DeleteUserData:

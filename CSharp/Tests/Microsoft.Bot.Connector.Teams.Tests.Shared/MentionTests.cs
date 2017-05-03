@@ -10,7 +10,7 @@
     /// @Mention tests.
     /// </summary>
     [TestClass]
-    public class AddMentionTests
+    public class MentionTests
     {
         /// <summary>
         /// @Mention tests with no mention text.
@@ -73,6 +73,30 @@
             Assert.IsTrue(reply.Entities.Count == 1);
             Assert.IsInstanceOfType(reply.Entities[0], typeof(Mention));
             Assert.IsTrue(reply.Text.Contains((reply.Entities[0] as Mention).Text));
+        }
+
+        /// <summary>
+        /// Activity extensions tests for strip mentions with mentions in it.
+        /// </summary>
+        [TestMethod]
+        public void RemoveMentions_StripMentionsWithMentionsInIt()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivity2AtMentions.json"));
+            string noMentionText = sampleActivity.GetTextWithoutMentions();
+            Assert.IsTrue(sampleActivity.Text.Contains(noMentionText));
+            Assert.AreEqual("TestMessage", noMentionText);
+        }
+
+        /// <summary>
+        /// Test to removes mentions from activity with no mentions.
+        /// </summary>
+        [TestMethod]
+        public void RemoveMentions_StripMentionsWithNoMentions()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
+            string noMentionText = sampleActivity.GetTextWithoutMentions();
+            Assert.IsTrue(sampleActivity.Text.Contains(noMentionText));
+            Assert.AreEqual(sampleActivity.Text, noMentionText);
         }
     }
 }

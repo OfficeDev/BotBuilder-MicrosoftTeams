@@ -3,3 +3,4 @@ del TeamsAPI\ConnectorClient.cs
 del TeamsAPI\IConnectorClient.cs
 del TeamsAPI\Models\CardAction.cs
 del TeamsAPI\Models\CardImage.cs
+del TeamsAPI\Models\Attachment.cs

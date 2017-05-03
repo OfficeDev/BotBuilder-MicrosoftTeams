@@ -39,7 +39,6 @@
                 }
             };
 
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
@@ -88,7 +87,6 @@
                 }
             };
 
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
@@ -137,7 +135,6 @@
                 }
             };
 
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
@@ -179,7 +176,6 @@
         public void TeamsAPI_FetchChannelListTestInvalidHttpCode()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
@@ -210,7 +206,6 @@
         public void TeamsAPI_FetchChannelListTestInvalidHttpCodeWithoutResponseContent()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
-            BotServiceProvider.Instance.GetHashCode();
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
@@ -238,7 +233,6 @@
         [TestMethod]
         public void TeamsAPI_FetchChannelListTestInvalidResonse()
         {
-            BotServiceProvider.Instance.GetHashCode();
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
@@ -269,7 +263,6 @@
         [TestMethod]
         public void TeamsAPI_FetchChannelListTestInvalidTeamId()
         {
-            BotServiceProvider.Instance.GetHashCode();
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
