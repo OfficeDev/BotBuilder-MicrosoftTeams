@@ -16,11 +16,17 @@ import * as https from 'https';
 import { TeamsChatConnector, TeamsMessage, TeamsModels } from 'botbuilder-teams';
 
 // Put your registered bot here, to register bot, go to bot framework
-var appName: string = 'app name';
-var appId: string = 'app id';
-var appPassword: string = 'app password';
-var userId: string = 'user id';
-var tenantId: string = 'tenant id';
+// var appName: string = 'app name';
+// var appId: string = 'app id';
+// var appPassword: string = 'app password';
+// var userId: string = 'user id';
+// var tenantId: string = 'tenant id';
+
+var appName: string = 'zel-bot-getcc';
+var appId: string = '3ac5850f-8e82-430b-812c-bee26f5adf77';
+var appPassword: string = 'OgFmsCEi7ydz7M11kFDTZrd';
+var userId: string = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
+var tenantId: string = '72f988bf-86f1-41af-91ab-2d7cd011db47';
 
 var server = restify.createServer(); 
 server.listen(3978, function () {    
@@ -133,60 +139,44 @@ bot.dialog('RouteMessageToGeneral', function (session: builder.Session) {
 });
 
 // example for compose extension
-var wikipediaHandler = function (event: builder.IEvent, query: TeamsModels.ComposeExtensionQuery, callback: (err: Error, result: TeamsModels.ComposeExtensionResult, statusCode: number) => void): void {
-	var keyword = 'wiki';
-	if (query.parameters && query.parameters.length > 0) {
-		keyword = query.parameters[0].value;
+var exampleHandler = function (event: builder.IEvent, query: TeamsModels.ComposeExtensionQuery, callback: (err: Error, result: TeamsModels.ComposeExtensionResult, statusCode: number) => void): void {
+	// parameters should be identical to manifest
+	if (query.parameters[0].name != "sample-parameter") {
+		return callback(new Error("Parameter mismatch in manifest"), null, 500);
 	}
 
-	var apiUrl = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=[keyword]&srlimit=10&format=json";
-  apiUrl = apiUrl.replace("[keyword]", keyword);
-  apiUrl = encodeURI(apiUrl);
-  var logo: builder.ICardImage = { 
-  	alt: "wikipedia logo",
-  	url: "http://adigaskell.org/wp-content/uploads/2014/08/wikipedia-logo.jpg", 
-  	tap: null
-  };
-  https.get(apiUrl, function (resHttp) {
-  	var body = '';
-  	
-  	resHttp.on('data', function (data) {
-  		body += data;
-  	});
+	var logo: builder.ICardImage = { 
+			alt: "logo",
+			url: "http://logo.jpg", 
+			tap: null
+	};
 
-  	resHttp.on('end', function () {
-  		try {
-  			let callbackReturn = { 
-  				composeExtension : {
-	  				type: "result",
-	          attachmentLayout: "list",
-	          attachments: []
-  				}
-  			};
-  			var result = JSON.parse(body).query.search;
-  			if (result.length > 0) {
-  				result.forEach((oneResult) => {
-  					let card = new builder.ThumbnailCard()
-  											.title(oneResult.title)
-  											.images([logo])
-  											.text(oneResult.snippet + " ...")
-  											.buttons([
-  												{
-  													type: "openUrl",
-  													title: "Go to Wikipedia",
-  													value: "https://en.wikipedia.org/wiki/" + encodeURI(oneResult.title)
-  												}
-  											]);
-  					callbackReturn.composeExtension.attachments.push(card['data']);
-  				});
-  			}
-  			callback(null, callbackReturn, 200);
-  		}
-  		catch (e) {
-  			callback(e, null, 500);
-  		}
-  	});
-  });
+	try {
+		let callbackReturn = { 
+			composeExtension : {
+				type: "result",
+        attachmentLayout: "list",
+        attachments: []
+			}
+		};
+		
+		let card = new builder.ThumbnailCard()
+										.title("sample title")
+										.images([logo])
+										.text("sample text")
+										.buttons([
+											{
+												type: "openUrl",
+												title: "Go to somewhere",
+												value: "https://url.com"
+											}
+										]);
+		callbackReturn.composeExtension.attachments.push(card['data']);
+		callback(null, callbackReturn, 200);
+	}
+	catch (e) {
+		callback(e, null, 500);
+	}
 }
 
-connector.onQuery('insertWikipedia', wikipediaHandler);
+connector.onQuery('exampleHandler', exampleHandler);

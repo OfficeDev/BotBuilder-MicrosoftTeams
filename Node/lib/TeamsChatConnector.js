@@ -73,7 +73,6 @@ var TeamsChatConnector = (function (_super) {
             var invoke = event;
             if (invoke.type == 'invoke') {
                 switch (invoke.name) {
-                    case 'inputExtension/query':
                     case 'composeExtension/query':
                         this.dispatchQuery(invoke, callback);
                         break;

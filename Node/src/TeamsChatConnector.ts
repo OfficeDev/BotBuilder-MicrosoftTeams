@@ -122,8 +122,6 @@ export class TeamsChatConnector extends builder.ChatConnector {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
         switch (invoke.name) {
-          // legacy
-          case 'inputExtension/query':
           case 'composeExtension/query':
             this.dispatchQuery(invoke, callback);
             break;

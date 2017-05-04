@@ -12,14 +12,18 @@ exports.__esModule = true;
 var util = require("util");
 var restify = require("restify");
 var builder = require("botbuilder");
-var https = require("https");
 var botbuilder_teams_1 = require("botbuilder-teams");
 // Put your registered bot here, to register bot, go to bot framework
-var appName = 'app name';
-var appId = 'app id';
-var appPassword = 'app password';
-var userId = 'user id';
-var tenantId = 'tenant id';
+// var appName: string = 'app name';
+// var appId: string = 'app id';
+// var appPassword: string = 'app password';
+// var userId: string = 'user id';
+// var tenantId: string = 'tenant id';
+var appName = 'zel-bot-getcc';
+var appId = '3ac5850f-8e82-430b-812c-bee26f5adf77';
+var appPassword = 'OgFmsCEi7ydz7M11kFDTZrd';
+var userId = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
+var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
 var server = restify.createServer();
 server.listen(3978, function () {
     console.log('%s listening to %s', server.name, util.inspect(server.address()));
@@ -115,56 +119,40 @@ bot.dialog('RouteMessageToGeneral', function (session) {
     session.send(generalMessage);
 });
 // example for compose extension
-var wikipediaHandler = function (event, query, callback) {
-    var keyword = 'wiki';
-    if (query.parameters && query.parameters.length > 0) {
-        keyword = query.parameters[0].value;
+var exampleHandler = function (event, query, callback) {
+    // parameters should be identical to manifest
+    if (query.parameters[0].name != "sample-parameter") {
+        return callback(new Error("Parameter mismatch in manifest"), null, 500);
     }
-    var apiUrl = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=[keyword]&srlimit=10&format=json";
-    apiUrl = apiUrl.replace("[keyword]", keyword);
-    apiUrl = encodeURI(apiUrl);
     var logo = {
         alt: "wikipedia logo",
         url: "http://adigaskell.org/wp-content/uploads/2014/08/wikipedia-logo.jpg",
         tap: null
     };
-    https.get(apiUrl, function (resHttp) {
-        var body = '';
-        resHttp.on('data', function (data) {
-            body += data;
-        });
-        resHttp.on('end', function () {
-            try {
-                var callbackReturn_1 = {
-                    composeExtension: {
-                        type: "result",
-                        attachmentLayout: "list",
-                        attachments: []
-                    }
-                };
-                var result = JSON.parse(body).query.search;
-                if (result.length > 0) {
-                    result.forEach(function (oneResult) {
-                        var card = new builder.ThumbnailCard()
-                            .title(oneResult.title)
-                            .images([logo])
-                            .text(oneResult.snippet + " ...")
-                            .buttons([
-                            {
-                                type: "openUrl",
-                                title: "Go to Wikipedia",
-                                value: "https://en.wikipedia.org/wiki/" + encodeURI(oneResult.title)
-                            }
-                        ]);
-                        callbackReturn_1.composeExtension.attachments.push(card['data']);
-                    });
-                }
-                callback(null, callbackReturn_1, 200);
+    try {
+        var callbackReturn = {
+            composeExtension: {
+                type: "result",
+                attachmentLayout: "list",
+                attachments: []
             }
-            catch (e) {
-                callback(e, null, 500);
+        };
+        var card = new builder.ThumbnailCard()
+            .title("sample title")
+            .images([logo])
+            .text("sample text")
+            .buttons([
+            {
+                type: "openUrl",
+                title: "Go to somewhere",
+                value: "https://url.com"
             }
-        });
-    });
+        ]);
+        callbackReturn.composeExtension.attachments.push(card['data']);
+        callback(null, callbackReturn, 200);
+    }
+    catch (e) {
+        callback(e, null, 500);
+    }
 };
-connector.onQuery('insertWikipedia', wikipediaHandler);
+connector.onQuery('exampleHandler', exampleHandler);
