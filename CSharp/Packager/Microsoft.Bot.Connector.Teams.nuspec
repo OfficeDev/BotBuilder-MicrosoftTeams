@@ -23,7 +23,7 @@
   <files>
     <!--<file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" />
     <file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" />-->
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.dll" target="lib\net461\Microsoft.Bot.Connector.Teams.dll" />
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.xml" target="lib\net461\Microsoft.Bot.Connector.Teams.xml" />
+    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.dll" target="lib\net46\Microsoft.Bot.Connector.Teams.dll" />
+    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.xml" target="lib\net46\Microsoft.Bot.Connector.Teams.xml" />
   </files>
 </package>
