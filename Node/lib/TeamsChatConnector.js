@@ -20,6 +20,7 @@ var TeamsChatConnector = (function (_super) {
     function TeamsChatConnector(settings) {
         if (settings === void 0) { settings = {}; }
         var _this = _super.call(this, settings) || this;
+        _this.queryHandlers = {};
         _this.allowedTenants = null;
         return _this;
     }
@@ -39,6 +40,23 @@ var TeamsChatConnector = (function (_super) {
             }
         });
     };
+    TeamsChatConnector.prototype.fetchMemberList = function (serverUrl, conversationId, tenantId, callback) {
+        var options = { customHeaders: {}, jar: false };
+        var restClient = new RestClient(serverUrl, null);
+        var remoteQuery = new RemoteQuery(restClient);
+        this.getAccessToken(function (err, token) {
+            if (!err && token) {
+                options.customHeaders = {
+                    'Authorization': 'Bearer ' + token,
+                    'X-MsTeamsTenantId': tenantId
+                };
+                remoteQuery.fetchMemberList(conversationId, options, callback);
+            }
+            else {
+                callback(new Error('Failed to authorize request'), null);
+            }
+        });
+    };
     TeamsChatConnector.prototype.setAllowedTenants = function (tenants) {
         if (tenants != null) {
             this.allowedTenants = tenants;
@@ -46,6 +64,9 @@ var TeamsChatConnector = (function (_super) {
     };
     TeamsChatConnector.prototype.resetAllowedTenants = function () {
         this.allowedTenants = null;
+    };
+    TeamsChatConnector.prototype.onQuery = function (commandId, handler) {
+        this.queryHandlers[commandId] = handler;
     };
     TeamsChatConnector.prototype.onDispatchEvents = function (events, callback) {
         if (this.allowedTenants) {
@@ -56,10 +77,49 @@ var TeamsChatConnector = (function (_super) {
                     filteredEvents.push(event);
                 }
             }
-            _super.prototype.onDispatchEvents.call(this, filteredEvents, callback);
+            this.dispatchEventOrQuery(filteredEvents, callback);
         }
         else {
-            _super.prototype.onDispatchEvents.call(this, events, callback);
+            this.dispatchEventOrQuery(events, callback);
+        }
+    };
+    TeamsChatConnector.prototype.dispatchEventOrQuery = function (events, callback) {
+        var realEvents = [];
+        for (var _i = 0, events_2 = events; _i < events_2.length; _i++) {
+            var event = events_2[_i];
+            var invoke = event;
+            if (invoke.type == 'invoke') {
+                switch (invoke.name) {
+                    case 'composeExtension/query':
+                        this.dispatchQuery(invoke, callback);
+                        break;
+                    default:
+                        realEvents.push(event);
+                        break;
+                }
+            }
+            else {
+                realEvents.push(event);
+            }
+        }
+        if (realEvents.length > 0) {
+            _super.prototype.onDispatchEvents.call(this, realEvents, callback);
+        }
+    };
+    TeamsChatConnector.prototype.dispatchQuery = function (event, callback) {
+        var query = event.value;
+        var handler = this.queryHandlers[query.commandId];
+        if (handler) {
+            try {
+                handler(event, query, callback);
+            }
+            catch (e) {
+                console.log(e);
+                callback(e, null, 500);
+            }
+        }
+        else {
+            callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
         }
     };
     return TeamsChatConnector;

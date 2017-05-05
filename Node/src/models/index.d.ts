@@ -33,7 +33,7 @@
 
 
 import * as moment from "moment";
-
+import * as builder from 'botbuilder';
 
 /**
  * @class
@@ -49,6 +49,34 @@ import * as moment from "moment";
 export interface ChannelInfo {
   name?: string;
   id?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ChannelAccount class.
+ * @constructor
+ * A channel account object which decribes the member.
+ * @member {string} [id] Unique identifier representing a member
+ *
+ * @member {string} [obejctId] User Id 
+ *
+ * @member {string} [givenName] Name of the member
+ *
+ * @member {string} [surname] Name of the member
+ *
+ * @member {string} [userPrincipalName] Name of the member
+ *
+ * @member {string} [email] Email of the member
+ *
+ *
+ */
+export interface ChannelAccount {
+  id: string;
+  objectId: string;
+  givenName: string;
+  surname: string;
+  email: string;
+  userPrincipalName: string;
 }
 
 /**
@@ -242,6 +270,102 @@ export interface O365ConnectorCard {
 export interface O365ConnectorCardViewAction extends O365ConnectorCardActionBase {
   name?: string;
   target?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionQueryOptions class.
+ * @constructor
+ * Compose extensions query options
+ *
+ * @member {number} [skip] Number of entities to skip
+ *
+ * @member {number} [count] Number of entities to fetch
+ *
+ */
+export interface ComposeExtensionQueryOptions {
+  skip?: number;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionParameter class.
+ * @constructor
+ * Compose extension query parameters
+ *
+ * @member {string} [name] Name of the parameter
+ *
+ * @member {object} [value] Value of the parameter
+ *
+ */
+export interface ComposeExtensionParameter {
+  name?: string;
+  value?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionQuery class.
+ * @constructor
+ * Compose extension query
+ *
+ * @member {string} [commandId] Id of the command assigned by Bot
+ *
+ * @member {array} [parameters] Parameters for the query
+ *
+ * @member {object} [queryOptions]
+ *
+ * @member {number} [queryOptions.skip] Number of entities to skip
+ *
+ * @member {number} [queryOptions.count] Number of entities to fetch
+ *
+ */
+export interface ComposeExtensionQuery {
+  commandId?: string;
+  parameters?: ComposeExtensionParameter[];
+  queryOptions?: ComposeExtensionQueryOptions;
+}
+
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionResult class.
+ * @constructor
+ * Compose extension result
+ *
+ * @member {string} [attachmentLayout] Hint for how to deal with multiple
+ * attachments.
+ *
+ * @member {string} [type] The type of the result
+ *
+ * @member {array} [attachments] Attachments
+ *
+ */
+export interface ComposeExtensionResult {
+  attachmentLayout?: string;
+  type?: string;
+  attachments?: (builder.IAttachment|builder.IIsAttachment)[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ComposeExtensionResponse class.
+ * @constructor
+ * Compose extension response
+ *
+ * @member {object} [composeExtension]
+ *
+ * @member {string} [composeExtension.attachmentLayout] Hint for how to deal
+ * with multiple attachments.
+ *
+ * @member {string} [composeExtension.type] The type of the result
+ *
+ * @member {array} [composeExtension.attachments] Attachments
+ *
+ */
+export interface ComposeExtensionResponse {
+  composeExtension?: ComposeExtensionResult;
 }
 
 export declare class ChannelInfo {
