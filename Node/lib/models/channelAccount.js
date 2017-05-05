@@ -1,8 +1,6 @@
 'use strict';
 var ChannelAccount = (function () {
-    function ChannelAccount(name, id) {
-        this.name = name;
-        this.id = id;
+    function ChannelAccount() {
     }
     ChannelAccount.prototype.mapper = function () {
         return {
@@ -19,9 +17,37 @@ var ChannelAccount = (function () {
                             name: 'String'
                         }
                     },
-                    name: {
+                    objectId: {
                         required: false,
-                        serializedName: 'name',
+                        serializedName: 'objectId',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    givenName: {
+                        required: false,
+                        serializedName: 'givenName',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    surname: {
+                        required: false,
+                        serializedName: 'surname',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    email: {
+                        required: false,
+                        serializedName: 'email',
+                        type: {
+                            name: 'String'
+                        }
+                    },
+                    userPrincipalName: {
+                        required: false,
+                        serializedName: 'userPrincipalName',
                         type: {
                             name: 'String'
                         }

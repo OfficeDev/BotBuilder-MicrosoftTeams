@@ -53,6 +53,34 @@ export interface ChannelInfo {
 
 /**
  * @class
+ * Initializes a new instance of the ChannelAccount class.
+ * @constructor
+ * A channel account object which decribes the member.
+ * @member {string} [id] Unique identifier representing a member
+ *
+ * @member {string} [obejctId] User Id 
+ *
+ * @member {string} [givenName] Name of the member
+ *
+ * @member {string} [surname] Name of the member
+ *
+ * @member {string} [userPrincipalName] Name of the member
+ *
+ * @member {string} [email] Email of the member
+ *
+ *
+ */
+export interface ChannelAccount {
+  id: string;
+  objectId: string;
+  givenName: string;
+  surname: string;
+  email: string;
+  userPrincipalName: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ConversationList class.
  * @constructor
  * List of channels under a team

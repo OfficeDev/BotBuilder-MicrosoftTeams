@@ -39,6 +39,7 @@
 'use strict';
 
 exports.ChannelInfo = require('./channelInfo');
+exports.ChannelAccount = require('./channelAccount');
 exports.ConversationList = require('./conversationList');
 exports.TeamInfo = require('./teamInfo');
 exports.TenantInfo = require('./tenantInfo');

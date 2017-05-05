@@ -40,6 +40,23 @@ var TeamsChatConnector = (function (_super) {
             }
         });
     };
+    TeamsChatConnector.prototype.fetchMemberList = function (serverUrl, conversationId, tenantId, callback) {
+        var options = { customHeaders: {}, jar: false };
+        var restClient = new RestClient(serverUrl, null);
+        var remoteQuery = new RemoteQuery(restClient);
+        this.getAccessToken(function (err, token) {
+            if (!err && token) {
+                options.customHeaders = {
+                    'Authorization': 'Bearer ' + token,
+                    'X-MsTeamsTenantId': tenantId
+                };
+                remoteQuery.fetchMemberList(conversationId, options, callback);
+            }
+            else {
+                callback(new Error('Failed to authorize request'), null);
+            }
+        });
+    };
     TeamsChatConnector.prototype.setAllowedTenants = function (tenants) {
         if (tenants != null) {
             this.allowedTenants = tenants;

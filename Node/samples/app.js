@@ -14,11 +14,16 @@ var restify = require("restify");
 var builder = require("botbuilder");
 var botbuilder_teams_1 = require("botbuilder-teams");
 // Put your registered bot here, to register bot, go to bot framework
-var appName = 'app name';
-var appId = 'app id';
-var appPassword = 'app password';
-var userId = 'user id';
-var tenantId = 'tenant id';
+// var appName: string = 'app name';
+// var appId: string = 'app id';
+// var appPassword: string = 'app password';
+// var userId: string = 'user id';
+// var tenantId: string = 'tenant id';
+var appName = 'zel-bot-getcc';
+var appId = '3ac5850f-8e82-430b-812c-bee26f5adf77';
+var appPassword = 'OgFmsCEi7ydz7M11kFDTZrd';
+var userId = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
+var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
 var server = restify.createServer();
 server.listen(3978, function () {
     console.log('%s listening to %s', server.name, util.inspect(server.address()));
@@ -36,10 +41,9 @@ server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList');
     },
     function (session, results) {
-        console.log(results);
         switch (results.response.index) {
             case 0:
                 session.beginDialog('FetchChannelList');
@@ -53,6 +57,9 @@ bot.dialog('/', [
             case 3:
                 session.beginDialog('RouteMessageToGeneral');
                 break;
+            case 4:
+                session.beginDialog('FetchMemberList');
+                break;
             default:
                 session.endDialog();
                 break;
@@ -61,11 +68,21 @@ bot.dialog('/', [
 ]);
 bot.on('conversationUpdate', function (message) {
     var event = botbuilder_teams_1.TeamsMessage.getConversationUpdateData(message);
-    console.log(event);
 });
 bot.dialog('FetchChannelList', function (session) {
     var teamId = session.message.sourceEvent.team.id;
     connector.fetchChannelList(session.message.address.serviceUrl, teamId, function (err, result) {
+        if (err) {
+            session.endDialog('There is some error');
+        }
+        else {
+            session.endDialog('%s', JSON.stringify(result));
+        }
+    });
+});
+bot.dialog('FetchMemberList', function (session) {
+    var conversationId = session.message.address.conversation.id;
+    connector.fetchMemberList(session.message.address.serviceUrl, conversationId, botbuilder_teams_1.TeamsMessage.getTenantId(session.message), function (err, result) {
         if (err) {
             session.endDialog('There is some error');
         }
