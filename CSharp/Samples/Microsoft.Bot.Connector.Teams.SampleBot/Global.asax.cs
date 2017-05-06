@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.Bot.Connector.Teams.SampleBot
 {
+    using System.Configuration;
     using System.Web.Http;
 
     /// <summary>

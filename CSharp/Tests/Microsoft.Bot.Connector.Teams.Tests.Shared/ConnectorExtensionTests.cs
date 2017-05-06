@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Fakes;
@@ -73,6 +75,41 @@
                     };
 
                 Assert.IsTrue(conClient.Conversations.CreateOrGetDirectConversation(botAccount, userAccount, "TestTenantId").Id == "TestId");
+            }
+        }
+
+        /// <summary>
+        /// Get teams conversation members async test.
+        /// </summary>
+        /// <returns>Task tracking operation.</returns>
+        [TestMethod]
+        public async Task ConnectorExtensions_GetTeamsConversationMembersAsync()
+        {
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test");
+
+            using (ShimsContext.Create())
+            {
+                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
+                (client, request, token) =>
+                {
+                    Assert.IsTrue(request.Headers.Contains("X-MsTeamsTenantId"));
+                    Guid wasteGuid;
+                    Assert.IsTrue(Guid.TryParse(request.Headers.GetValues("X-MsTeamsTenantId").Single(), out wasteGuid));
+                    Assert.AreEqual(Guid.Empty, Guid.Parse(request.Headers.GetValues("X-MsTeamsTenantId").Single()));
+
+                    StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseGetTeamsConversationMembers.json"));
+                    var response = new HttpResponseMessage(HttpStatusCode.OK);
+                    response.Content = stringContent;
+                    return Task.FromResult(response);
+                };
+
+                var memberList = await conClient.Conversations.GetTeamsConversationMembersAsync("TestConversationId", Guid.Empty.ToString());
+
+                Assert.IsTrue(memberList.Count() == 2);
+                Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.ObjectId)));
+                Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.UserPrincipalName)));
+                Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Id)));
+                Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Email)));
             }
         }
     }

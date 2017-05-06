@@ -15,7 +15,7 @@
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
       </group>-->
       <group targetFramework="net46">
-        <dependency id="Microsoft.Bot.Builder" version="3.5.8.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Bot.Builder" version="3.5.8.1" exclude="Build,Analyzers" />
         <!--<dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" exclude="Build,Analyzers" />-->
       </group>
     </dependencies>

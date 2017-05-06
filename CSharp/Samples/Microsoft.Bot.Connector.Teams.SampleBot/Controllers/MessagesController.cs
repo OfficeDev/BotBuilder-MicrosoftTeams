@@ -80,7 +80,7 @@
                         var response = await client.Conversations.GetTeamsConversationMembersAsync(activity.Conversation.Id, activity.GetTenantId());
                         StringBuilder stringBuilder = new StringBuilder();
                         Activity replyActivity = activity.CreateReply();
-                        replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.Name + " --> " + info.Id));
+                        replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
                         await client.Conversations.ReplyToActivityAsync(replyActivity);
                     }
                     else
