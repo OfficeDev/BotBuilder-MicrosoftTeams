@@ -54,5 +54,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleActivityNoMentions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleResponseGetTeamsConversationMembers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

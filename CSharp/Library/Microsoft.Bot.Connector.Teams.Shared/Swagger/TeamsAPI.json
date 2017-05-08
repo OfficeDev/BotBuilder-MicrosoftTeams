@@ -352,6 +352,10 @@
         },
         "queryOptions": {
           "$ref": "#/definitions/ComposeExtensionQueryOptions"
+        },
+        "authenticationCode": {
+          "description": "Authentication code used by bot to authenticate the request.",
+          "type": "string"
         }
       }
     },
@@ -426,6 +430,55 @@
           "properties": {
             "preview": {
               "$ref": "#/definitions/Attachment"
+            }
+          }
+        }
+      ]
+    },
+
+    "ChannelAccount": {
+      "description": "Channel account information needed to route a message",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Channel id for the user or bot on this channel (Example: joe@smith.com, or @joesmith or 123456)",
+          "type": "string"
+        },
+        "name": {
+          "description": "Display friendly name",
+          "type": "string"
+        }
+      }
+    },
+
+    "TeamsChannelAccount": {
+      "description": "Teams channel account detailing user Azure Active Directory details.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChannelAccount"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "objectId": {
+              "description": "Unique Azure Active Directory object Id.",
+              "type": "string"
+            },
+            "givenName": {
+              "description": "Given name part of the user name.",
+              "type": "string"
+            },
+            "surname": {
+              "description": "Surname part of the user name.",
+              "type": "string"
+            },
+            "email": {
+              "description": "Email Id of the user.",
+              "type": "string"
+            },
+            "userPrincipalName": {
+              "description": "Unique user principal name",
+              "type": "string"
             }
           }
         }

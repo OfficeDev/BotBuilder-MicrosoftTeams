@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -74,6 +75,14 @@
 
                         await client.Conversations.SendToConversationAsync(newActivity, response.Id);
                     }
+                    else if (activity.Text.Contains("GetMembers"))
+                    {
+                        var response = await client.Conversations.GetTeamsConversationMembersAsync(activity.Conversation.Id, activity.GetTenantId());
+                        StringBuilder stringBuilder = new StringBuilder();
+                        Activity replyActivity = activity.CreateReply();
+                        replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
+                        await client.Conversations.ReplyToActivityAsync(replyActivity);
+                    }
                     else
                     {
                         var accountList = client.Conversations.GetConversationMembers(activity.Conversation.Id);
@@ -82,7 +91,8 @@
                         replyActivity.Text = "Help " +
                             "<p>Type GetChannels to get List of Channels. </p>" +
                             "<p>Type GetTenantId to get Tenant Id </p>" +
-                            "<p>Type Create1on1 to create one on one conversation. </p>";
+                            "<p>Type Create1on1 to create one on one conversation. </p>" +
+                            "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>";
                         replyActivity.AddMentionToText(activity.From);
                         await client.Conversations.ReplyToActivityAsync(replyActivity);
                     }

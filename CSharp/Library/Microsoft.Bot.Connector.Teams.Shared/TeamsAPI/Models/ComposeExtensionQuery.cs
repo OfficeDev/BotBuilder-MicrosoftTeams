@@ -21,11 +21,14 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         /// <param name="commandId">Id of the command assigned by Bot</param>
         /// <param name="parameters">Parameters for the query</param>
-        public ComposeExtensionQuery(string commandId = default(string), System.Collections.Generic.IList<ComposeExtensionParameter> parameters = default(System.Collections.Generic.IList<ComposeExtensionParameter>), ComposeExtensionQueryOptions queryOptions = default(ComposeExtensionQueryOptions))
+        /// <param name="authenticationCode">Authentication code used by bot
+        /// to authenticate the request.</param>
+        public ComposeExtensionQuery(string commandId = default(string), System.Collections.Generic.IList<ComposeExtensionParameter> parameters = default(System.Collections.Generic.IList<ComposeExtensionParameter>), ComposeExtensionQueryOptions queryOptions = default(ComposeExtensionQueryOptions), string authenticationCode = default(string))
         {
             CommandId = commandId;
             Parameters = parameters;
             QueryOptions = queryOptions;
+            AuthenticationCode = authenticationCode;
         }
 
         /// <summary>
@@ -44,6 +47,13 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "queryOptions")]
         public ComposeExtensionQueryOptions QueryOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets authentication code used by bot to authenticate the
+        /// request.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "authenticationCode")]
+        public string AuthenticationCode { get; set; }
 
     }
 }
