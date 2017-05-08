@@ -27,10 +27,7 @@ export class ComposeExtensionResponse {
 
 	private data: IComposeExtensionResponse = {
 		composeExtension: {
-			attachmentLayout: "",
-		  type: "",
-		  attachments: [],
-		  suggestedActions: []
+		  type: ""
 		}
 	}
 
