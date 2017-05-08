@@ -36,11 +36,11 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, ComposeExtensionResult, ComposeExtensionParameter, ComposeExtensionResponse } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse } from './models';
 
 var WebResource = msRest.WebResource;
 
-export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: ComposeExtensionResult, statusCode: number) => void) => void;
+export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -163,7 +163,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
     }
   }
 
-  private dispatchQuery(event: IInvokeEvent, callback: (err: Error, body: ComposeExtensionResult, status?: number) => void): void {
+  private dispatchQuery(event: IInvokeEvent, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
     let query = <ComposeExtensionQuery>event.value;
     let handler = this.queryHandlers[query.commandId];
     if (handler) {

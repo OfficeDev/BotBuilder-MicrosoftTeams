@@ -13,20 +13,14 @@ import * as util from 'util';
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
 import * as https from 'https';
-import { TeamsChatConnector, TeamsMessage, TeamsModels } from 'botbuilder-teams';
+import * as teams from 'botbuilder-teams';
 
 // Put your registered bot here, to register bot, go to bot framework
-// var appName: string = 'app name';
-// var appId: string = 'app id';
-// var appPassword: string = 'app password';
-// var userId: string = 'user id';
-// var tenantId: string = 'tenant id';
-
-var appName: string = 'zel-bot-getcc';
-var appId: string = '3ac5850f-8e82-430b-812c-bee26f5adf77';
-var appPassword: string = 'OgFmsCEi7ydz7M11kFDTZrd';
-var userId: string = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
-var tenantId: string = '72f988bf-86f1-41af-91ab-2d7cd011db47';
+var appName: string = 'app name';
+var appId: string = 'app id';
+var appPassword: string = 'app password';
+var userId: string = 'user id';
+var tenantId: string = 'tenant id';
 
 var server = restify.createServer(); 
 server.listen(3978, function () {    
@@ -34,7 +28,7 @@ server.listen(3978, function () {
 });  
 
 // Create chat bot 
-var connector = new TeamsChatConnector({     
+var connector = new teams.TeamsChatConnector({     
   appId: appId,     
   appPassword: appPassword 
 }); 
@@ -76,7 +70,7 @@ bot.dialog('/', [
 ]); 
 
 bot.on('conversationUpdate', function (message) {
-	var event = TeamsMessage.getConversationUpdateData(message);
+	var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 
 bot.dialog('FetchChannelList', function (session: builder.Session) {
@@ -100,7 +94,7 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
 	connector.fetchMemberList(
 		(<builder.IChatConnectorAddress>session.message.address).serviceUrl,
 		conversationId,
-		TeamsMessage.getTenantId(session.message),
+		teams.TeamsMessage.getTenantId(session.message),
 		(err, result) => {
 			if (err) {
 				session.endDialog('There is some error');
@@ -118,8 +112,8 @@ bot.dialog('MentionUser', function (session: builder.Session) {
 	  name: 'Bill Zeng',
 	  id: userId
 	};
-	var msg = new TeamsMessage(session).text(TeamsMessage.getTenantId(session.message));
-	var mentionedMsg = msg.addMentionToText(toMention);
+	var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
+	var mentionedMsg = (<teams.TeamsMessage>msg).addMentionToText(toMention);
 	session.send(mentionedMsg);
 });
 
@@ -150,14 +144,14 @@ bot.dialog('RouteMessageToGeneral', function (session: builder.Session) {
 	  name: 'Bill Zeng',
 	  id: userId
 	};
-	var msg = new TeamsMessage(session).text(TeamsMessage.getTenantId(session.message));
-	var mentionedMsg = msg.addMentionToText(toMention);
+	var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
+	var mentionedMsg = (<teams.TeamsMessage>msg).addMentionToText(toMention);
 	var generalMessage = mentionedMsg.routeReplyToGeneralChannel();
 	session.send(generalMessage);
 });
 
 // example for compose extension
-var composeExtensionHandler = function (event: builder.IEvent, query: TeamsModels.ComposeExtensionQuery, callback: (err: Error, result: TeamsModels.ComposeExtensionResult, statusCode: number) => void): void {
+var composeExtensionHandler = function (event: builder.IEvent, query: teams.ComposeExtensionQuery, callback: (err: Error, result: teams.IComposeExtensionResponse, statusCode: number) => void): void {
 	// parameters should be identical to manifest
 	if (query.parameters[0].name != "sample-parameter") {
 		return callback(new Error("Parameter mismatch in manifest"), null, 500);
@@ -170,14 +164,6 @@ var composeExtensionHandler = function (event: builder.IEvent, query: TeamsModel
 	};
 
 	try {
-		let callbackReturn = { 
-			composeExtension : {
-				type: "result",
-        attachmentLayout: "list",
-        attachments: []
-			}
-		};
-		
 		let card = new builder.ThumbnailCard()
 										.title("sample title")
 										.images([logo])
@@ -189,8 +175,8 @@ var composeExtensionHandler = function (event: builder.IEvent, query: TeamsModel
 												value: "https://url.com"
 											}
 										]);
-		callbackReturn.composeExtension.attachments.push(card['data']);
-		callback(null, callbackReturn, 200);
+		let response = teams.ComposeExtensionResponse.result("list").attachments([card.toAttachment()]);
+		callback(null, response.toResponse(), 200);
 	}
 	catch (e) {
 		callback(e, null, 500);

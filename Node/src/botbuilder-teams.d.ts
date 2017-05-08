@@ -404,17 +404,45 @@ export class ComposeExtensionResponse {
 
   constructor(type: string);
 
-  result(attachmentLayout: string):  ComposeExtensionResponse;
+  static result(attachmentLayout: string):  ComposeExtensionResponse;
 
-  auth(): ComposeExtensionResponse;
+  static auth(): ComposeExtensionResponse;
 
-  config(): ComposeExtensionResponse;
+  static config(): ComposeExtensionResponse;
 
   attachments(list: ComposeExtensionAttachment[]): ComposeExtensionResponse;
 
   actions(list: builder.CardAction[]): ComposeExtensionResponse;
 
   toResponse(): IComposeExtensionResponse
+}
+
+export declare class TeamEventBase {
+  constructor(team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class ChannelCreatedEvent {
+  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class ChannelDeletedEvent {
+  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class ChannelRenamedEvent {
+  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class MembersAddedEvent {
+  constructor(membersAdded: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class MembersRemovedEvent {
+  constructor(membersRemoved: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
+}
+
+export declare class TeamRenamedEvent {
+  constructor(team: TeamInfo, tenant: TenantInfo);
 }
 
 export declare class ChannelInfo {
@@ -427,4 +455,93 @@ export declare class TeamInfo {
 
 export declare class TenantInfo {
   constructor(id: string);
+}
+
+export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+
+export interface IInvokeEvent extends builder.IEvent {
+  name: string;
+  value: any;
+}
+
+export class TeamsChatConnector extends builder.ChatConnector {
+
+  constructor(settings?: builder.IChatConnectorSettings);
+
+  /**
+  *  Return a list of conversations in a team
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
+
+  /**
+  *  Return a list of conversations in a team
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {string} tenantId - The tenantId, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchMemberList(serverUrl: string, conversationId: string, tenantId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
+
+  /**
+  *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
+  *  @param {array} tenants - Ids of allowed tenants.
+  */
+  public setAllowedTenants(tenants: string[]);
+
+  /**
+  *  Reset allowed tenants, ask connector to receive every message sent from any source.
+  */
+  public resetAllowedTenants();
+
+  public onQuery(commandId: string, handler: ComposeExtensionQueryHandlerType): void;
+}
+
+export enum MentionTextLocation {
+  PrependText,
+  AppendText
+}
+
+export class TeamsMessage extends builder.Message {
+  
+  constructor(session?: builder.Session);
+
+  /**
+  *  Enable bot to send a message to mention user
+  *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
+  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
+  *  @param {string} mentionText - text to mention
+  */
+  public addMentionToText(mentionedUser: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
+
+  /**
+  *  Return conversation update related event 
+  *  @param {IConversationUpdate} message - user message like adding member to channel, rename etc
+  */
+  public static getConversationUpdateData(message: builder.IConversationUpdate): TeamEventBase; 
+
+  /**
+  *  Get message related team info
+  *  @param {IEvent} message - The message sent to bot.
+  */
+  public static getGeneralChannel(message: builder.IEvent): ChannelInfo;
+
+  /**
+  *  Route message to general channel
+  */
+  public routeReplyToGeneralChannel(): TeamsMessage;
+
+  /**
+  *  Get message related tenant id
+  *  @param {IEvent} message - The message sent to bot.
+  */
+  public static getTenantId(message: builder.IEvent): string;
+
+  /**
+  *  Retrun message without mentions
+  *  @param {IMessage} message - The message with mentions
+  */
+  public static getTextWithoutMentions(message: builder.IMessage): string;
 }
