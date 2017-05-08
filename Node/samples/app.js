@@ -12,24 +12,19 @@ exports.__esModule = true;
 var util = require("util");
 var restify = require("restify");
 var builder = require("botbuilder");
-var botbuilder_teams_1 = require("botbuilder-teams");
+var teams = require("botbuilder-teams");
 // Put your registered bot here, to register bot, go to bot framework
-// var appName: string = 'app name';
-// var appId: string = 'app id';
-// var appPassword: string = 'app password';
-// var userId: string = 'user id';
-// var tenantId: string = 'tenant id';
-var appName = 'zel-bot-getcc';
-var appId = '3ac5850f-8e82-430b-812c-bee26f5adf77';
-var appPassword = 'OgFmsCEi7ydz7M11kFDTZrd';
-var userId = 'e5ef3302-c442-4c3e-88ba-d4c5602b761a';
-var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
+var appName = 'app name';
+var appId = 'app id';
+var appPassword = 'app password';
+var userId = 'user id';
+var tenantId = 'tenant id';
 var server = restify.createServer();
 server.listen(3978, function () {
     console.log('%s listening to %s', server.name, util.inspect(server.address()));
 });
 // Create chat bot 
-var connector = new botbuilder_teams_1.TeamsChatConnector({
+var connector = new teams.TeamsChatConnector({
     appId: appId,
     appPassword: appPassword
 });
@@ -67,7 +62,7 @@ bot.dialog('/', [
     }
 ]);
 bot.on('conversationUpdate', function (message) {
-    var event = botbuilder_teams_1.TeamsMessage.getConversationUpdateData(message);
+    var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 bot.dialog('FetchChannelList', function (session) {
     var teamId = session.message.sourceEvent.team.id;
@@ -82,7 +77,7 @@ bot.dialog('FetchChannelList', function (session) {
 });
 bot.dialog('FetchMemberList', function (session) {
     var conversationId = session.message.address.conversation.id;
-    connector.fetchMemberList(session.message.address.serviceUrl, conversationId, botbuilder_teams_1.TeamsMessage.getTenantId(session.message), function (err, result) {
+    connector.fetchMemberList(session.message.address.serviceUrl, conversationId, teams.TeamsMessage.getTenantId(session.message), function (err, result) {
         if (err) {
             session.endDialog('There is some error');
         }
@@ -97,7 +92,7 @@ bot.dialog('MentionUser', function (session) {
         name: 'Bill Zeng',
         id: userId
     };
-    var msg = new botbuilder_teams_1.TeamsMessage(session).text(botbuilder_teams_1.TeamsMessage.getTenantId(session.message));
+    var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
     var mentionedMsg = msg.addMentionToText(toMention);
     session.send(mentionedMsg);
 });
@@ -125,7 +120,7 @@ bot.dialog('RouteMessageToGeneral', function (session) {
         name: 'Bill Zeng',
         id: userId
     };
-    var msg = new botbuilder_teams_1.TeamsMessage(session).text(botbuilder_teams_1.TeamsMessage.getTenantId(session.message));
+    var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
     var mentionedMsg = msg.addMentionToText(toMention);
     var generalMessage = mentionedMsg.routeReplyToGeneralChannel();
     session.send(generalMessage);
@@ -142,13 +137,6 @@ var composeExtensionHandler = function (event, query, callback) {
         tap: null
     };
     try {
-        var callbackReturn = {
-            composeExtension: {
-                type: "result",
-                attachmentLayout: "list",
-                attachments: []
-            }
-        };
         var card = new builder.ThumbnailCard()
             .title("sample title")
             .images([logo])
@@ -160,8 +148,8 @@ var composeExtensionHandler = function (event, query, callback) {
                 value: "https://url.com"
             }
         ]);
-        callbackReturn.composeExtension.attachments.push(card['data']);
-        callback(null, callbackReturn, 200);
+        var response = teams.ComposeExtensionResponse.result("list").attachments([card.toAttachment()]);
+        callback(null, response.toResponse(), 200);
     }
     catch (e) {
         callback(e, null, 500);

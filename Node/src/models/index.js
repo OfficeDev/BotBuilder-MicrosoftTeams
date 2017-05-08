@@ -41,6 +41,7 @@
 exports.ChannelInfo = require('./channelInfo');
 exports.ChannelAccount = require('./channelAccount');
 exports.ConversationList = require('./conversationList');
+exports.ComposeExtensionResponse = require('./composeExtensionResponse').ComposeExtensionResponse;
 exports.TeamInfo = require('./teamInfo');
 exports.TenantInfo = require('./tenantInfo');
 exports.TeamsChannelData = require('./teamsChannelData');
