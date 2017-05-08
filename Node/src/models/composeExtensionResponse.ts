@@ -36,7 +36,9 @@ export class ComposeExtensionResponse {
 	}
 
 	public static result(attachmentLayout: string = "list") {
-		return new ComposeExtensionResponse("result") 
+		var obj = new ComposeExtensionResponse("result");
+		obj.data.composeExtension.attachmentLayout = attachmentLayout;
+		return obj; 
 	}
 
 	public static auth() {
