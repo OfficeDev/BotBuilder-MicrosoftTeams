@@ -25,6 +25,9 @@ If you are using Node, grab the [botbuilder-teams](https://www.npmjs.com/package
 * Sample bot [C#](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/tree/master/CSharp/Samples/Microsoft.Bot.Connector.Teams.SampleBot)
 * Sample bot [Node](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/tree/master/Node/samples)
 
+# Questions, bugs, feature requests, and contributions
+Please review the information [here](https://msdn.microsoft.com/en-us/microsoft-teams/feedback).
+
 # Contributing
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
