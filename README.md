@@ -6,9 +6,9 @@ The Microsoft Bot Builder SDK Teams Extensions allow you to build bots for Micro
 
 * Accept/reject messages from specific tenants
 * Fetch a list of channels in a team
+* Fetch profile info about all members of a team
 * Fetch tenant-id from an incoming message to bot
 * Create 1:1 chat with a specific user
-* Get profile info about members of a team
 * Mention a specific user
 * Consume various events like channel-created, team-renamed, etc.
 * Write compose extensions
