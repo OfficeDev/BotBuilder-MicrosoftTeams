@@ -376,7 +376,7 @@ export interface ComposeExtensionResult {
   attachmentLayout?: string;
   type?: string;
   attachments?: ComposeExtensionAttachment[];
-  suggestedActions?: builder.CardAction[]
+  suggestedActions?: builder.ISuggestedActions
 }
 
 

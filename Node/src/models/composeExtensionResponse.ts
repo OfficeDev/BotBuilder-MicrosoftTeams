@@ -61,11 +61,11 @@ export class ComposeExtensionResponse {
 	}
 
 	public actions(list: builder.CardAction[]): this {
-		this.data.composeExtension.suggestedActions = [];
+		this.data.composeExtension.suggestedActions = { actions: [] };
 		if (list) {
 			for (var i = 0; i < list.length; i++) {
 				var action = list[i];
-				this.data.composeExtension.suggestedActions.push(action);
+				this.data.composeExtension.suggestedActions.actions.push(action.toAction());
 			}
 		}
 		return this;
