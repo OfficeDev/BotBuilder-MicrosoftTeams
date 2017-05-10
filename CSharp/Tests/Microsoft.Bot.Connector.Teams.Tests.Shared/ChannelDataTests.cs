@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 //
 // Microsoft Bot Framework: http://botframework.com
+// Microsoft Teams: https://dev.office.com/microsoft-teams
 //
 // Bot Builder SDK GitHub:
 // https://github.com/Microsoft/BotBuilder
