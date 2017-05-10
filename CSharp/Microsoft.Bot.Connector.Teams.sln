@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}"
 EndProject
@@ -32,10 +32,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Bot.Connector.Tea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Bot.Connector.Teams.Tests.NetFramework", "Tests\Microsoft.Bot.Connector.Teams.Tests.NetFramework\Microsoft.Bot.Connector.Teams.Tests.NetFramework.csproj", "{D63AF194-744A-4207-A223-B6CFB5A0D6C5}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Bot.Connector.Teams.SampleBot.Shared", "Samples\Microsoft.Bot.Connector.Teams.SampleBot.Shared\Microsoft.Bot.Connector.Teams.SampleBot.Shared.shproj", "{3AA653DD-A278-4C8D-A0C8-1DFD47446EC0}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Samples\Microsoft.Bot.Connector.Teams.SampleBot.Shared\Microsoft.Bot.Connector.Teams.SampleBot.Shared.projitems*{3aa653dd-a278-4c8d-a0c8-1dfd47446ec0}*SharedItemsImports = 13
 		Library\Microsoft.Bot.Connector.Teams.Shared\Microsoft.Bot.Connector.Teams.Shared.projitems*{5d5f91d9-d2b4-4ef5-b0e4-39b9125a9018}*SharedItemsImports = 13
 		Tests\Microsoft.Bot.Connector.Teams.Tests.Shared\Microsoft.Bot.Connector.Teams.Tests.Shared.projitems*{8e7d4c7e-7d02-4e8a-afd5-1be8879bb8a6}*SharedItemsImports = 13
+		Samples\Microsoft.Bot.Connector.Teams.SampleBot.Shared\Microsoft.Bot.Connector.Teams.SampleBot.Shared.projitems*{d3261462-9ccb-430c-a63d-4ada0103d0ac}*SharedItemsImports = 4
 		Tests\Microsoft.Bot.Connector.Teams.Tests.Shared\Microsoft.Bot.Connector.Teams.Tests.Shared.projitems*{d63af194-744a-4207-a223-b6cfb5a0d6c5}*SharedItemsImports = 4
 		Library\Microsoft.Bot.Connector.Teams.Shared\Microsoft.Bot.Connector.Teams.Shared.projitems*{f7ae9994-f816-4c28-bd15-8882205bfe08}*SharedItemsImports = 4
 	EndGlobalSection
@@ -80,5 +84,6 @@ Global
 		{D3261462-9CCB-430C-A63D-4ADA0103D0AC} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
 		{F80DCDD2-C7D9-4DC0-8C58-37AEA73652EA} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
 		{D63AF194-744A-4207-A223-B6CFB5A0D6C5} = {DA3220AD-3DBA-4102-B1D4-3ED8C39CC42D}
+		{3AA653DD-A278-4C8D-A0C8-1DFD47446EC0} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
 	EndGlobalSection
 EndGlobal
