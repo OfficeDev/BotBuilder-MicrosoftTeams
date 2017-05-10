@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-teams",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Microsoft Teams Botbuilder extension SDK",
   "scripts": {
     "test": "mocha"
@@ -8,6 +8,7 @@
   "author": "Microsoft Corp",
   "license": "MIT",
   "main": "./lib/botbuilder-teams.js",
+  "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
     "botbuilder": "^3.8.0-beta6",
     "http": "0.0.0",
