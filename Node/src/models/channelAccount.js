@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 // 
-// Microsoft Bot Framework: http://botframework.com
+// Microsoft Teams: https://dev.office.com/microsoft-teams
 // 
-// Bot Builder SDK Github:
-// https://github.com/Microsoft/BotBuilder
+// Bot Builder Microsoft Teams SDK GitHub
+// https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
 // 
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
@@ -45,19 +45,21 @@
  * @constructor
  * A channel account object which decribes the member.
  *
- * @member {string} [id] Unique identifier representing a member
+ * @member {string} [id] ID of the user in Microsoft Teams
  *
- * @member {string} [objectId] Unique Azure Active Directory object 
+ * @member {string} [objectId] Unique identifier of the user in AAD
  *
- * @member {string} [givenName] Given name of the member
+ * @member {string} [givenName] The given name (first name) of the user
  *
- * @member {string} [surname] Surname of the member
+ * @member {string} [surname] The user’s surname (family name)
  *
  * @member {string} [email] Email of the member
  *
- * @member {string} [userPrincipalName] Name of the member in system, for most cases it is an email.
+ * @member {string} [userPrincipalName] The user principal name (UPN) of the user. The UPN is an Internet-style login name for the user based on the Internet standard RFC 822. By convention, this should map to the user's email name.
+ *
  *
  */
+
 class ChannelAccount {
   constructor() {
   }

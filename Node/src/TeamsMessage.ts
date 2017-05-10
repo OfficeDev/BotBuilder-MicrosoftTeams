@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 // 
-// Microsoft Bot Framework: http://botframework.com
+// Microsoft Teams: https://dev.office.com/microsoft-teams
 // 
-// Bot Builder SDK Github:
-// https://github.com/Microsoft/BotBuilder
+// Bot Builder Microsoft Teams SDK GitHub
+// https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
 // 
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
