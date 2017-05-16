@@ -40,18 +40,18 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Conversation update tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ConversationUpdateTests
     {
         /// <summary>
         /// Conversation update test for event channel created.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_ChannelCreated()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityChannelCreated.json"));
@@ -68,7 +68,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Conversation update test for event channel deleted.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_ChannelDeleted()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityChannelDeleted.json"));
@@ -85,7 +85,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Conversation update test for event channel renamed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_ChannelRenamed()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityChannelRenamed.json"));
@@ -102,7 +102,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Conversation update test for event members added.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_MembersAdded()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityMembersAdded.json"));
@@ -119,7 +119,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Conversation update test for event members removed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_MembersRemoved()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityMembersRemoved.json"));
@@ -136,7 +136,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Conversation update test for event team renamed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_TeamRenamed()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityTeamRenamed.json"));
@@ -153,7 +153,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Conversation update test for when activity is not an update.
         /// </summary>
         [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
+        [Test]
         public void ConversatioUpdate_NonUpdateActivity()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -164,7 +164,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Conversation update test for missing channel data.
         /// </summary>
         [ExpectedException(typeof(ArgumentNullException))]
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_MissingChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityTeamRenamed.json"));
@@ -176,7 +176,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Conversation update test for missing event type.
         /// </summary>
         [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
+        [Test]
         public void ConversationUpdate_MissingEventType()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityTeamRenamed.json"));

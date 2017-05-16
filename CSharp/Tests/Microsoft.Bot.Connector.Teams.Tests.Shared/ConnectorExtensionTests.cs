@@ -46,20 +46,20 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector.Teams.Models;
     using Microsoft.QualityTools.Testing.Fakes;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using NUnit.Framework;
 
     /// <summary>
     /// Connector extension tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ConnectorExtensionTests
     {
         /// <summary>
         /// Connector extensions test for creating 1 on 1 conversation between bot and user.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConnectorExtensions_Create1on1()
         {
             JsonSerializerSettings serializerSettings = new JsonSerializerSettings();
@@ -117,7 +117,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Get teams conversation members async test.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task ConnectorExtensions_GetTeamsConversationMembersAsync()
         {
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test");

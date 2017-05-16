@@ -40,18 +40,18 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Teams channel data tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ChannelDataTests
     {
         /// <summary>
         /// Channel data test to get general channel.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ChannelData_GetGeneralChannel()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -68,7 +68,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Channel data test to get general channel while channel data is missing.
         /// </summary>
         [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
+        [Test]
         public void ChannelData_GetGeneralChannelNoChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -80,7 +80,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Channel data test to get general channel with invalid channel data.
         /// </summary>
         [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
+        [Test]
         public void ChannelData_GetGeneralChannelInvalidChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -93,7 +93,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Channel data test to check properties.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ChannelData_PropertyCheck()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -110,7 +110,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// <summary>
         /// Channel data test to get tenant Id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ChannelData_GetTenantId()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -123,7 +123,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Channel data test to get tenant Id with missing channel data.
         /// </summary>
         [ExpectedException(typeof(ArgumentNullException))]
-        [TestMethod]
+        [Test]
         public void ChannelData_GetTenantIdMissingChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -135,7 +135,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Channel data test to get tenant Id with missing tenant Id.
         /// </summary>
         [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
+        [Test]
         public void ChannelData_GetTenantIdMissingTenantData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));

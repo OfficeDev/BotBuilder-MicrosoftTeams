@@ -6,7 +6,7 @@
     <SharedGUID>8e7d4c7e-7d02-4e8a-afd5-1be8879bb8a6</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Microsoft.Bot.Connector.Teams.Tests.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Microsoft.Bot.Connector.Teams.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ComposeExtensionTests.cs" />
