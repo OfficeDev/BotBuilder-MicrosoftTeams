@@ -1,6 +1,6 @@
 language: csharp
 solution: CSharp/Microsoft.Bot.Connector.Teams.sln
-dotnet: 1.0.1
+dotnet: 1.0.3
 mono: latest
 sudo: required
 dist: trusty
