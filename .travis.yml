@@ -7,5 +7,5 @@ install:
   - nuget restore CSharp/Microsoft.Bot.Connector.Teams.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Release CSharp/Microsoft.Bot.Connector.Teams.sln
+  - msbuild /p:Configuration=Release CSharp/Microsoft.Bot.Connector.Teams.sln /p:VisualStudioVersion=15.0
   - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./CSharp/Tests/Microsoft.Bot.Connector.Teams.Tests.NetFramework/bin/Release/Microsoft.Bot.Connector.Teams.Tests.NetFramework.dll
