@@ -1,7 +1,7 @@
 language: csharp
 solution: CSharp/Microsoft.Bot.Connector.Teams.sln
 mono: none
-dotnet: 1.1.2
+dotnet: 1.0.4
 dist: trusty
 install:
   - nuget restore CSharp/Microsoft.Bot.Connector.Teams.sln
