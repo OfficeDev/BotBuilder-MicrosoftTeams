@@ -1,5 +1,8 @@
 language: csharp
 solution: CSharp/Microsoft.Bot.Connector.Teams.sln
+mono: none
+dotnet: 1.1.2
+dist: trusty
 install:
   - nuget restore CSharp/Microsoft.Bot.Connector.Teams.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
