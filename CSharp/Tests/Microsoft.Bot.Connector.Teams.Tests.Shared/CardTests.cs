@@ -45,18 +45,18 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Custom card tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CardTests
     {
         /// <summary>
         /// O365 connector card.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CardTests_O365ConnectorCard()
         {
             var section = new O365ConnectorCardSection(

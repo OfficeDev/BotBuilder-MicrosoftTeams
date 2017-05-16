@@ -37,19 +37,19 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
 {
     using System.IO;
     using Microsoft.Bot.Connector.Teams.Models;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
+    using NUnit.Framework;
 
     /// <summary>
     /// Compose extension tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ComposeExtensionTests
     {
         /// <summary>
         /// Tests IsComposeExtension logic by providing a valid compose extension file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ComposeExtension_IsComposeExtensionValidComposeExtension()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityComposeExtension.json"));
@@ -59,7 +59,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
         /// <summary>
         /// Tests IsComposeExtension logic by providing an invalid compose extension file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ComposeExtension_IsComposeExtensionInvalidComposeExtension()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityInvoke.json"));
@@ -69,7 +69,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
         /// <summary>
         /// Tests get compose extension data logic.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ComposeExtension_GetComposeExtensionData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityComposeExtension.json"));

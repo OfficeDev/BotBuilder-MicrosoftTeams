@@ -47,18 +47,18 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Microsoft.Rest;
     using Models;
     using Newtonsoft.Json;
-    using VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Teams Fetch Channel list tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public partial class TeamsAPITests
     {
         /// <summary>
         /// Teams API test for fetching channel list.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TeamsAPI_FetchChannelListTest()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -106,7 +106,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetching channel list async.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task TeamsAPI_FetchChannelListAsyncTest()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -154,7 +154,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetching channel list async with advanced options.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task TeamsAPI_FetchChannelListAsyncWithHttpMessagesTest()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -207,7 +207,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetch channel list with invalid http code in response.
         /// </summary>
         [ExpectedException(typeof(HttpOperationException))]
-        [TestMethod]
+        [Test]
         public void TeamsAPI_FetchChannelListTestInvalidHttpCode()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -237,7 +237,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetch channel list with invalid http code and no response body.
         /// </summary>
         [ExpectedException(typeof(HttpOperationException))]
-        [TestMethod]
+        [Test]
         public void TeamsAPI_FetchChannelListTestInvalidHttpCodeWithoutResponseContent()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -265,7 +265,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetch channel list with invalid http code in response and response body.
         /// </summary>
         [ExpectedException(typeof(SerializationException))]
-        [TestMethod]
+        [Test]
         public void TeamsAPI_FetchChannelListTestInvalidResonse()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
@@ -295,7 +295,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Teams API test for fetch channel list with invalid team Id.
         /// </summary>
         [ExpectedException(typeof(ValidationException))]
-        [TestMethod]
+        [Test]
         public void TeamsAPI_FetchChannelListTestInvalidTeamId()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;

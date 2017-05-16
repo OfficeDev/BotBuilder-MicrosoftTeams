@@ -41,20 +41,20 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using NUnit.Framework;
     using Teams;
-    using VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
     /// Tenant filtering tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class TenantFilteringTests
     {
         /// <summary>
         /// Tenant filtering test with non-allowed tenant Id.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task NetFramework_TenantFiltering_WrongTenantId()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -74,7 +74,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Tenant filtering test with no channel data.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task NetFramework_TenantFiltering_NoChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -94,7 +94,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Tenant filtering test with invalid channel data.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task NetFramework_TenantFiltering_InvalidChannelData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -114,7 +114,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Tenant filtering test with missing tenant data.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task NetFramework_TenantFiltering_MissingTenantData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
@@ -136,7 +136,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// Tenant filtering test with allowed tenant Id.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
-        [TestMethod]
+        [Test]
         public async Task NetFramework_TenantFiltering_AllowedTenantData()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));

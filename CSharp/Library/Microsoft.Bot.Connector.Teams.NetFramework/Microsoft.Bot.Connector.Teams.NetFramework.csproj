@@ -97,8 +97,7 @@
   </ItemGroup>
   <Import Project="..\Microsoft.Bot.Connector.Teams.Shared\Microsoft.Bot.Connector.Teams.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(BuildRoot)\Build\SkypeTeams.targets" />
   <Target Name="GenerateCodeFromSpecs" BeforeTargets="BeforeResolveReferences">
-    <Exec Command="..\Microsoft.Bot.Connector.Teams.Shared\generateClient.cmd" WorkingDirectory="..\Microsoft.Bot.Connector.Teams.Shared" />
+    <Exec Command="..\Microsoft.Bot.Connector.Teams.Shared\generateClient.cmd" WorkingDirectory="..\Microsoft.Bot.Connector.Teams.Shared" ContinueOnError="true"/>
   </Target>
 </Project>
