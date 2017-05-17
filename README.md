@@ -1,5 +1,8 @@
 # Bot Builder Microsoft Teams Extensions
 
+| C# | [![Build status](https://ci.appveyor.com/api/projects/status/504dr2qv99ee2ide/branch/master?svg=true)](https://ci.appveyor.com/project/RamjotSingh/botbuilder-microsoftteams/branch/master) |  |  |  |
+|----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|---|---|
+
 The Microsoft Bot Builder SDK Teams Extensions allow you to build bots for Microsoft Teams quickly and easily. **[Review the documentation](https://msdn.microsoft.com/en-us/microsoft-teams/bots)** to get started!
 
 # This SDK allows you to easily...
