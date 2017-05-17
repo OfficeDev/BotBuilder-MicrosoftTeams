@@ -41,9 +41,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Fakes;
     using System.Threading.Tasks;
-    using Microsoft.QualityTools.Testing.Fakes;
     using Microsoft.Rest;
     using Models;
     using Newtonsoft.Json;
@@ -74,32 +72,29 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 }
             };
 
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                {
-                    StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
-                    var response = new HttpResponseMessage(HttpStatusCode.OK);
-                    response.Content = stringContent;
-                    return Task.FromResult(response);
-                };
+            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
 
-                ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
-
-                Assert.IsNotNull(conversationListResponse);
-                Assert.IsNotNull(conversationListResponse.Conversations);
-                Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
-            }
+            Assert.IsNotNull(conversationListResponse);
+            Assert.IsNotNull(conversationListResponse.Conversations);
+            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
         }
 
         /// <summary>
@@ -122,32 +117,29 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 }
             };
 
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = stringContent;
-                        return Task.FromResult(response);
-                    };
+            ConversationList conversationListResponse = await teamsConnectorClient.Teams.FetchChannelListAsync("TestTeamId");
 
-                ConversationList conversationListResponse = await teamsConnectorClient.Teams.FetchChannelListAsync("TestTeamId");
-
-                Assert.IsNotNull(conversationListResponse);
-                Assert.IsNotNull(conversationListResponse.Conversations);
-                Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
-            }
+            Assert.IsNotNull(conversationListResponse);
+            Assert.IsNotNull(conversationListResponse.Conversations);
+            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
         }
 
         /// <summary>
@@ -170,37 +162,34 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 }
             };
 
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                Assert.IsNotNull(request.Headers.GetValues("Authorization"));
+                Assert.AreEqual(request.Headers.GetValues("Authorization").Count(), 1);
+                Assert.AreEqual(request.Headers.GetValues("Authorization").ToList()[0], "CustomValue");
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = stringContent;
-                        Assert.IsNotNull(request.Headers.GetValues("Authorization"));
-                        Assert.AreEqual(request.Headers.GetValues("Authorization").Count(), 1);
-                        Assert.AreEqual(request.Headers.GetValues("Authorization").ToList()[0], "CustomValue");
-                        return Task.FromResult(response);
-                    };
-
-                ConversationList conversationListResponse = (await teamsConnectorClient.Teams.FetchChannelListWithHttpMessagesAsync(
+            ConversationList conversationListResponse = (await teamsConnectorClient.Teams.FetchChannelListWithHttpMessagesAsync(
                     "TestTeamId",
                     new Dictionary<string, List<string>>() { { "Authorization", new List<string>() { "CustomValue" } } })).Body;
 
-                Assert.IsNotNull(conversationListResponse);
-                Assert.IsNotNull(conversationListResponse.Conversations);
-                Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-                Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
-            }
+            Assert.IsNotNull(conversationListResponse);
+            Assert.IsNotNull(conversationListResponse.Conversations);
+            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
+            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
         }
 
         /// <summary>
@@ -211,26 +200,22 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public void TeamsAPI_FetchChannelListTestInvalidHttpCode()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent("RandomRandomRandom");
+                var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        StringContent stringContent = new StringContent("RandomRandomRandom");
-                        var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                        response.Content = stringContent;
-                        return Task.FromResult(response);
-                    };
-
-                ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
-            }
+            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
         }
 
         /// <summary>
@@ -241,24 +226,20 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public void TeamsAPI_FetchChannelListTestInvalidHttpCodeWithoutResponseContent()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.NotFound);
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        var response = new HttpResponseMessage(HttpStatusCode.NotFound);
-                        return Task.FromResult(response);
-                    };
-
-                ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
-            }
+            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
         }
 
         /// <summary>
@@ -269,26 +250,22 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public void TeamsAPI_FetchChannelListTestInvalidResonse()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent("RandomRandomRandom");
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        StringContent stringContent = new StringContent("RandomRandomRandom");
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = stringContent;
-                        return Task.FromResult(response);
-                    };
-
-                ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
-            }
+            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
         }
 
         /// <summary>
@@ -299,26 +276,22 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public void TeamsAPI_FetchChannelListTestInvalidTeamId()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
+            TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
+            {
+                StringContent stringContent = new StringContent("RandomRandomRandom");
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
             ConnectorClient connectorClient = new ConnectorClient(
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings["MicrosoftAppId"],
-                ConfigurationManager.AppSettings["MicrosoftAppPassword"]);
+                ConfigurationManager.AppSettings["MicrosoftAppPassword"],
+                testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-
-            using (ShimsContext.Create())
-            {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        StringContent stringContent = new StringContent("RandomRandomRandom");
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = stringContent;
-                        return Task.FromResult(response);
-                    };
-
-                ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList(null);
-            }
+            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList(null);
         }
     }
 }

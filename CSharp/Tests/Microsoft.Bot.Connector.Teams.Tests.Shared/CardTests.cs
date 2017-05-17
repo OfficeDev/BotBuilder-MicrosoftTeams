@@ -39,9 +39,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Fakes;
     using System.Threading.Tasks;
-    using Microsoft.QualityTools.Testing.Fakes;
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -221,28 +219,24 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 Attachments = new List<Attachment>() { attachment },
             };
 
-            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test");
-
-            using (ShimsContext.Create())
+            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
             {
-                ShimHttpClient.AllInstances.SendAsyncHttpRequestMessageCancellationToken =
-                    (client, request, token) =>
-                    {
-                        string data = (request.Content as StringContent).ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                        Activity receivedActivity = JsonConvert.DeserializeObject<Activity>(data, serializerSettings);
+                string data = (request.Content as StringContent).ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                Activity receivedActivity = JsonConvert.DeserializeObject<Activity>(data, serializerSettings);
 
-                        Assert.AreEqual(receivedActivity.Attachments.Count, activity.Attachments.Count);
-                        Assert.IsTrue(JObject.DeepEquals(JObject.FromObject(activity.Attachments[0].Content, JsonSerializer.Create(serializerSettings)), JObject.FromObject(receivedActivity.Attachments[0].Content)));
+                Assert.AreEqual(receivedActivity.Attachments.Count, activity.Attachments.Count);
+                Assert.IsTrue(JObject.DeepEquals(JObject.FromObject(activity.Attachments[0].Content, JsonSerializer.Create(serializerSettings)), JObject.FromObject(receivedActivity.Attachments[0].Content)));
 
-                        ResourceResponse resourceResponse = new ResourceResponse("TestId");
-                        StringContent responseContent = new StringContent(JsonConvert.SerializeObject(resourceResponse));
-                        var response = new HttpResponseMessage(HttpStatusCode.OK);
-                        response.Content = responseContent;
-                        return Task.FromResult(response);
-                    };
+                ResourceResponse resourceResponse = new ResourceResponse("TestId");
+                StringContent responseContent = new StringContent(JsonConvert.SerializeObject(resourceResponse));
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = responseContent;
+                return Task.FromResult(response);
+            });
 
-                Assert.IsTrue(conClient.Conversations.SendToConversation(activity, "Test").Id == "TestId");
-            }
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
+
+            Assert.IsTrue(conClient.Conversations.SendToConversation(activity, "Test").Id == "TestId");
         }
     }
 }
