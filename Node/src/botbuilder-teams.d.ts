@@ -36,6 +36,17 @@ import * as builder from 'botbuilder';
 
 /**
  * @class
+ * Initializes a new instance of the IntentMessage class.
+ * @constructor
+ * @member {string} [intentText] Stripped text without at mentions
+ * 
+ */
+export interface IntentMessage extends builder.IMessage {
+  intentText?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ChannelInfo class.
  * @constructor
  * A channel info object which decribes the channel.
