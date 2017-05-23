@@ -32,7 +32,6 @@
 //
 
 
-import * as moment from "moment";
 import * as builder from 'botbuilder';
 
 /**

@@ -80,3 +80,7 @@ _[Ss]cripts
 *.ncrunchsolution
 *.dot[Cc]over
 /CSharp/.vs/*
+
+# Node generated files
+/Node/lib
+/Node/node_modules
