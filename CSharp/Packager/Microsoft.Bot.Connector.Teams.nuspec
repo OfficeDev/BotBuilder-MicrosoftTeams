@@ -2,28 +2,28 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Microsoft.Bot.Connector.Teams</id>
-    <version>0.5.0-alpha</version>
+    <version>0.5.6</version>
     <authors>Microsoft</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Extends Microsoft.Bot.Builder functionality to include Microsoft Teams specific constructs.</description>
     <dependencies>
-      <group targetFramework=".NETStandard1.6">
+      <!--<group targetFramework=".NETStandard1.6">
         <dependency id="Microsoft.Bot.Connector.Common" version="3.6.0-alpha" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore.Http" version="1.1.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore.Mvc.Core" version="1.1.2" exclude="Build,Analyzers" />
         <dependency id="Microsoft.Extensions.Options" version="1.1.1" exclude="Build,Analyzers" />
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework="net461">
-        <dependency id="Microsoft.Bot.Connector.Common" version="3.6.0-alpha" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" exclude="Build,Analyzers" />
+      </group>-->
+      <group targetFramework="net46">
+        <dependency id="Microsoft.Bot.Builder" version="3.5.9.0" exclude="Build,Analyzers" />
+        <!--<dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" exclude="Build,Analyzers" />-->
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" />
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" />
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.dll" target="lib\net461\Microsoft.Bot.Connector.Teams.dll" />
-    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.xml" target="lib\net461\Microsoft.Bot.Connector.Teams.xml" />
+    <!--<file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.dll" />
+    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetStandard\bin\$configuration$\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" target="lib\netstandard1.6\Microsoft.Bot.Connector.Teams.xml" />-->
+    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.dll" target="lib\net46\Microsoft.Bot.Connector.Teams.dll" />
+    <file src="..\Library\Microsoft.Bot.Connector.Teams.NetFramework\bin\$configuration$\Microsoft.Bot.Connector.Teams.xml" target="lib\net46\Microsoft.Bot.Connector.Teams.xml" />
   </files>
 </package>

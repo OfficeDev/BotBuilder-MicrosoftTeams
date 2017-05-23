@@ -11,7 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ActivityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdditionalProperties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AttachmentExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorClientExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConversationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\ChannelCreatedEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\ChannelDeletedEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\TeamEventBase.cs" />

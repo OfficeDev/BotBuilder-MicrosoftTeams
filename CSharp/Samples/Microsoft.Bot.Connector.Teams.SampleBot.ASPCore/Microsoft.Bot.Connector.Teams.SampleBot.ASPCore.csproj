@@ -22,5 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Library\Microsoft.Bot.Connector.Teams.NetStandard\Microsoft.Bot.Connector.Teams.NetStandard.csproj" />
   </ItemGroup>
+  <Import Project="..\Microsoft.Bot.Connector.Teams.SampleBot.Shared\Microsoft.Bot.Connector.Teams.SampleBot.Shared.projitems" Label="Shared" />
 
 </Project>

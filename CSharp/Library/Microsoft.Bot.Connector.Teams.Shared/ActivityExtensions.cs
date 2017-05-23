@@ -1,7 +1,43 @@
-﻿namespace Microsoft.Bot.Connector.Teams
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+//
+// Microsoft Bot Framework: http://botframework.com
+// Microsoft Teams: https://dev.office.com/microsoft-teams
+//
+// Bot Builder SDK GitHub:
+// https://github.com/Microsoft/BotBuilder
+//
+// Bot Builder SDK Extensions for Teams
+// https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
+//
+// Copyright (c) Microsoft Corporation
+// All rights reserved.
+//
+// MIT License:
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+namespace Microsoft.Bot.Connector.Teams
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Models;
     using Newtonsoft.Json.Linq;
 
@@ -254,6 +290,61 @@
             {
                 throw new ArgumentNullException("ChannelData missing in Activity");
             }
+        }
+
+        /// <summary>
+        /// Gets the activity text without mentions.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>Text without mentions.</returns>
+        public static string GetTextWithoutMentions(this Activity activity)
+        {
+            // Case 1. No entities.
+            if (activity.Entities?.Count == 0)
+            {
+                return activity.Text;
+            }
+
+            var mentionEntities = activity.Entities.Where(entity => entity.Type.Equals("mention", StringComparison.OrdinalIgnoreCase));
+
+            // Case 2. No Mention entities.
+            if (!mentionEntities.Any())
+            {
+                return activity.Text;
+            }
+
+            // Case 3. Mention entities.
+            string strippedText = activity.Text;
+
+            mentionEntities.ToList()
+                .ForEach(entity =>
+                {
+                    strippedText = strippedText.Replace(entity.GetAs<Mention>().Text, string.Empty);
+                });
+
+            return strippedText.Trim();
+        }
+
+        /// <summary>
+        /// Checks if the activity is a compose extension query.
+        /// </summary>
+        /// <param name="activity">Incoming activity.</param>
+        /// <returns>True is activity is a compose extension query, false otherwise.</returns>
+        public static bool IsComposeExtensionQuery(this Activity activity)
+        {
+            return activity.Type == ActivityTypes.Invoke &&
+                !string.IsNullOrEmpty(activity.Name) &&
+                activity.Name.StartsWith("composeExtension", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Gets the compose extension query data.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>Compose extension query data.</returns>
+        public static ComposeExtensionQuery GetComposeExtensionQueryData(this Activity activity)
+        {
+            return JObject.FromObject(activity.Value).ToObject<ComposeExtensionQuery>();
         }
     }
 }
