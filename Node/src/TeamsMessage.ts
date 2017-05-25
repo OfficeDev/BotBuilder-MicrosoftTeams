@@ -62,8 +62,11 @@ export class TeamsMessage extends builder.Message {
       throw new Error('Either mentioned user name or mentionText must have a value');
     }
 
-    var toMention = !mentionText ? mentionedUser.name : mentionText;
-    var mentionEntityText = '<at>'+toMention+'</at>';
+    if (mentionText) {
+      mentionedUser.name = mentionText;
+    }
+
+    var mentionEntityText = '<at>'+mentionedUser.name+'</at>';
 
     this.data.text = !this.data.text ? '' : this.data.text;
 
