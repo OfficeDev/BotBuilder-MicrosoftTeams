@@ -113,7 +113,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
-  public setAllowedTenants(tenants: string[]) {
+  public setAllowedTenants(tenants: string[]) : void {
     if (tenants != null) {
       this.allowedTenants = tenants;
     }
@@ -122,7 +122,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   /**
   *  Reset allowed tenants, ask connector to receive every message sent from any source.
   */
-  public resetAllowedTenants() {
+  public resetAllowedTenants() : void {
     this.allowedTenants = null;
   }
 
