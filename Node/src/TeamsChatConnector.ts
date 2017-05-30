@@ -86,7 +86,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
-  *  Return a list of conversations in a team
+  *  Return a list of members in a conversation or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
   *  @param {string} tenantId - The tenantId, you can look it up in session object.
