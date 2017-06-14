@@ -56,17 +56,10 @@ namespace Microsoft.Bot.Connector.Teams
         /// <param name="conversationId">Conversation Id.</param>
         /// <param name="tenantId">Tenant Id for the conversation.</param>
         /// <returns>List of members who are part of conversation.</returns>
-        public static async Task<TeamsChannelAccount[]> GetTeamsConversationMembersAsync(this IConversations conversations, string conversationId, string tenantId)
+        [Obsolete("Use IConversations.GetConversationMembersAsync method instead. AsTeamsChannelAccount method can then be used to get extended properties.")]
+        public static async Task<TeamsChannelAccount[]> GetTeamsConversationMembersAsync(this IConversations conversations, string conversationId, string tenantId = null)
         {
-            Guid throwawayGuid;
-            if (!Guid.TryParse(tenantId, out throwawayGuid))
-            {
-                throw new ArgumentException("TenantId should be parseable as a Guid", nameof(tenantId));
-            }
-
-            Dictionary<string, List<string>> customHeaders = new Dictionary<string, List<string>>();
-            customHeaders.Add("X-MsTeamsTenantId", new List<string>() { tenantId });
-            using (var memberList = await conversations.GetConversationMembersWithHttpMessagesAsync(conversationId, customHeaders).ConfigureAwait(false))
+            using (var memberList = await conversations.GetConversationMembersWithHttpMessagesAsync(conversationId).ConfigureAwait(false))
             {
                 var members = await memberList.HandleErrorAsync<ChannelAccount[]>().ConfigureAwait(false);
                 return members.Select(member => member.AsTeamsChannelAccount()).ToArray();
@@ -81,6 +74,19 @@ namespace Microsoft.Bot.Connector.Teams
         public static TeamsChannelAccount AsTeamsChannelAccount(this ChannelAccount channelAccount)
         {
             return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
+        }
+
+        /// <summary>
+        /// Resolves channel account collection to extended teams channel account collection.
+        /// </summary>
+        /// <param name="channelAccountList">Collection of Channel account.</param>
+        /// <returns>Teams channel account collection.</returns>
+        public static IEnumerable<TeamsChannelAccount> AsTeamsChannelAccounts(this IEnumerable<ChannelAccount> channelAccountList)
+        {
+            foreach (ChannelAccount channelAccount in channelAccountList)
+            {
+                yield return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
+            }
         }
     }
 }

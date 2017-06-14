@@ -104,7 +104,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             else if (activity.Text.Contains("GetTenantId"))
             {
                 Activity replyActivity = activity.CreateReply();
-                replyActivity.AddMentionToText(activity.From, MentionTextLocation.PrependText);
+                replyActivity = replyActivity.AddMentionToText(activity.From, MentionTextLocation.PrependText).NotifyMentionedUsers();
                 replyActivity.Text += " Tenant ID - " + activity.GetTenantId();
                 await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
             }
@@ -125,7 +125,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             }
             else if (activity.Text.Contains("GetMembers"))
             {
-                var response = await connectorClient.Conversations.GetTeamsConversationMembersAsync(activity.Conversation.Id, activity.GetTenantId());
+                var response = (await connectorClient.Conversations.GetConversationMembersAsync(activity.Conversation.Id)).AsTeamsChannelAccounts();
                 StringBuilder stringBuilder = new StringBuilder();
                 Activity replyActivity = activity.CreateReply();
                 replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
@@ -141,7 +141,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     "<p>Type GetTenantId to get Tenant Id </p>" +
                     "<p>Type Create1on1 to create one on one conversation. </p>" +
                     "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>";
-                replyActivity.AddMentionToText(activity.From);
+                replyActivity = replyActivity.AddMentionToText(activity.From).NotifyMentionedUsers();
                 await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
             }
         }

@@ -117,7 +117,12 @@ namespace Microsoft.Bot.Connector.Teams
                 throw new ArgumentException("Either mentioned user name or mentionText must have a value");
             }
 
-            string mentionEntityText = string.Format("<at>{0}</at>", mentionText == null ? mentionedUser.Name : mentionText);
+            if (!string.IsNullOrWhiteSpace(mentionText))
+            {
+                mentionedUser.Name = mentionText;
+            }
+
+            string mentionEntityText = string.Format("<at>{0}</at>", mentionedUser.Name);
 
             if (textLocation == MentionTextLocation.AppendText)
             {
@@ -140,6 +145,31 @@ namespace Microsoft.Bot.Connector.Teams
             });
 
             return activity;
+        }
+
+        /// <summary>
+        /// Notifies the mentioned users.
+        /// </summary>
+        /// <param name="replyActivity">The reply activity.</param>
+        /// <returns>Modified activity.</returns>
+        public static Activity NotifyMentionedUsers(this Activity replyActivity)
+        {
+            if (replyActivity.Entities?.Where(entity => entity.Type.Equals("mention", StringComparison.OrdinalIgnoreCase)).Count() > 0)
+            {
+                TeamsChannelData channelData = replyActivity.ChannelData == null ? new TeamsChannelData() : replyActivity.GetChannelData<TeamsChannelData>();
+                channelData.Notification = new NotificationInfo
+                {
+                    Alert = true
+                };
+
+                replyActivity.ChannelData = JObject.FromObject(channelData);
+            }
+            else
+            {
+                throw new ArgumentException("No mentions were found in the activity");
+            }
+
+            return replyActivity;
         }
 
         /// <summary>Gets the conversation update data.</summary>

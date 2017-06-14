@@ -20,11 +20,12 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// Initializes a new instance of the TeamsChannelData class.
         /// </summary>
         /// <param name="eventType">Type of event.</param>
-        public TeamsChannelData(ChannelInfo channel = default(ChannelInfo), string eventType = default(string), TeamInfo team = default(TeamInfo), TenantInfo tenant = default(TenantInfo))
+        public TeamsChannelData(ChannelInfo channel = default(ChannelInfo), string eventType = default(string), TeamInfo team = default(TeamInfo), NotificationInfo notification = default(NotificationInfo), TenantInfo tenant = default(TenantInfo))
         {
             Channel = channel;
             EventType = eventType;
             Team = team;
+            Notification = notification;
             Tenant = tenant;
         }
 
@@ -43,6 +44,11 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "team")]
         public TeamInfo Team { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "notification")]
+        public NotificationInfo Notification { get; set; }
 
         /// <summary>
         /// </summary>

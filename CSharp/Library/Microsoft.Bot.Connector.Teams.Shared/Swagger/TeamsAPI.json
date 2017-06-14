@@ -92,6 +92,10 @@
           "type": "object",
           "$ref": "#/definitions/TeamInfo"
         },
+        "notification": {
+          "type": "object",
+          "$ref": "#/definitions/NotificationInfo"
+        },
         "tenant": {
           "type": "object",
           "$ref": "#/definitions/TenantInfo"
@@ -110,6 +114,17 @@
         "name": {
           "type": "string",
           "description": "Name of team."
+        }
+      }
+    },
+
+    "NotificationInfo": {
+      "description": "Specifies if a notification is to be sent for the mentions.",
+      "type": "object",
+      "properties": {
+        "alert": {
+          "type": "boolean",
+          "description": "true if notification is to be sent to the user, false otherwise."
         }
       }
     },
