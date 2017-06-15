@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Teams: https://dev.office.com/microsoft-teams
-// 
+//
 // Bot Builder Microsoft Teams SDK GitHub
 // https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,7 +41,7 @@ import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionRe
 
 var WebResource = msRest.WebResource;
 
-export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -53,14 +53,19 @@ export interface IntentMessage extends builder.IMessage {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
+  public static queryInvokeName:string = 'composeExtension/query';
+  public static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
+  public static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
 
-  private queryHandlers: { [id: string]: ComposeExtensionQueryHandlerType } = {};
+  private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
+  private invokeEventHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
     this.allowedTenants = null;
+    this.onInvokeEvent(TeamsChatConnector.queryInvokeName, this.dispatchQuery.bind(this));
   }
 
   /**
@@ -79,7 +84,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -103,7 +108,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'X-MsTeamsTenantId' : tenantId
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -126,8 +131,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.allowedTenants = null;
   }
 
-  public onQuery(commandId: string, handler: ComposeExtensionQueryHandlerType): void {
+  public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
+  }
+
+  public onInvokeEvent(eventName: string, handler: ComposeExtensionHandlerType) {
+    this.invokeEventHandlers[eventName] = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -150,13 +159,19 @@ export class TeamsChatConnector extends builder.ChatConnector {
     for (var event of events) {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
-        switch (invoke.name) {
-          case 'composeExtension/query':
-            this.dispatchQuery(invoke, callback);
-            break;
-          default:
-            realEvents.push(event);
-            break;
+        let handler = this.invokeEventHandlers[invoke.name];
+        if (handler) {
+          try {
+            let query = <ComposeExtensionQuery>(<any>event).value;
+            handler(invoke, query, callback);
+          }
+          catch (e) {
+            console.log(e);
+            callback(e, null, 500);
+          }
+        }
+        else {
+          realEvents.push(event);
         }
       }
       else {
@@ -165,7 +180,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
     }
     if (realEvents.length > 0) {
       // Filter out @mention
-      var out: builder.IEvent[] = []; 
+      var out: builder.IEvent[] = [];
       for (var re of realEvents) {
         let intentMessage = <IntentMessage>re;
         // Add intent message
@@ -193,8 +208,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
     }
   }
 
-  private dispatchQuery(event: IInvokeEvent, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
-    let query = <ComposeExtensionQuery>event.value;
+  private dispatchQuery(event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
     let handler = this.queryHandlers[query.commandId];
     if (handler) {
       try {

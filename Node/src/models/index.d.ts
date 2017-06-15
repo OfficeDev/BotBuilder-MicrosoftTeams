@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Teams: https://dev.office.com/microsoft-teams
-// 
+//
 // Bot Builder Microsoft Teams SDK GitHub
 // https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57,7 +57,7 @@ export interface ChannelInfo {
  * A channel account object which decribes the member.
  * @member {string} [id] Unique identifier representing a member
  *
- * @member {string} [obejctId] User Id 
+ * @member {string} [obejctId] User Id
  *
  * @member {string} [givenName] Name of the member
  *
@@ -319,15 +319,14 @@ export interface ComposeExtensionParameter {
  *
  * @member {number} [queryOptions.count] Number of entities to fetch
  *
- * @member {string} [authenticationCode] Authentication code used by bot to
- * authenticate the request.
+ * @member {string} [state] state parameter used by the bot to send back at the end of authentication/configuration flow
  *
  */
 export interface ComposeExtensionQuery {
   commandId?: string;
   parameters?: ComposeExtensionParameter[];
   queryOptions?: ComposeExtensionQueryOptions;
-  authenticationCode?: string;
+  state?: string;
 }
 
 /**
@@ -369,13 +368,15 @@ export interface ComposeExtensionAttachment extends builder.IAttachment {
  *
  * @member {array} [suggestedActions] suggestedActions
  *
+ * @member {string} [text] text
  */
 
 export interface ComposeExtensionResult {
   attachmentLayout?: string;
   type?: string;
   attachments?: ComposeExtensionAttachment[];
-  suggestedActions?: builder.ISuggestedActions
+  suggestedActions?: builder.ISuggestedActions;
+  text?: string;
 }
 
 
