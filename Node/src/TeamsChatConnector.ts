@@ -53,19 +53,19 @@ export interface IntentMessage extends builder.IMessage {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
-  public static queryInvokeName:string = 'composeExtension/query';
-  public static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
-  public static settingInvokeName:string = 'composeExtension/setting';
+  private static queryInvokeName:string = 'composeExtension/query';
+  private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
+  private static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
 
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
-  private invokeEventHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
+  private querySettingUrlHandler: ComposeExtensionHandlerType;
+  private settingHandler: ComposeExtensionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
     this.allowedTenants = null;
-    this.onInvokeEvent(TeamsChatConnector.queryInvokeName, this.dispatchQuery.bind(this));
   }
 
   /**
@@ -135,8 +135,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.queryHandlers[commandId] = handler;
   }
 
-  public onInvokeEvent(eventName: string, handler: ComposeExtensionHandlerType) {
-    this.invokeEventHandlers[eventName] = handler;
+  public onQuerySettingurl(handler: ComposeExtensionHandlerType) {
+    this.querySettingUrlHandler = handler;
+  }
+
+  public onSetting(handler: ComposeExtensionHandlerType) {
+    this.settingHandler = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -159,19 +163,32 @@ export class TeamsChatConnector extends builder.ChatConnector {
     for (var event of events) {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
-        let handler = this.invokeEventHandlers[invoke.name];
+        let query = <ComposeExtensionQuery>(<any>event).value;
+        let handler: ComposeExtensionHandlerType;
+        switch (invoke.name) {
+          case TeamsChatConnector.queryInvokeName:
+            handler = this.dispatchQuery;
+            break;
+          case TeamsChatConnector.querySettingUrlInvokeName:
+            handler = this.querySettingUrlHandler;
+            break;
+          case TeamsChatConnector.settingInvokeName:
+          {
+            handler = this.settingHandler;
+            break;
+          }
+          default:
+            realEvents.push(event);
+            break;
+        }
         if (handler) {
           try {
-            let query = <ComposeExtensionQuery>(<any>event).value;
             handler(invoke, query, callback);
           }
           catch (e) {
             console.log(e);
             callback(e, null, 500);
           }
-        }
-        else {
-          realEvents.push(event);
         }
       }
       else {
@@ -211,13 +228,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private dispatchQuery(event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
     let handler = this.queryHandlers[query.commandId];
     if (handler) {
-      try {
-        handler(event, query, callback);
-      }
-      catch (e) {
-        console.log(e);
-        callback(e, null, 500);
-      }
+      handler(event, query, callback);
     }
     else {
       callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);

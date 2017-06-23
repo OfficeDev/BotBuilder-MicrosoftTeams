@@ -520,9 +520,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void;
 
   /**
-  *  Set a handler by invoke name of a compose extension invoke request
+  *  Set a handler for compose extension invoke request that queries setting url
   */
-  public onInvokeEvent(eventName: string, handler: ComposeExtensionHandlerType):void;
+  public onQuerySettingurl(handler: ComposeExtensionHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request made after setting flow is successfully finished
+  */
+  public onSetting(handler: ComposeExtensionHandlerType): void;
 }
 
 export enum MentionTextLocation {
