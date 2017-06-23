@@ -564,3 +564,9 @@ export class TeamsMessage extends builder.Message {
   */
   public static getTextWithoutMentions(message: builder.IMessage): string;
 }
+
+export class StripBotAtMentions implements builder.IMiddlewareMap
+{
+    /** Called in series once an incoming message has been bound to a session. Executed after [receive](#receive) middleware.  */
+    public readonly botbuilder: builder.ISessionMiddleware|builder.ISessionMiddleware[];
+}

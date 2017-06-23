@@ -22,7 +22,6 @@ var appPassword: string = 'app password';
 var userId: string = 'user id';
 var tenantId: string = 'tenant id';
 
-
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
@@ -41,6 +40,9 @@ connector.resetAllowedTenants();
 
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
+
+var stripBotAtMentions = new teams.StripBotAtMentions();
+bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {

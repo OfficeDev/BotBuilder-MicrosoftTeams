@@ -34,6 +34,8 @@ connector.setAllowedTenants([]);
 connector.resetAllowedTenants();
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
+var stripBotAtMentions = new teams.StripBotAtMentions();
+bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
         builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList');
