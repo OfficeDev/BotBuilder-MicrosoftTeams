@@ -487,13 +487,22 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
 
   /**
-  *  Return a list of conversations in a team
+  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
+  *  Return a list of members in a team or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
   *  @param {string} tenantId - The tenantId, you can look it up in session object.
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchMemberList(serverUrl: string, conversationId: string, tenantId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
+
+  /**
+  *  Return a list of members in a team or channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
   /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.

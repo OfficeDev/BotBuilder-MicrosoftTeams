@@ -33,6 +33,7 @@
 
 export { TeamsChatConnector } from './TeamsChatConnector';
 export { TeamsMessage } from './TeamsMessage';
+export { MentionTextLocation } from './TeamsMessage';
 export { ChannelInfo } from './models';
 export { ConversationList } from './models';
 export { TeamInfo } from './models';
