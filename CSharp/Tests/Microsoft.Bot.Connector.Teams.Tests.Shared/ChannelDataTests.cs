@@ -144,5 +144,31 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             sampleActivity.ChannelData = JObject.FromObject(channelData);
             sampleActivity.GetTenantId();
         }
+
+        /// <summary>
+        /// Add notification tests.
+        /// </summary>
+        [TestMethod]
+        public void ChannelData_AddNotification()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
+            var modifiedActivity = sampleActivity.NotifyMentionedUsers();
+
+            Assert.IsNotNull(modifiedActivity.ChannelData);
+            Assert.IsNotNull(modifiedActivity.GetChannelData<TeamsChannelData>().Notification);
+            Assert.IsTrue(modifiedActivity.GetChannelData<TeamsChannelData>().Notification.Alert.Value);
+            Assert.IsNotNull(modifiedActivity.GetChannelData<TeamsChannelData>().Team.Id);
+        }
+
+        /// <summary>
+        /// Add notification when no at mentions are present. This should result into exception.
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ChannelData_AddNotification_NoMentions()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
+            var modifiedActivity = sampleActivity.NotifyMentionedUsers();
+        }
     }
 }

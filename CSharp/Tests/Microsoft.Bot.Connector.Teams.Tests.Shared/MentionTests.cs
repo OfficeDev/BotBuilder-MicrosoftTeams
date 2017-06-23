@@ -60,6 +60,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             Assert.IsInstanceOfType(reply.Entities[0], typeof(Mention));
             Assert.IsTrue(reply.Text.Contains((reply.Entities[0] as Mention).Text));
             Assert.IsTrue((reply.Entities[0] as Mention).Text.Contains("<at>"));
+            Assert.IsTrue((reply.Entities[0] as Mention).Text == "<at>" + (reply.Entities[0] as Mention).Mentioned.Name + "</at>");
             Assert.IsTrue((reply.Entities[0] as Mention).Text.EndsWith("</at>"));
         }
 
@@ -76,6 +77,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             Assert.IsInstanceOfType(reply.Entities[0], typeof(Mention));
             Assert.IsTrue(reply.Text.Contains((reply.Entities[0] as Mention).Text));
             Assert.IsTrue((reply.Entities[0] as Mention).Text.Contains("SampleName"));
+            Assert.IsTrue((reply.Entities[0] as Mention).Text == "<at>" + (reply.Entities[0] as Mention).Mentioned.Name + "</at>");
             Assert.IsTrue((reply.Entities[0] as Mention).Text.StartsWith("<at>"));
         }
 
@@ -108,6 +110,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             Assert.IsTrue(reply.Entities.Count == 1);
             Assert.IsInstanceOfType(reply.Entities[0], typeof(Mention));
             Assert.IsTrue(reply.Text.Contains((reply.Entities[0] as Mention).Text));
+            Assert.IsTrue((reply.Entities[0] as Mention).Text == "<at>" + (reply.Entities[0] as Mention).Mentioned.Name + "</at>");
         }
 
         /// <summary>
