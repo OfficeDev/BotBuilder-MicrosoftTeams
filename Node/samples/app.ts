@@ -22,6 +22,7 @@ var appPassword: string = 'app password';
 var userId: string = 'user id';
 var tenantId: string = 'tenant id';
 
+
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
@@ -91,10 +92,9 @@ bot.dialog('FetchChannelList', function (session: builder.Session) {
 
 bot.dialog('FetchMemberList', function (session: builder.Session) {
   var conversationId = session.message.address.conversation.id;
-  connector.fetchMemberList(
+  connector.fetchMembers(
     (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
     conversationId,
-    teams.TeamsMessage.getTenantId(session.message),
     (err, result) => {
       if (err) {
         session.endDialog('There is some error');

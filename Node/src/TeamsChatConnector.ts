@@ -91,7 +91,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
-  *  Return a list of conversations in a team
+  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
+  *  Return a list of members in a team or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
   *  @param {string} tenantId - The tenantId, you can look it up in session object.
@@ -109,6 +110,28 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
         } else {
+          callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
+  *  Return a list of members in a team or channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchMemberList(conversationId, options, callback);
+        } else {  
           callback(new Error('Failed to authorize request'), null);
         }
     });

@@ -77,7 +77,7 @@ bot.dialog('FetchChannelList', function (session) {
 });
 bot.dialog('FetchMemberList', function (session) {
     var conversationId = session.message.address.conversation.id;
-    connector.fetchMemberList(session.message.address.serviceUrl, conversationId, teams.TeamsMessage.getTenantId(session.message), function (err, result) {
+    connector.fetchMembers(session.message.address.serviceUrl, conversationId, function (err, result) {
         if (err) {
             session.endDialog('There is some error');
         }
