@@ -167,14 +167,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
         let handler: ComposeExtensionHandlerType;
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
-            handler = this.dispatchQuery;
+            handler = this.dispatchQuery.bind(this);
             break;
           case TeamsChatConnector.querySettingUrlInvokeName:
-            handler = this.querySettingUrlHandler;
+            handler = this.querySettingUrlHandler.bind(this);
             break;
           case TeamsChatConnector.settingInvokeName:
           {
-            handler = this.settingHandler;
+            handler = this.settingHandler.bind(this);
             break;
           }
           default:
