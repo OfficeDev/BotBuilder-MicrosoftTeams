@@ -108,7 +108,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
                 if (!activity.Conversation.IsGroup.GetValueOrDefault())
                 {
-                    replyActivity = replyActivity.NotifyMentionedUsers();
+                    replyActivity = replyActivity.NotifyUser();
                 }
 
                 replyActivity.Text += " Tenant ID - " + activity.GetTenantId();
