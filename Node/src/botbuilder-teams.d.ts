@@ -36,17 +36,6 @@ import * as builder from 'botbuilder';
 
 /**
  * @class
- * Initializes a new instance of the IntentMessage class.
- * @constructor
- * @member {string} [intentText] Stripped text without at mentions
- * 
- */
-export interface IntentMessage extends builder.IMessage {
-  intentText?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the ChannelInfo class.
  * @constructor
  * A channel info object which decribes the channel.
@@ -563,4 +552,10 @@ export class TeamsMessage extends builder.Message {
   *  @param {IMessage} message - The message with mentions
   */
   public static getTextWithoutMentions(message: builder.IMessage): string;
+}
+
+export class StripBotAtMentions implements builder.IMiddlewareMap
+{
+    /** Called in series once an incoming message has been bound to a session. Executed after [receive](#receive) middleware.  */
+    public readonly botbuilder: builder.ISessionMiddleware|builder.ISessionMiddleware[];
 }
