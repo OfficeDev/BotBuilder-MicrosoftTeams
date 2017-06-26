@@ -150,28 +150,21 @@ namespace Microsoft.Bot.Connector.Teams
         }
 
         /// <summary>
-        /// Notifies the mentioned users.
+        /// Notifies the user in direct conversation.
         /// </summary>
         /// <typeparam name="T">Type of message activity.</typeparam>
         /// <param name="replyActivity">The reply activity.</param>
         /// <returns>Modified activity.</returns>
-        public static T NotifyMentionedUsers<T>(this T replyActivity)
+        public static T NotifyUser<T>(this T replyActivity)
             where T : IMessageActivity
         {
-            if (replyActivity.Entities?.Where(entity => entity.Type.Equals("mention", StringComparison.OrdinalIgnoreCase)).Count() > 0)
+            TeamsChannelData channelData = replyActivity.ChannelData == null ? new TeamsChannelData() : replyActivity.GetChannelData<TeamsChannelData>();
+            channelData.Notification = new NotificationInfo
             {
-                TeamsChannelData channelData = replyActivity.ChannelData == null ? new TeamsChannelData() : replyActivity.GetChannelData<TeamsChannelData>();
-                channelData.Notification = new NotificationInfo
-                {
-                    Alert = true
-                };
+                Alert = true
+            };
 
-                replyActivity.ChannelData = JObject.FromObject(channelData);
-            }
-            else
-            {
-                throw new ArgumentException("No mentions were found in the activity");
-            }
+            replyActivity.ChannelData = JObject.FromObject(channelData);
 
             return replyActivity;
         }

@@ -152,7 +152,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public void ChannelData_AddNotification()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
-            var modifiedActivity = sampleActivity.NotifyMentionedUsers();
+            var modifiedActivity = sampleActivity.NotifyUser();
 
             Assert.IsNotNull(modifiedActivity.ChannelData);
             Assert.IsNotNull(modifiedActivity.GetChannelData<TeamsChannelData>().Notification);
@@ -161,14 +161,13 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         }
 
         /// <summary>
-        /// Add notification when no at mentions are present. This should result into exception.
+        /// Add notification when no at mentions are present.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         public void ChannelData_AddNotification_NoMentions()
         {
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
-            var modifiedActivity = sampleActivity.NotifyMentionedUsers();
+            var modifiedActivity = sampleActivity.NotifyUser();
         }
     }
 }
