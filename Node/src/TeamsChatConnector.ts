@@ -48,10 +48,6 @@ export interface IInvokeEvent extends builder.IEvent {
   value: any;
 }
 
-export interface IntentMessage extends builder.IMessage {
-  intentText?: string;
-}
-
 export class TeamsChatConnector extends builder.ChatConnector {
 
   private allowedTenants: string[];
@@ -187,32 +183,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
       }
     }
     if (realEvents.length > 0) {
-      // Filter out @mention
-      var out: builder.IEvent[] = []; 
-      for (var re of realEvents) {
-        let intentMessage = <IntentMessage>re;
-        // Add intent message
-        if (intentMessage.type == 'message') {
-          var atMentions = [];
-          intentMessage.intentText = intentMessage.text;
-          for(var ent of intentMessage.entities) {
-            if (ent.type == 'mention') {
-              atMentions.push(ent.text);
-            }
-          }
-          if (atMentions.length != 0) {
-            for(var mention of atMentions) {
-              intentMessage.intentText = intentMessage.intentText.replace(new RegExp(mention, 'g'), '');
-            }
-          }
-          out.push(intentMessage);
-        }
-        // Add non-mention event
-        else {
-          out.push(re);
-        }
-      }
-      super.onDispatchEvents(out, callback);
+      super.onDispatchEvents(realEvents, callback);
     }
   }
 
