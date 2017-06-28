@@ -22,7 +22,6 @@ var appPassword: string = 'app password';
 var userId: string = 'user id';
 var tenantId: string = 'tenant id';
 
-
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
@@ -41,6 +40,13 @@ connector.resetAllowedTenants();
 
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
+
+// Strip bot at mention text, set text property to text without specific Bot at mention, find original text in textWithBotMentions
+// e.g. original text "<at>zel-bot-1</at> hello please find <at>Bot</at>" and zel-bot-1 is the Bot we at mentions. 
+// Then it text would be "hello please find <at>Bot</at>", the original text could be found at textWithBotMentions property.
+// This is to resolve inaccuracy for regex or LUIS scenarios.
+var stripBotAtMentions = new teams.StripBotAtMentions();
+bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
