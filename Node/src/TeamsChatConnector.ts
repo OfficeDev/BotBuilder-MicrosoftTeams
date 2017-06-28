@@ -56,8 +56,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private allowedTenants: string[];
 
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
-  private querySettingUrlHandler: ComposeExtensionHandlerType;
-  private settingUpdateHandler: ComposeExtensionHandlerType;
+  private querySettingsUrlHandler: ComposeExtensionHandlerType;
+  private settingsUpdateHandler: ComposeExtensionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -154,12 +154,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.queryHandlers[commandId] = handler;
   }
 
-  public onQuerySettingUrl(handler: ComposeExtensionHandlerType) {
-    this.querySettingUrlHandler = handler;
+  public onQuerySettingsUrl(handler: ComposeExtensionHandlerType) {
+    this.querySettingsUrlHandler = handler;
   }
 
-  public onSettingUpdate(handler: ComposeExtensionHandlerType) {
-    this.settingUpdateHandler = handler;
+  public onSettingsUpdate(handler: ComposeExtensionHandlerType) {
+    this.settingsUpdateHandler = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -189,11 +189,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
             handler = this.dispatchQuery.bind(this);
             break;
           case TeamsChatConnector.querySettingUrlInvokeName:
-            handler = this.querySettingUrlHandler.bind(this);
+            handler = this.querySettingsUrlHandler.bind(this);
             break;
           case TeamsChatConnector.settingInvokeName:
           {
-            handler = this.settingUpdateHandler.bind(this);
+            handler = this.settingsUpdateHandler.bind(this);
             break;
           }
           default:

@@ -57,7 +57,7 @@ export interface ChannelInfo {
  * A channel account object which decribes the member.
  * @member {string} [id] Unique identifier representing a member
  *
- * @member {string} [obejctId] User Id
+ * @member {string} [objectId] User Id
  *
  * @member {string} [givenName] Name of the member
  *
@@ -409,6 +409,8 @@ export class ComposeExtensionResponse {
   auth(): ComposeExtensionResponse;
 
   config(): ComposeExtensionResponse;
+
+  message(): ComposeExtensionResponse;
 
   attachments(list: ComposeExtensionAttachment[]): ComposeExtensionResponse;
 
