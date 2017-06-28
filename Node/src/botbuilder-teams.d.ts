@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Bot Framework: http://botframework.com
-// 
+//
 // Bot Builder SDK Github:
 // https://github.com/Microsoft/BotBuilder
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57,7 +57,7 @@ export interface ChannelInfo {
  * A channel account object which decribes the member.
  * @member {string} [id] Unique identifier representing a member
  *
- * @member {string} [obejctId] User Id 
+ * @member {string} [obejctId] User Id
  *
  * @member {string} [givenName] Name of the member
  *
@@ -319,15 +319,14 @@ export interface ComposeExtensionParameter {
  *
  * @member {number} [queryOptions.count] Number of entities to fetch
  *
- * @member {string} [authenticationCode] Authentication code used by bot to
- * authenticate the request.
+ * @member {string} [state] state parameter used by the bot to send back at the end of authentication/configuration flow
  *
  */
 export interface ComposeExtensionQuery {
   commandId?: string;
   parameters?: ComposeExtensionParameter[];
   queryOptions?: ComposeExtensionQueryOptions;
-  authenticationCode?: string;
+  state?: string;
 }
 
 /**
@@ -369,13 +368,15 @@ export interface ComposeExtensionAttachment extends builder.IAttachment {
  *
  * @member {array} [suggestedActions] suggestedActions
  *
+ * @member {string} [text] text
  */
 
 export interface ComposeExtensionResult {
   attachmentLayout?: string;
   type?: string;
   attachments?: ComposeExtensionAttachment[];
-  suggestedActions?: builder.ISuggestedActions
+  suggestedActions?: builder.ISuggestedActions;
+  text?: string;
 }
 
 
@@ -409,9 +410,13 @@ export class ComposeExtensionResponse {
 
   static config(): ComposeExtensionResponse;
 
+  static message(): ComposeExtensionResponse;
+
   attachments(list: ComposeExtensionAttachment[]): ComposeExtensionResponse;
 
   actions(list: builder.CardAction[]): ComposeExtensionResponse;
+
+  text(text: string): ComposeExtensionResponse;
 
   toResponse(): IComposeExtensionResponse
 }
@@ -456,7 +461,7 @@ export declare class TenantInfo {
   constructor(id: string);
 }
 
-export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -464,6 +469,9 @@ export interface IInvokeEvent extends builder.IEvent {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
+  public static queryInvokeName: string;
+  public static querySettingUrlInvokeName: string;
+  public static settingInvokeName: string;
 
   constructor(settings?: builder.IChatConnectorSettings);
 
@@ -504,7 +512,20 @@ export class TeamsChatConnector extends builder.ChatConnector {
   */
   public resetAllowedTenants();
 
-  public onQuery(commandId: string, handler: ComposeExtensionQueryHandlerType): void;
+  /**
+  *  Set a handler by commandId of a compose extension query
+  */
+  public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request that queries setting url
+  */
+  public onQuerySettingsUrl(handler: ComposeExtensionHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request made after setting flow is successfully finished
+  */
+  public onSettingsUpdate(handler: ComposeExtensionHandlerType): void;
 }
 
 export enum MentionTextLocation {
@@ -513,7 +534,7 @@ export enum MentionTextLocation {
 }
 
 export class TeamsMessage extends builder.Message {
-  
+
   constructor(session?: builder.Session);
 
   /**
@@ -525,10 +546,10 @@ export class TeamsMessage extends builder.Message {
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
 
   /**
-  *  Return conversation update related event 
+  *  Return conversation update related event
   *  @param {IConversationUpdate} message - user message like adding member to channel, rename etc
   */
-  public static getConversationUpdateData(message: builder.IConversationUpdate): TeamEventBase; 
+  public static getConversationUpdateData(message: builder.IConversationUpdate): TeamEventBase;
 
   /**
   *  Get message related team info

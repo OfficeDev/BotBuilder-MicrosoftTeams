@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Teams: https://dev.office.com/microsoft-teams
-// 
+//
 // Bot Builder Microsoft Teams SDK GitHub
 // https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,7 +41,7 @@ import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionRe
 
 var WebResource = msRest.WebResource;
 
-export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -49,10 +49,15 @@ export interface IInvokeEvent extends builder.IEvent {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
+  private static queryInvokeName:string = 'composeExtension/query';
+  private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
+  private static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
 
-  private queryHandlers: { [id: string]: ComposeExtensionQueryHandlerType } = {};
+  private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
+  private querySettingsUrlHandler: ComposeExtensionHandlerType;
+  private settingsUpdateHandler: ComposeExtensionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -75,7 +80,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -100,7 +105,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'X-MsTeamsTenantId' : tenantId
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -122,7 +127,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -145,8 +150,16 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.allowedTenants = null;
   }
 
-  public onQuery(commandId: string, handler: ComposeExtensionQueryHandlerType): void {
+  public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
+  }
+
+  public onQuerySettingsUrl(handler: ComposeExtensionHandlerType) {
+    this.querySettingsUrlHandler = handler;
+  }
+
+  public onSettingsUpdate(handler: ComposeExtensionHandlerType) {
+    this.settingsUpdateHandler = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -169,13 +182,32 @@ export class TeamsChatConnector extends builder.ChatConnector {
     for (var event of events) {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
+        let query = <ComposeExtensionQuery>(<any>event).value;
+        let handler: ComposeExtensionHandlerType;
         switch (invoke.name) {
-          case 'composeExtension/query':
-            this.dispatchQuery(invoke, callback);
+          case TeamsChatConnector.queryInvokeName:
+            handler = this.dispatchQuery.bind(this);
             break;
+          case TeamsChatConnector.querySettingUrlInvokeName:
+            handler = this.querySettingsUrlHandler.bind(this);
+            break;
+          case TeamsChatConnector.settingInvokeName:
+          {
+            handler = this.settingsUpdateHandler.bind(this);
+            break;
+          }
           default:
             realEvents.push(event);
             break;
+        }
+        if (handler) {
+          try {
+            handler(invoke, query, callback);
+          }
+          catch (e) {
+            console.log(e);
+            callback(e, null, 500);
+          }
         }
       }
       else {
@@ -187,17 +219,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     }
   }
 
-  private dispatchQuery(event: IInvokeEvent, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
-    let query = <ComposeExtensionQuery>event.value;
+  private dispatchQuery(event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
     let handler = this.queryHandlers[query.commandId];
     if (handler) {
-      try {
-        handler(event, query, callback);
-      }
-      catch (e) {
-        console.log(e);
-        callback(e, null, 500);
-      }
+      handler(event, query, callback);
     }
     else {
       callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
