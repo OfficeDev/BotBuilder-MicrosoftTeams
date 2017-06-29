@@ -1,15 +1,15 @@
-// 
+//
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-// 
+//
 // Microsoft Teams: https://dev.office.com/microsoft-teams
-// 
+//
 // Bot Builder Microsoft Teams SDK GitHub
 // https://github.com/OfficeDev/BotBuilder-MicrosoftTeams
-// 
+//
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -18,10 +18,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,22 +41,23 @@ import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionRe
 
 var WebResource = msRest.WebResource;
 
-export type ComposeExtensionQueryHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
   value: any;
 }
 
-export interface IntentMessage extends builder.IMessage {
-  intentText?: string;
-}
-
 export class TeamsChatConnector extends builder.ChatConnector {
+  private static queryInvokeName:string = 'composeExtension/query';
+  private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
+  private static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
 
-  private queryHandlers: { [id: string]: ComposeExtensionQueryHandlerType } = {};
+  private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
+  private querySettingsUrlHandler: ComposeExtensionHandlerType;
+  private settingsUpdateHandler: ComposeExtensionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -79,13 +80,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
-        } else {  
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
   }
 
   /**
+  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
   *  Return a list of members in a conversation or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
@@ -103,7 +105,29 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'X-MsTeamsTenantId' : tenantId
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
-        } else {  
+        } else {
+          callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
+  *  Return a list of members in a team or channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchMemberList(conversationId, options, callback);
+        } else {
           callback(new Error('Failed to authorize request'), null);
         }
     });
@@ -113,7 +137,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
-  public setAllowedTenants(tenants: string[]) {
+  public setAllowedTenants(tenants: string[]) : void {
     if (tenants != null) {
       this.allowedTenants = tenants;
     }
@@ -122,12 +146,20 @@ export class TeamsChatConnector extends builder.ChatConnector {
   /**
   *  Reset allowed tenants, ask connector to receive every message sent from any source.
   */
-  public resetAllowedTenants() {
+  public resetAllowedTenants() : void {
     this.allowedTenants = null;
   }
 
-  public onQuery(commandId: string, handler: ComposeExtensionQueryHandlerType): void {
+  public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
+  }
+
+  public onQuerySettingsUrl(handler: ComposeExtensionHandlerType) {
+    this.querySettingsUrlHandler = handler;
+  }
+
+  public onSettingsUpdate(handler: ComposeExtensionHandlerType) {
+    this.settingsUpdateHandler = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -150,13 +182,32 @@ export class TeamsChatConnector extends builder.ChatConnector {
     for (var event of events) {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
+        let query = <ComposeExtensionQuery>(<any>event).value;
+        let handler: ComposeExtensionHandlerType;
         switch (invoke.name) {
-          case 'composeExtension/query':
-            this.dispatchQuery(invoke, callback);
+          case TeamsChatConnector.queryInvokeName:
+            handler = this.dispatchQuery.bind(this);
             break;
+          case TeamsChatConnector.querySettingUrlInvokeName:
+            handler = this.querySettingsUrlHandler.bind(this);
+            break;
+          case TeamsChatConnector.settingInvokeName:
+          {
+            handler = this.settingsUpdateHandler.bind(this);
+            break;
+          }
           default:
             realEvents.push(event);
             break;
+        }
+        if (handler) {
+          try {
+            handler(invoke, query, callback);
+          }
+          catch (e) {
+            console.log(e);
+            callback(e, null, 500);
+          }
         }
       }
       else {
@@ -164,46 +215,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
       }
     }
     if (realEvents.length > 0) {
-      // Filter out @mention
-      var out: builder.IEvent[] = []; 
-      for (var re of realEvents) {
-        let intentMessage = <IntentMessage>re;
-        // Add intent message
-        if (intentMessage.type == 'message') {
-          var atMentions = [];
-          intentMessage.intentText = intentMessage.text;
-          for(var ent of intentMessage.entities) {
-            if (ent.type == 'mention') {
-              atMentions.push(ent.text);
-            }
-          }
-          if (atMentions.length != 0) {
-            for(var mention of atMentions) {
-              intentMessage.intentText = intentMessage.intentText.replace(new RegExp(mention, 'g'), '');
-            }
-          }
-          out.push(intentMessage);
-        }
-        // Add non-mention event
-        else {
-          out.push(re);
-        }
-      }
-      super.onDispatchEvents(out, callback);
+      super.onDispatchEvents(realEvents, callback);
     }
   }
 
-  private dispatchQuery(event: IInvokeEvent, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
-    let query = <ComposeExtensionQuery>event.value;
+  private dispatchQuery(event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, body: IComposeExtensionResponse, status?: number) => void): void {
     let handler = this.queryHandlers[query.commandId];
     if (handler) {
-      try {
-        handler(event, query, callback);
-      }
-      catch (e) {
-        console.log(e);
-        callback(e, null, 500);
-      }
+      handler(event, query, callback);
     }
     else {
       callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);

@@ -95,17 +95,19 @@ namespace Microsoft.Bot.Connector.Teams
         /// <summary>
         /// Adds the mention text to an existing activity.
         /// </summary>
+        /// <typeparam name="T">Message activity type.</typeparam>
         /// <param name="activity">The activity.</param>
         /// <param name="mentionedUser">The mentioned user.</param>
         /// <param name="textLocation">Location at which AtMention text should be added to text.</param>
         /// <param name="mentionText">The mention text.</param>
         /// <returns>Activity with added mention.</returns>
         /// <exception cref="Rest.ValidationException">Either mentioned user name or mentionText must have a value</exception>
-        public static Activity AddMentionToText(
-            this Activity activity,
+        public static T AddMentionToText<T>(
+            this T activity,
             ChannelAccount mentionedUser,
             MentionTextLocation textLocation = MentionTextLocation.PrependText,
             string mentionText = null)
+            where T : IMessageActivity
         {
             if (mentionedUser == null || string.IsNullOrEmpty(mentionedUser.Id))
             {
@@ -117,7 +119,12 @@ namespace Microsoft.Bot.Connector.Teams
                 throw new ArgumentException("Either mentioned user name or mentionText must have a value");
             }
 
-            string mentionEntityText = string.Format("<at>{0}</at>", mentionText == null ? mentionedUser.Name : mentionText);
+            if (!string.IsNullOrWhiteSpace(mentionText))
+            {
+                mentionedUser.Name = mentionText;
+            }
+
+            string mentionEntityText = string.Format("<at>{0}</at>", mentionedUser.Name);
 
             if (textLocation == MentionTextLocation.AppendText)
             {
@@ -142,6 +149,26 @@ namespace Microsoft.Bot.Connector.Teams
             return activity;
         }
 
+        /// <summary>
+        /// Notifies the user in direct conversation.
+        /// </summary>
+        /// <typeparam name="T">Type of message activity.</typeparam>
+        /// <param name="replyActivity">The reply activity.</param>
+        /// <returns>Modified activity.</returns>
+        public static T NotifyUser<T>(this T replyActivity)
+            where T : IMessageActivity
+        {
+            TeamsChannelData channelData = replyActivity.ChannelData == null ? new TeamsChannelData() : replyActivity.GetChannelData<TeamsChannelData>();
+            channelData.Notification = new NotificationInfo
+            {
+                Alert = true
+            };
+
+            replyActivity.ChannelData = JObject.FromObject(channelData);
+
+            return replyActivity;
+        }
+
         /// <summary>Gets the conversation update data.</summary>
         /// <param name="activity">The activity.</param>
         /// <returns>Channel event data.</returns>
@@ -150,7 +177,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// or
         /// ChannelData missing in Activity
         /// </exception>
-        public static TeamEventBase GetConversationUpdateData(this Activity activity)
+        public static TeamEventBase GetConversationUpdateData(this IConversationUpdateActivity activity)
         {
             if (activity.GetActivityType() != ActivityTypes.ConversationUpdate)
             {
@@ -224,7 +251,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <returns>Channel data for general channel.</returns>
         /// <exception cref="ArgumentException">Failed to process channel data in Activity</exception>
         /// <exception cref="ArgumentNullException">ChannelData missing in Activity</exception>
-        public static ChannelInfo GetGeneralChannel(this Activity activity)
+        public static ChannelInfo GetGeneralChannel(this IActivity activity)
         {
             if (activity.ChannelData != null)
             {
@@ -273,7 +300,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <returns>Tenant Id of the user who send the message.</returns>
         /// <exception cref="ArgumentException">Failed to process channel data in Activity</exception>
         /// <exception cref="ArgumentNullException">ChannelData missing in Activity</exception>
-        public static string GetTenantId(this Activity activity)
+        public static string GetTenantId(this IActivity activity)
         {
             if (activity.ChannelData != null)
             {
@@ -297,7 +324,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// </summary>
         /// <param name="activity">The activity.</param>
         /// <returns>Text without mentions.</returns>
-        public static string GetTextWithoutMentions(this Activity activity)
+        public static string GetTextWithoutMentions(this IMessageActivity activity)
         {
             // Case 1. No entities.
             if (activity.Entities?.Count == 0)
@@ -330,7 +357,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// </summary>
         /// <param name="activity">Incoming activity.</param>
         /// <returns>True is activity is a compose extension query, false otherwise.</returns>
-        public static bool IsComposeExtensionQuery(this Activity activity)
+        public static bool IsComposeExtensionQuery(this IInvokeActivity activity)
         {
             return activity.Type == ActivityTypes.Invoke &&
                 !string.IsNullOrEmpty(activity.Name) &&
@@ -342,7 +369,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// </summary>
         /// <param name="activity">The activity.</param>
         /// <returns>Compose extension query data.</returns>
-        public static ComposeExtensionQuery GetComposeExtensionQueryData(this Activity activity)
+        public static ComposeExtensionQuery GetComposeExtensionQueryData(this IInvokeActivity activity)
         {
             return JObject.FromObject(activity.Value).ToObject<ComposeExtensionQuery>();
         }

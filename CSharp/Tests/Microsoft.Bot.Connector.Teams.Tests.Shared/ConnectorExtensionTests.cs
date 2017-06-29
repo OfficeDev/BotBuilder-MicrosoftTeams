@@ -115,10 +115,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         {
             TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
             {
-                Assert.IsTrue(request.Headers.Contains("X-MsTeamsTenantId"));
-                Guid wasteGuid;
-                Assert.IsTrue(Guid.TryParse(request.Headers.GetValues("X-MsTeamsTenantId").Single(), out wasteGuid));
-                Assert.AreEqual(Guid.Empty, Guid.Parse(request.Headers.GetValues("X-MsTeamsTenantId").Single()));
+                Assert.IsFalse(request.Headers.Contains("X-MsTeamsTenantId"));
 
                 StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseGetTeamsConversationMembers.json"));
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -128,10 +125,41 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var memberList = await conClient.Conversations.GetTeamsConversationMembersAsync("TestConversationId", Guid.Empty.ToString());
+#pragma warning restore CS0618 // Type or member is obsolete
 
             Assert.IsTrue(memberList.Count() == 2);
             Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.ObjectId)));
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.UserPrincipalName)));
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Id)));
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Email)));
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Name)));
+        }
+
+        /// <summary>
+        /// Tests resolution of ChannelAccount to TeamsChannelAccount.
+        /// </summary>
+        [TestMethod]
+        public void ConnectorExtensions_ResolveAsTeamsChannelAccount()
+        {
+            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
+            {
+                Assert.IsFalse(request.Headers.Contains("X-MsTeamsTenantId"));
+
+                StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseGetTeamsConversationMembers.json"));
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = stringContent;
+                return Task.FromResult(response);
+            });
+
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
+
+            var memberList = conClient.Conversations.GetConversationMembers("TestConversationId").AsTeamsChannelAccounts();
+
+            Assert.IsTrue(memberList.Count() == 2);
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.ObjectId)));
+            Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Name)));
             Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.UserPrincipalName)));
             Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Id)));
             Assert.IsFalse(memberList.Any(member => string.IsNullOrEmpty(member.Email)));

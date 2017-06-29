@@ -32,7 +32,9 @@
 //
 
 export { TeamsChatConnector } from './TeamsChatConnector';
+export { StripBotAtMentions } from './TeamsMiddleware';
 export { TeamsMessage } from './TeamsMessage';
+export { MentionTextLocation } from './TeamsMessage';
 export { ChannelInfo } from './models';
 export { ConversationList } from './models';
 export { TeamInfo } from './models';

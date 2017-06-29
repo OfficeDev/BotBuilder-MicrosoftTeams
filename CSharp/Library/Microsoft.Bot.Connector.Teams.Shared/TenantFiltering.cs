@@ -96,7 +96,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// </summary>
         /// <param name="activity">The list of activities.</param>
         /// <returns>true if request is from allowed tenant false otherwise.</returns>
-        public bool IsFromAllowedTenant(Activity activity)
+        public bool IsFromAllowedTenant(IActivity activity)
         {
             // 1. Channel Data is missing - Block.
             // 2. Channel data is present

@@ -1,4 +1,4 @@
-// 
+//
 // MIT License:
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -7,10 +7,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,7 @@ export class ComposeExtensionResponse {
 	public static result(attachmentLayout: string = "list") {
 		var obj = new ComposeExtensionResponse("result");
 		obj.data.composeExtension.attachmentLayout = attachmentLayout;
-		return obj; 
+		return obj;
 	}
 
 	public static auth() {
@@ -47,6 +47,10 @@ export class ComposeExtensionResponse {
 
 	public static config() {
 		return new ComposeExtensionResponse("config");
+	}
+
+	public static message() {
+		return new ComposeExtensionResponse("message");
 	}
 
 	public attachments(list: ComposeExtensionAttachment[]): this {
@@ -68,6 +72,11 @@ export class ComposeExtensionResponse {
 				this.data.composeExtension.suggestedActions.actions.push(action.toAction());
 			}
 		}
+		return this;
+	}
+
+	public text(text: string): this {
+		this.data.composeExtension.text = text;
 		return this;
 	}
 
