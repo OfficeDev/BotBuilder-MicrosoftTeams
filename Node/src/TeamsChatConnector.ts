@@ -88,7 +88,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
   /**
   *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
-  *  Return a list of members in a team or channel
+  *  Return a list of members in a conversation or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
   *  @param {string} tenantId - The tenantId, you can look it up in session object.
