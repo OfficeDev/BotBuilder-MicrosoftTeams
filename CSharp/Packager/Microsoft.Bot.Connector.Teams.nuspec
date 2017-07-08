@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Microsoft.Bot.Connector.Teams</id>
-    <version>0.5.7</version>
+    <version>0.5.7-preview</version>
     <authors>Microsoft</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Extends Microsoft.Bot.Builder functionality to include Microsoft Teams specific constructs.</description>
