@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Microsoft.Bot.Connector.Teams</id>
-    <version>0.5.7-preview</version>
+    <version>0.5.7</version>
     <authors>Microsoft</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Extends Microsoft.Bot.Builder functionality to include Microsoft Teams specific constructs.</description>
@@ -17,7 +17,7 @@
       </group>-->
       <group targetFramework="net46">
         <dependency id="Microsoft.Bot.Builder" version="3.5.9.0" exclude="Build,Analyzers" />
-        <dependency id="CoreCompat.EnterpriseLibrary.TransientFaultHandling" version="6.0.1304-r3" exclude="Build,Analyzers" />
+        <dependency id="EnterpriseLibrary.TransientFaultHandling" version="6.0.1304.0" exclude="Build,Analyzers" />
         <!--<dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" exclude="Build,Analyzers" />-->
       </group>
     </dependencies>
