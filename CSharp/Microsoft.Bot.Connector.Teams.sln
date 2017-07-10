@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}"
 EndProject
@@ -67,5 +67,8 @@ Global
 		{D3261462-9CCB-430C-A63D-4ADA0103D0AC} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
 		{D63AF194-744A-4207-A223-B6CFB5A0D6C5} = {DA3220AD-3DBA-4102-B1D4-3ED8C39CC42D}
 		{3AA653DD-A278-4C8D-A0C8-1DFD47446EC0} = {A918A5D4-D261-4DD4-A3BC-AD4ACD238A86}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
 	EndGlobalSection
 EndGlobal

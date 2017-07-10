@@ -99,7 +99,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
                 // Adding to existing text to ensure @Mention text is not replaced.
                 replyActivity.Text = replyActivity.Text + " <p>" + string.Join("</p><p>", channels.Conversations.ToList().Select(info => info.Name + " --> " + info.Id));
-                await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
             else if (activity.Text.Contains("GetTenantId"))
             {
@@ -112,7 +112,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 }
 
                 replyActivity.Text += " Tenant ID - " + activity.GetTenantId();
-                await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
             else if (activity.Text.Contains("Create1on1"))
             {
@@ -135,7 +135,16 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 StringBuilder stringBuilder = new StringBuilder();
                 Activity replyActivity = activity.CreateReply();
                 replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
-                await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+            }
+            else if (activity.Text.Contains("TestRetry"))
+            {
+                for (int i = 0; i < 15; i++)
+                {
+                    Activity replyActivity = activity.CreateReply();
+                    replyActivity.Text = "Message Count " + i;
+                    await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+                }
             }
             else
             {
@@ -146,9 +155,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     "<p>Type GetChannels to get List of Channels. </p>" +
                     "<p>Type GetTenantId to get Tenant Id </p>" +
                     "<p>Type Create1on1 to create one on one conversation. </p>" +
-                    "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>";
+                    "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>" +
+                    "<p>Type TestRetry to get multiple messages from Bot in throttled and retried mechanism. </p>";
                 replyActivity = replyActivity.AddMentionToText(activity.From);
-                await connectorClient.Conversations.ReplyToActivityAsync(replyActivity);
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
         }
 
@@ -183,7 +193,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                             },
                         };
 
-                        await connectorClient.Conversations.SendToConversationAsync(newActivity, channelCreatedEvent.Channel.Id);
+                        await connectorClient.Conversations.SendToConversationWithRetriesAsync(newActivity, channelCreatedEvent.Channel.Id);
                         break;
                     }
 
@@ -193,7 +203,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
                         Activity newActivity = activity.CreateReplyToGeneralChannel(channelDeletedEvent.Channel.Name + " Channel deletion complete");
 
-                        await connectorClient.Conversations.SendToConversationAsync(newActivity, activity.GetGeneralChannel().Id);
+                        await connectorClient.Conversations.SendToConversationWithRetriesAsync(newActivity, activity.GetGeneralChannel().Id);
                         break;
                     }
 
@@ -203,7 +213,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
                         Activity newActivity = activity.CreateReplyToGeneralChannel("Members added to team.");
 
-                        await connectorClient.Conversations.SendToConversationAsync(newActivity, activity.GetGeneralChannel().Id);
+                        await connectorClient.Conversations.SendToConversationWithRetriesAsync(newActivity, activity.GetGeneralChannel().Id);
                         break;
                     }
 
@@ -213,7 +223,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
                         Activity newActivity = activity.CreateReplyToGeneralChannel("Members removed from the team.");
 
-                        await connectorClient.Conversations.SendToConversationAsync(newActivity, activity.GetGeneralChannel().Id);
+                        await connectorClient.Conversations.SendToConversationWithRetriesAsync(newActivity, activity.GetGeneralChannel().Id);
                         break;
                     }
             }
