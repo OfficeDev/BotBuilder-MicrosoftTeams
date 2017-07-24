@@ -37,11 +37,12 @@ import * as util from 'util';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, O365ConnectorCardActionQuery } from './models';
 
 var WebResource = msRest.WebResource;
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
+export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: O365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -49,12 +50,14 @@ export interface IInvokeEvent extends builder.IEvent {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
+  private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
   private static queryInvokeName:string = 'composeExtension/query';
   private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
   private static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
 
+  private o365CardActionHandler: O365ConnectorCardActionHandlerType;
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
@@ -150,6 +153,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.allowedTenants = null;
   }
 
+  public onO365ConnectorCardAction(handler: O365ConnectorCardActionHandlerType): void {
+    this.o365CardActionHandler = handler;
+  }
+
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
   }
@@ -182,27 +189,41 @@ export class TeamsChatConnector extends builder.ChatConnector {
     for (var event of events) {
       let invoke = <IInvokeEvent>event;
       if (invoke.type == 'invoke') {
-        let query = <ComposeExtensionQuery>(<any>event).value;
-        let handler: ComposeExtensionHandlerType;
+        let compExthandler: ComposeExtensionHandlerType;
+        let o365Handler: O365ConnectorCardActionHandlerType;
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
-            handler = this.dispatchQuery.bind(this);
+            compExthandler = this.dispatchQuery.bind(this);
             break;
           case TeamsChatConnector.querySettingUrlInvokeName:
-            handler = this.querySettingsUrlHandler.bind(this);
+            compExthandler = this.querySettingsUrlHandler.bind(this);
             break;
           case TeamsChatConnector.settingInvokeName:
           {
-            handler = this.settingsUpdateHandler.bind(this);
+            compExthandler = this.settingsUpdateHandler.bind(this);
             break;
           }
+          case TeamsChatConnector.o365CardActionInvokeName:
+            o365Handler = this.o365CardActionHandler.bind(this);
+            break;
           default:
             realEvents.push(event);
             break;
         }
-        if (handler) {
+        if (compExthandler) {
           try {
-            handler(invoke, query, callback);
+            let query = <ComposeExtensionQuery>(<any>event).value;
+            compExthandler(invoke, query, callback);
+          }
+          catch (e) {
+            console.log(e);
+            callback(e, null, 500);
+          }
+        }
+        if (o365Handler) {
+          try {
+            let query = <O365ConnectorCardActionQuery>(<any>event).value;
+            o365Handler(invoke, query, callback);
           }
           catch (e) {
             console.log(e);

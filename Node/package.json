@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-teams",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Microsoft Teams Botbuilder extension SDK",
   "scripts": {
     "test": "mocha"
@@ -11,12 +11,14 @@
   "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
     "botbuilder": "^3.8.0-beta6",
-    "ms-rest": "^1.15.7"
+    "ms-rest": "^1.15.7",
+    "sprintf-js": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
     "mocha": "^2.4.5",
     "restify": "^4.3.0",
-    "typescript": "^2.2.1"
+    "typescript": "^2.2.1",
+    "@types/sprintf-js": "0.0.27"
   }
 }
