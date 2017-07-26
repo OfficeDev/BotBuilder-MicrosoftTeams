@@ -24,13 +24,16 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <param name="summary">Summary for the card</param>
         /// <param name="themeColor">Theme color for the card</param>
         /// <param name="sections">Set of sections for the current card</param>
-        public O365ConnectorCard(string title = default(string), string text = default(string), string summary = default(string), string themeColor = default(string), System.Collections.Generic.IList<O365ConnectorCardSection> sections = default(System.Collections.Generic.IList<O365ConnectorCardSection>))
+        /// <param name="potentialAction">Set of actions for the current
+        /// card</param>
+        public O365ConnectorCard(string title = default(string), string text = default(string), string summary = default(string), string themeColor = default(string), System.Collections.Generic.IList<O365ConnectorCardSection> sections = default(System.Collections.Generic.IList<O365ConnectorCardSection>), System.Collections.Generic.IList<O365ConnectorCardActionBase> potentialAction = default(System.Collections.Generic.IList<O365ConnectorCardActionBase>))
         {
             Title = title;
             Text = text;
             Summary = summary;
             ThemeColor = themeColor;
             Sections = sections;
+            PotentialAction = potentialAction;
         }
 
         /// <summary>
@@ -62,6 +65,12 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "sections")]
         public System.Collections.Generic.IList<O365ConnectorCardSection> Sections { get; set; }
+
+        /// <summary>
+        /// Gets or sets set of actions for the current card
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "potentialAction")]
+        public System.Collections.Generic.IList<O365ConnectorCardActionBase> PotentialAction { get; set; }
 
     }
 }

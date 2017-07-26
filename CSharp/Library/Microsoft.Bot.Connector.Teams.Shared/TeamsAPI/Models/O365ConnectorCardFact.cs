@@ -19,8 +19,8 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Initializes a new instance of the O365ConnectorCardFact class.
         /// </summary>
-        /// <param name="name">Name of the fact</param>
-        /// <param name="value">Value for the fact</param>
+        /// <param name="name">Display name of the fact</param>
+        /// <param name="value">Display value for the fact</param>
         public O365ConnectorCardFact(string name = default(string), string value = default(string))
         {
             Name = name;
@@ -28,13 +28,13 @@ namespace Microsoft.Bot.Connector.Teams.Models
         }
 
         /// <summary>
-        /// Gets or sets name of the fact
+        /// Gets or sets display name of the fact
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets value for the fact
+        /// Gets or sets display value for the fact
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "value")]
         public string Value { get; set; }

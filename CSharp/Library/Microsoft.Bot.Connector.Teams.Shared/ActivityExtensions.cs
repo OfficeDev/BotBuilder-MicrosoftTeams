@@ -353,6 +353,28 @@ namespace Microsoft.Bot.Connector.Teams
         }
 
         /// <summary>
+        /// Checks if the activity is a O365 connector card action query.
+        /// </summary>
+        /// <param name="activity">Incoming activity.</param>
+        /// <returns>True is activity is a actionable card query, false otherwise.</returns>
+        public static bool IsO365ConnectorCardActionQuery(this IInvokeActivity activity)
+        {
+            return activity.Type == ActivityTypes.Invoke &&
+                !string.IsNullOrEmpty(activity.Name) &&
+                activity.Name.StartsWith("actionableMessage/executeAction", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Gets O365 connector card action query data.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>O365 connector card action query data.</returns>
+        public static O365ConnectorCardActionQuery GetO365ConnectorCardActionQueryData(this IInvokeActivity activity)
+        {
+            return JObject.FromObject(activity.Value).ToObject<O365ConnectorCardActionQuery>();
+        }
+
+        /// <summary>
         /// Checks if the activity is a compose extension query.
         /// </summary>
         /// <param name="activity">Incoming activity.</param>

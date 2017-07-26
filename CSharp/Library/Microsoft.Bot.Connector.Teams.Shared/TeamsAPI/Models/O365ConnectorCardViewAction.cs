@@ -6,6 +6,9 @@ namespace Microsoft.Bot.Connector.Teams.Models
 {
     using System.Linq;
 
+    /// <summary>
+    /// O365 connector card ViewAction action
+    /// </summary>
     public partial class O365ConnectorCardViewAction : O365ConnectorCardActionBase
     {
         /// <summary>
@@ -18,24 +21,21 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// Initializes a new instance of the O365ConnectorCardViewAction
         /// class.
         /// </summary>
-        /// <param name="type">Type of the item</param>
-        /// <param name="name">Name of the action</param>
-        /// <param name="target">Target urls</param>
-        public O365ConnectorCardViewAction(string type = default(string), string name = default(string), System.Collections.Generic.IList<string> target = default(System.Collections.Generic.IList<string>))
-            : base(type)
+        /// <param name="type">Type of the action</param>
+        /// <param name="name">Name of the action that will be used as button
+        /// title</param>
+        /// <param name="id">Action Id</param>
+        /// <param name="target">Target urls, only the first url effective for
+        /// card button</param>
+        public O365ConnectorCardViewAction(string type = default(string), string name = default(string), string id = default(string), System.Collections.Generic.IList<string> target = default(System.Collections.Generic.IList<string>))
+            : base(type, name, id)
         {
-            Name = name;
             Target = target;
         }
 
         /// <summary>
-        /// Gets or sets name of the action
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets target urls
+        /// Gets or sets target urls, only the first url effective for card
+        /// button
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "target")]
         public System.Collections.Generic.IList<string> Target { get; set; }

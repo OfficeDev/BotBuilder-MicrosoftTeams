@@ -211,6 +211,11 @@
           "description": "Set of sections for the current card",
           "type": "array",
           "items": { "$ref": "#/definitions/O365ConnectorCardSection" }
+        },
+        "potentialAction": {
+          "description": "Set of actions for the current card",
+          "type": "array",
+          "items": { "$ref": "#/definitions/O365ConnectorCardActionBase" }
         }
       }
     },
@@ -243,18 +248,22 @@
           "description": "Activity image",
           "type": "string"
         },
+        "markdown": {
+          "description": "Use markdown for all text contents. Default vaule is true.",
+          "type": "boolean"
+        },
         "facts": {
-          "description": "Set of sections for the current card",
+          "description": "Set of facts for the current section",
           "type": "array",
           "items": { "$ref": "#/definitions/O365ConnectorCardFact" }
         },
         "images": {
-          "description": "Set of sections for the current card",
+          "description": "Set of images for the current section",
           "type": "array",
           "items": { "$ref": "#/definitions/O365ConnectorCardImage" }
         },
         "potentialAction": {
-          "description": "Set of sections for the current card",
+          "description": "Set of actions for the current section",
           "type": "array",
           "items": { "$ref": "#/definitions/O365ConnectorCardActionBase" }
         }
@@ -266,11 +275,11 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the fact",
+          "description": "Display name of the fact",
           "type": "string"
         },
         "value": {
-          "description": "Value for the fact",
+          "description": "Display value for the fact",
           "type": "string"
         }
       }
@@ -283,6 +292,10 @@
         "image": {
           "description": "URL for the image",
           "type": "string"
+        },
+        "title": {
+          "description": "Alternative text for the image",
+          "type": "string"
         }
       }
     },
@@ -292,13 +305,22 @@
       "type": "object",
       "properties": {
         "@type": {
-          "description": "Type of the item",
+          "description": "Type of the action",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the action that will be used as button title",
+          "type": "string"
+        },
+        "@id": {
+          "description": "Action Id",
           "type": "string"
         }
       }
     },
 
     "O365ConnectorCardViewAction": {
+      "description": "O365 connector card ViewAction action",
       "allOf": [
         {
           "$ref": "#/definitions/O365ConnectorCardActionBase"
@@ -306,18 +328,216 @@
         {
           "type": "object",
           "properties": {
-            "name": {
-              "description": "Name of the action",
-              "type": "string"
-            },
             "target": {
-              "description": "Target urls",
+              "description": "Target urls, only the first url effective for card button",
               "type": "array",
               "items": { "type": "string" }
             }
           }
         }
       ]
+    },
+
+    "O365ConnectorCardOpenUriTarget": {
+      "description": "O365 connector card OpenUri target",
+      "type": "object",
+      "properties": {
+        "os": {
+          "description": "Target operating system.",
+          "type": "string",
+          "enum": [ "default", "iOS", "android", "windows" ]
+        },
+        "uri": {
+          "description": "Target url",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardOpenUri": {
+      "description": "O365 connector card OpenUri action",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardActionBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "targets": {
+              "description": "Target os / urls",
+              "type": "array",
+              "items": { "$ref": "#/definitions/O365ConnectorCardOpenUriTarget" }
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardHttpPOST": {
+      "description": "O365 connector card HttpPOST action",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardActionBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "body": {
+              "description": "Content to be posted back to bots via invoke",
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardActionCard": {
+      "description": "O365 connector card ActionCard action",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardActionBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "inputs": {
+              "description": "Set of inputs contained in this ActionCard whose each item can be in any subtype of O365ConnectorCardInputBase",
+              "type": "array",
+              "items": { "$ref": "#/definitions/O365ConnectorCardInputBase" }
+            },
+            "actions": {
+              "description": "Set of actions contained in this ActionCard whose each item can be in any subtype of O365ConnectorCardActionBase except O365ConnectorCardActionCard, as nested ActionCard is forbidden.",
+              "type": "array",
+              "items": { "$ref": "#/definitions/O365ConnectorCardActionBase" }
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardInputBase": {
+      "description": "O365 connector card input for ActionCard action",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "description": "Input type name",
+          "type": "string"
+        },
+        "id": {
+          "description": "Input Id. It must be unique per entire O365 connector card.",
+          "type": "string"
+        },
+        "isRequired": {
+          "description": "Define if this input is a required field. Default value is false.",
+          "type": "boolean"
+        },
+        "title": {
+          "description": "Input title that will be shown as the placeholder",
+          "type": "string"
+        },
+        "value": {
+          "description": "Default value for this input field",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardTextInput": {
+      "description": "O365 connector card text input",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardInputBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "isMultiline": {
+              "description": "Define if text input is allowed for multiple lines. Default value is false.",
+              "type": "boolean"
+            },
+            "maxLength": {
+              "description": "Maximum length of text input. Default value is unlimited.",
+              "type": "number"
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardDateInput": {
+      "description": "O365 connector card date input",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardInputBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "includeTime": {
+              "description": "Include time input field. Default value  is false (date only).",
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardMultichoiceInput": {
+      "description": "O365 connector card multiple choice input",
+      "allOf": [
+        {
+          "$ref": "#/definitions/O365ConnectorCardInputBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "choices": {
+              "description": "Set of choices whose each item can be in any subtype of O365ConnectorCardMultichoiceInputChoice.",
+              "type": "array",
+              "items": { "$ref": "#/definitions/O365ConnectorCardMultichoiceInputChoice" }
+            },
+            "style": {
+              "description": "Choice item rendering style. Default valud is 'compact'.",
+              "type": "string",
+              "enum": [ "compact", "expanded" ]
+            },
+            "isMultiSelect": {
+              "description": "Define if this input field allows multiple selections. Default value is false.",
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+
+    "O365ConnectorCardMultichoiceInputChoice": {
+      "description": "O365O365 connector card multiple choice input item",
+      "type": "object",
+      "properties": {
+        "display": {
+          "description": "The text rednered on ActionCard.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value received as results.",
+          "type": "string"
+        }
+      }
+    },
+
+    "O365ConnectorCardActionQuery": {
+      "description": "O365 connector card HttpPOST invoke query",
+      "type": "object",
+      "properties": {
+        "body": {
+          "description": "The results of body string defined in IO365ConnectorCardHttpPOST with substituted input values",
+          "type": "string"
+        },
+        "actionId": {
+          "description": "Action Id associated with the HttpPOST action button triggered, defined in O365ConnectorCardActionBase.",
+          "type": "string"
+        }
+      }
     },
 
     "ComposeExtensionQueryOptions": {

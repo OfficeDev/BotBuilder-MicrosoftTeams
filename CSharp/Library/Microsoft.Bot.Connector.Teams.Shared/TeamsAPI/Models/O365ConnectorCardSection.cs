@@ -25,11 +25,13 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <param name="activitySubtitle">Activity subtitle</param>
         /// <param name="activityText">Activity text</param>
         /// <param name="activityImage">Activity image</param>
-        /// <param name="facts">Set of sections for the current card</param>
-        /// <param name="images">Set of sections for the current card</param>
-        /// <param name="potentialAction">Set of sections for the current
-        /// card</param>
-        public O365ConnectorCardSection(string title = default(string), string text = default(string), string activityTitle = default(string), string activitySubtitle = default(string), string activityText = default(string), string activityImage = default(string), System.Collections.Generic.IList<O365ConnectorCardFact> facts = default(System.Collections.Generic.IList<O365ConnectorCardFact>), System.Collections.Generic.IList<O365ConnectorCardImage> images = default(System.Collections.Generic.IList<O365ConnectorCardImage>), System.Collections.Generic.IList<O365ConnectorCardActionBase> potentialAction = default(System.Collections.Generic.IList<O365ConnectorCardActionBase>))
+        /// <param name="markdown">Use markdown for all text contents. Default
+        /// vaule is true.</param>
+        /// <param name="facts">Set of facts for the current section</param>
+        /// <param name="images">Set of images for the current section</param>
+        /// <param name="potentialAction">Set of actions for the current
+        /// section</param>
+        public O365ConnectorCardSection(string title = default(string), string text = default(string), string activityTitle = default(string), string activitySubtitle = default(string), string activityText = default(string), string activityImage = default(string), bool? markdown = default(bool?), System.Collections.Generic.IList<O365ConnectorCardFact> facts = default(System.Collections.Generic.IList<O365ConnectorCardFact>), System.Collections.Generic.IList<O365ConnectorCardImage> images = default(System.Collections.Generic.IList<O365ConnectorCardImage>), System.Collections.Generic.IList<O365ConnectorCardActionBase> potentialAction = default(System.Collections.Generic.IList<O365ConnectorCardActionBase>))
         {
             Title = title;
             Text = text;
@@ -37,6 +39,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
             ActivitySubtitle = activitySubtitle;
             ActivityText = activityText;
             ActivityImage = activityImage;
+            Markdown = markdown;
             Facts = facts;
             Images = images;
             PotentialAction = potentialAction;
@@ -79,19 +82,26 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public string ActivityImage { get; set; }
 
         /// <summary>
-        /// Gets or sets set of sections for the current card
+        /// Gets or sets use markdown for all text contents. Default vaule is
+        /// true.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "markdown")]
+        public bool? Markdown { get; set; }
+
+        /// <summary>
+        /// Gets or sets set of facts for the current section
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "facts")]
         public System.Collections.Generic.IList<O365ConnectorCardFact> Facts { get; set; }
 
         /// <summary>
-        /// Gets or sets set of sections for the current card
+        /// Gets or sets set of images for the current section
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "images")]
         public System.Collections.Generic.IList<O365ConnectorCardImage> Images { get; set; }
 
         /// <summary>
-        /// Gets or sets set of sections for the current card
+        /// Gets or sets set of actions for the current section
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "potentialAction")]
         public System.Collections.Generic.IList<O365ConnectorCardActionBase> PotentialAction { get; set; }
