@@ -81,7 +81,7 @@ export class O365ConnectorCard implements builder.IIsAttachment {
         (<teams.IO365ConnectorCard>this.data.content).sections = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var section = list[i];
+                let section = list[i];
                 (<teams.IO365ConnectorCard>this.data.content).sections.push((<teams.IIsO365ConnectorCardSection>section).toSection ? (<teams.IIsO365ConnectorCardSection>section).toSection() : <teams.IO365ConnectorCardSection>section);
             }
         }
@@ -92,8 +92,8 @@ export class O365ConnectorCard implements builder.IIsAttachment {
         (<teams.IO365ConnectorCard>this.data.content).potentialAction = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var action = list[i];
-                var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
+                let action = list[i];
+                let obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;
                 (<teams.IO365ConnectorCard>this.data.content).potentialAction.push(o365ActionToPayload(obj));
             }
@@ -175,7 +175,7 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
         this.data.facts = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var fact = list[i];
+                let fact = list[i];
                 this.data.facts.push((<teams.IIsO365ConnectorCardFact>fact).toFact ? (<teams.IIsO365ConnectorCardFact>fact).toFact() : <teams.IO365ConnectorCardFact>fact);    
             }
         }
@@ -186,7 +186,7 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
         this.data.images = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var image = list[i];
+                let image = list[i];
                 this.data.images.push((<teams.IIsO365ConnectorCardImage>image).toImage ? (<teams.IIsO365ConnectorCardImage>image).toImage() : <teams.IO365ConnectorCardImage>image);
             }
         }
@@ -197,8 +197,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
         this.data.potentialAction = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var action = list[i];
-                var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
+                let action = list[i];
+                let obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;
                 this.data.potentialAction.push(o365ActionToPayload(obj));
             }
@@ -419,8 +419,8 @@ export class O365ConnectorCardActionCard extends O365ConnectorCardActionBase {
         data.actions = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var action = list[i];
-                var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
+                let action = list[i];
+                let obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;                
                 data.actions.push(o365ActionToPayload(obj));
             }
@@ -433,8 +433,8 @@ export class O365ConnectorCardActionCard extends O365ConnectorCardActionBase {
         data.inputs = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var input = list[i];
-                var obj = (<teams.IIsO365ConnectorCardInputBase>input).toInput ?
+                let input = list[i];
+                let obj = (<teams.IIsO365ConnectorCardInputBase>input).toInput ?
                           (<teams.IIsO365ConnectorCardInputBase>input).toInput() : <teams.IO365ConnectorCardInputBase>input;
                 data.inputs.push(o365InputToPayload(obj));
             }
@@ -565,7 +565,7 @@ export class O365ConnectorCardMultichoiceInput extends O365ConnectorCardInputBas
         let choicesData: teams.IO365ConnectorCardMultichoiceInputChoice[] = [];
         if (list) {
             for (let i = 0; i < list.length; i++) {
-                var item = list[i];
+                let item = list[i];
                 if ((<teams.IIsO365ConnectorCardMultichoiceInputChoice>item).toChoice) {
                     choicesData.push((<teams.IIsO365ConnectorCardMultichoiceInputChoice>item).toChoice());
                  } else {
