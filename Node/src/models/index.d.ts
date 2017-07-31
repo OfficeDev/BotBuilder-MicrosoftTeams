@@ -405,14 +405,14 @@ export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase
  * 
  * @member {array} [choices] Set of choices whose each item can be in any subtype of IO365ConnectorCardMultichoiceInputChoice.
  * 
- * @member {IO365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
+ * @member {O365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
  * 
  * @member {boolean} [isMultiSelect] Define if this input field allows multiple selections. Default value is false.
  *  
  */
 export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase{
   choices: IO365ConnectorCardMultichoiceInputChoice[];
-  style?: IO365ConnectorCardMultichoiceInputStyle;
+  style?: O365ConnectorCardMultichoiceInputStyle;
   isMultiSelect?: boolean; 
 }
 
@@ -421,7 +421,7 @@ export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardIn
  * Type of literal strings used for multi-choice input (IO365ConnectorCardMultichoiceInput) rendering style.
  *
  */
-export type IO365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
+export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
 
 /**
  * @interface
@@ -450,7 +450,7 @@ export interface IIsO365ConnectorCardMultichoiceInputChoice {
  * @member {string} [actionId] Action Id associated with the HttpPOST action button triggered, defined in IO365ConnectorCardActionBase.
  *  
  */
-export interface O365ConnectorCardActionQuery {
+export interface IO365ConnectorCardActionQuery {
   body: string;
   actionId: string;
 }

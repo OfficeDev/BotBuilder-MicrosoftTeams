@@ -37,12 +37,12 @@ import * as util from 'util';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, O365ConnectorCardActionQuery } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery } from './models';
 
 var WebResource = msRest.WebResource;
 
-export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
-export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: O365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -187,20 +187,20 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private dispatchEventOrQuery(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
     var realEvents: builder.IEvent[] = [];
     for (var event of events) {
-      let invoke = <IInvokeEvent>event;
-      if (invoke.type == 'invoke') {
-        let compExthandler: ComposeExtensionHandlerType;
+      if (event.type === 'invoke') {
+        let invoke = <IInvokeEvent>event;
+        let compExtHandler: ComposeExtensionHandlerType;
         let o365Handler: O365ConnectorCardActionHandlerType;
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
-            compExthandler = this.dispatchQuery.bind(this);
+            compExtHandler = this.dispatchQuery.bind(this);
             break;
           case TeamsChatConnector.querySettingUrlInvokeName:
-            compExthandler = this.querySettingsUrlHandler.bind(this);
+            compExtHandler = this.querySettingsUrlHandler.bind(this);
             break;
           case TeamsChatConnector.settingInvokeName:
           {
-            compExthandler = this.settingsUpdateHandler.bind(this);
+            compExtHandler = this.settingsUpdateHandler.bind(this);
             break;
           }
           case TeamsChatConnector.o365CardActionInvokeName:
@@ -210,19 +210,21 @@ export class TeamsChatConnector extends builder.ChatConnector {
             realEvents.push(event);
             break;
         }
-        if (compExthandler) {
+
+        if (compExtHandler) {
           try {
-            let query = <ComposeExtensionQuery>(<any>event).value;
-            compExthandler(invoke, query, callback);
+            let query = <ComposeExtensionQuery>(invoke.value);
+            compExtHandler(invoke, query, callback);
           }
           catch (e) {
             console.log(e);
             callback(e, null, 500);
           }
         }
+
         if (o365Handler) {
           try {
-            let query = <O365ConnectorCardActionQuery>(<any>event).value;
+            let query = <IO365ConnectorCardActionQuery>(invoke.value);
             o365Handler(invoke, query, callback);
           }
           catch (e) {
@@ -235,6 +237,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
         realEvents.push(event);
       }
     }
+
     if (realEvents.length > 0) {
       super.onDispatchEvents(realEvents, callback);
     }

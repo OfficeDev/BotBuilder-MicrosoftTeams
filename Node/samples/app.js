@@ -267,8 +267,8 @@ bot.dialog('SendO365Card', function (session) {
         .activityImage("http://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg")
         .activityText("activity text")
         .facts([
-        new teams.O365ConnectorCardFact(session).name("Fact Name 1").value("Faction value 1"),
-        new teams.O365ConnectorCardFact(session).name("Fact Name 2").value("Faction value 2"),
+        new teams.O365ConnectorCardFact(session).name("Fact name 1").value("Fact value 1"),
+        new teams.O365ConnectorCardFact(session).name("Fact name 2").value("Fact value 2"),
     ])
         .images([
         new teams.O365ConnectorCardImage(session).title("image 1").image("http://connectorsdemo.azurewebsites.net/images/MicrosoftSurface_024_Cafe_OH-06315_VS_R1c.jpg"),
@@ -276,8 +276,8 @@ bot.dialog('SendO365Card', function (session) {
         new teams.O365ConnectorCardImage(session).title("image 3").image("http://connectorsdemo.azurewebsites.net/images/WIN12_Anthony_02.jpg")
     ]);
     var card = new teams.O365ConnectorCard(session)
-        .summary("O365 card summar")
-        .themeColor("#8899AA")
+        .summary("O365 card summary")
+        .themeColor("#E67A9E")
         .title("card title")
         .text("card text")
         .sections([section])
@@ -309,7 +309,7 @@ var o365CardActionHandler = function (event, query, callback) {
         .address(event.address)
         .summary("Thanks for your input!")
         .textFormat("xml")
-        .text("<h2>Thanks, " + userName + "!<br/>\n                   <h3>Your input action ID:</h3><br/>\n                   <pre>" + query.actionId + "</pre><br/>\n                   <h3>Your input body:</h3><br/>\n                   <pre>" + JSON.stringify(body, null, 2) + "</pre>");
+        .text("<h2>Thanks, " + userName + "!</h2><br/><h3>Your input action ID:</h3><br/><pre>" + query.actionId + "</pre><br/><h3>Your input body:</h3><br/><pre>" + JSON.stringify(body, null, 2) + "</pre>");
     connector.send([msg.toMessage()], function (err, address) {
     });
     callback(null, null, 200);

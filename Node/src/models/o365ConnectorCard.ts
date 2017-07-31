@@ -48,6 +48,8 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     public title(text: string|string[], ...args: any[]): this {
         if (text) {
             (<teams.IO365ConnectorCard>this.data.content).title = fmtText(this.session, text, args);
+        } else {
+            delete (<teams.IO365ConnectorCard>this.data.content).title;
         }
         return this;
     }
@@ -55,6 +57,8 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     public text(text: string|string[], ...args: any[]): this {
         if (text) {
             (<teams.IO365ConnectorCard>this.data.content).text = fmtText(this.session, text, args);
+        } else {
+            delete (<teams.IO365ConnectorCard>this.data.content).text;
         }
         return this;
     }
@@ -64,9 +68,11 @@ export class O365ConnectorCard implements builder.IIsAttachment {
         return this; 
     }
 
-    public themeColor(text: string|string[], ...args: any[]): this {
-        if (text) {
-            (<teams.IO365ConnectorCard>this.data.content).themeColor = fmtText(this.session, text, args);
+    public themeColor(color: string): this {
+        if (color) {
+            (<teams.IO365ConnectorCard>this.data.content).themeColor = color;
+        } else {
+            delete (<teams.IO365ConnectorCard>this.data.content).themeColor;
         }
         return this;
     }
@@ -74,9 +80,9 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     public sections(list: teams.IO365ConnectorCardSection[]|teams.IIsO365ConnectorCardSection[]): this {
         (<teams.IO365ConnectorCard>this.data.content).sections = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var section = list[i];
-                (<teams.IO365ConnectorCard>this.data.content).sections.push((<teams.IIsO365ConnectorCardSection>section).toSection ? (<teams.IIsO365ConnectorCardSection>section).toSection() : <teams.IO365ConnectorCardSection>section);    
+                (<teams.IO365ConnectorCard>this.data.content).sections.push((<teams.IIsO365ConnectorCardSection>section).toSection ? (<teams.IIsO365ConnectorCardSection>section).toSection() : <teams.IO365ConnectorCardSection>section);
             }
         }
         return this;
@@ -85,7 +91,7 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     public potentialAction(list: teams.IO365ConnectorCardActionBase[]|teams.IIsO365ConnectorCardActionBase[]): this {
         (<teams.IO365ConnectorCard>this.data.content).potentialAction = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var action = list[i];
                 var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;
@@ -101,7 +107,7 @@ export class O365ConnectorCard implements builder.IIsAttachment {
 }
 
 export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSection {
-    private data = <teams.IO365ConnectorCardSection>{}
+    private data = <teams.IO365ConnectorCardSection>{};
     
     constructor(protected session?: builder.Session) {
     }
@@ -109,6 +115,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public title(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.title = fmtText(this.session, text, args);
+        } else {
+            delete this.data.title;
         }
         return this;
     }
@@ -116,6 +124,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public text(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.text = fmtText(this.session, text, args);
+        } else {
+            delete this.data.text;
         }
         return this;
     }
@@ -123,6 +133,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activityTitle(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.activityTitle = fmtText(this.session, text, args);
+        } else {
+            delete this.data.activityTitle;
         }
         return this;
     }
@@ -130,6 +142,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activitySubtitle(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.activitySubtitle = fmtText(this.session, text, args);
+        } else {
+            delete this.data.activitySubtitle;
         }
         return this;
     }
@@ -137,6 +151,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activityText(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.activityText = fmtText(this.session, text, args);
+        } else {
+            delete this.data.activityText;
         }
         return this;
     }
@@ -144,6 +160,8 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activityImage(imageUrl: string): this {
         if (imageUrl) {
             this.data.activityImage = imageUrl;
+        } else {
+            delete this.data.activityImage;
         }
         return this;
     }
@@ -156,7 +174,7 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public facts(list: teams.IO365ConnectorCardFact[]|teams.IIsO365ConnectorCardFact[]): this {
         this.data.facts = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var fact = list[i];
                 this.data.facts.push((<teams.IIsO365ConnectorCardFact>fact).toFact ? (<teams.IIsO365ConnectorCardFact>fact).toFact() : <teams.IO365ConnectorCardFact>fact);    
             }
@@ -167,7 +185,7 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public images(list: teams.IO365ConnectorCardImage[]|teams.IIsO365ConnectorCardImage[]): this {
         this.data.images = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var image = list[i];
                 this.data.images.push((<teams.IIsO365ConnectorCardImage>image).toImage ? (<teams.IIsO365ConnectorCardImage>image).toImage() : <teams.IO365ConnectorCardImage>image);
             }
@@ -178,7 +196,7 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public potentialAction(list: teams.IO365ConnectorCardActionBase[]|teams.IIsO365ConnectorCardActionBase[]): this {
         this.data.potentialAction = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var action = list[i];
                 var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;
@@ -200,14 +218,20 @@ export class O365ConnectorCardFact implements teams.IIsO365ConnectorCardFact {
         
     }
     
-    public name(v: string): this {
-        this.data.name = v || '';
+    public name(text: string|string[], ...args: any[]): this {
+        if (text) {
+            this.data.name = fmtText(this.session, text, args);
+        } else {
+            delete this.data.name;
+        }
         return this;
     }
 
     public value(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.value = fmtText(this.session, text, args);
+        } else {
+            delete this.data.value;
         }
         return this;
     }
@@ -234,6 +258,8 @@ export class O365ConnectorCardImage implements teams.IIsO365ConnectorCardImage {
     public title(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.title = fmtText(this.session, text, args);
+        } else {
+            delete this.data.title;
         }
         return this;
     }
@@ -253,6 +279,8 @@ export abstract class O365ConnectorCardActionBase implements teams.IIsO365Connec
     public name(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.name = fmtText(this.session, text, args);
+        } else {
+            delete this.data.name;
         }
         return this;
     }
@@ -260,6 +288,8 @@ export abstract class O365ConnectorCardActionBase implements teams.IIsO365Connec
     public id(actionId: string): this {
         if (actionId) {
             this.data.id = actionId;
+        } else {
+            delete this.data.id;
         }
         return this;
     }
@@ -277,9 +307,7 @@ export class O365ConnectorCardViewAction extends O365ConnectorCardActionBase {
     }
 
     public target(targetUrl: string): this {
-        if (targetUrl) {
-            (<teams.IO365ConnectorCardViewAction>this.data).target = [targetUrl];
-        }
+        (<teams.IO365ConnectorCardViewAction>this.data).target = targetUrl ? [targetUrl] : [];
         return this;
     }
 
@@ -289,51 +317,72 @@ export class O365ConnectorCardViewAction extends O365ConnectorCardActionBase {
 }
 
 export class O365ConnectorCardOpenUri extends O365ConnectorCardActionBase {
-    private targets: teams.IO365ConnectorCardOpenUriTarget[] = [];
+    private targetsData:  {[os in teams.O365ConnectorCardOpenUriOS]?: string} = {};
 
     constructor(protected session?: builder.Session) {
         super(session);
-        (<teams.IO365ConnectorCardOpenUri>this.data).targets = this.targets;
+    }
+
+    public targets(platformUrlMap: {[os in teams.O365ConnectorCardOpenUriOS]?: string}): this {
+        if (platformUrlMap) {
+            this.targetsData = platformUrlMap;
+            this.update();
+        }
+        return this;
     }
 
     public default(targetUrl: string): this {
         if (targetUrl) {
-            this.targets.push(<teams.IO365ConnectorCardOpenUriTarget> {
-                os: 'default',
-                uri: targetUrl
-            });
+            this.targetsData.default = targetUrl;
+        } else {
+            delete this.targetsData.default;
         }
+        this.update();
         return this;
     }
 
     public iOS(targetUrl: string): this {
         if (targetUrl) {
-            this.targets.push(<teams.IO365ConnectorCardOpenUriTarget> {
-                os: 'iOS',
-                uri: targetUrl
-            });
+            this.targetsData.iOS = targetUrl;
+        } else {
+            delete this.targetsData.iOS;
         }
+        this.update();        
         return this;
     }
 
     public android(targetUrl: string): this {
         if (targetUrl) {
-            this.targets.push(<teams.IO365ConnectorCardOpenUriTarget> {
-                os: 'android',
-                uri: targetUrl
-            });
+            this.targetsData.android = targetUrl;
+        } else {
+            delete this.targetsData.android;
         }
+        this.update();
         return this;
     }
 
     public windowsPhone(targetUrl: string): this {
         if (targetUrl) {
-            this.targets.push(<teams.IO365ConnectorCardOpenUriTarget> {
-                os: 'windows',
-                uri: targetUrl
-            });
+            this.targetsData.windows = targetUrl;
+        } else {
+            delete this.targetsData.windows;
         }
+        this.update();
         return this;
+    }
+
+    private update(): void {
+        let data: teams.IO365ConnectorCardOpenUriTarget[] = [];
+        for (let key in this.targetsData) {
+            let val: string = this.targetsData[ <teams.O365ConnectorCardOpenUriOS>key ];
+            if (val) {
+                data.push(<teams.IO365ConnectorCardOpenUriTarget> {
+                    os: key,
+                    uri: val
+                });
+            }
+        }
+        (<teams.IO365ConnectorCardOpenUri>this.data).targets = data;
     }
 
     protected get type(): string {
@@ -349,6 +398,8 @@ export class O365ConnectorCardHttpPOST extends O365ConnectorCardActionBase {
     public body(text: string): this {
         if (text) {
             (<teams.IO365ConnectorCardHttpPOST>this.data).body = text;
+        } else {
+            delete (<teams.IO365ConnectorCardHttpPOST>this.data).body;
         }
         return this;
     }
@@ -367,7 +418,7 @@ export class O365ConnectorCardActionCard extends O365ConnectorCardActionBase {
         let data = <teams.IO365ConnectorCardActionCard> this.data;
         data.actions = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var action = list[i];
                 var obj = (<teams.IIsO365ConnectorCardActionBase>action).toAction ?
                           (<teams.IIsO365ConnectorCardActionBase>action).toAction() : <teams.IO365ConnectorCardActionBase>action;                
@@ -381,7 +432,7 @@ export class O365ConnectorCardActionCard extends O365ConnectorCardActionBase {
         let data = <teams.IO365ConnectorCardActionCard> this.data;
         data.inputs = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var input = list[i];
                 var obj = (<teams.IIsO365ConnectorCardInputBase>input).toInput ?
                           (<teams.IIsO365ConnectorCardInputBase>input).toInput() : <teams.IO365ConnectorCardInputBase>input;
@@ -406,6 +457,8 @@ export abstract class O365ConnectorCardInputBase implements teams.IIsO365Connect
     public id(inputId: string): this {
         if (inputId) {
             this.data.id = inputId;
+        } else {
+            delete this.data.id;
         }
         return this;
     }
@@ -418,6 +471,8 @@ export abstract class O365ConnectorCardInputBase implements teams.IIsO365Connect
     public title(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.title = fmtText(this.session, text, args);
+        } else {
+            delete this.data.title;
         }
         return this;
     }
@@ -425,6 +480,8 @@ export abstract class O365ConnectorCardInputBase implements teams.IIsO365Connect
     public value(text: string): this {
         if (text) {
             this.data.value = text;
+        } else {
+            delete this.data.value;
         }
         return this;
     }
@@ -447,8 +504,10 @@ export class O365ConnectorCardTextInput extends O365ConnectorCardInputBase {
     }
 
     public maxLength(len: number): this {
-        if (len) {
+        if (len && len > 0) {
             (<teams.IO365ConnectorCardTextInput>this.data).maxLength = len;
+        } else {
+            delete (<teams.IO365ConnectorCardTextInput>this.data).maxLength;
         }
         return this;
     }
@@ -474,11 +533,8 @@ export class O365ConnectorCardDateInput extends O365ConnectorCardInputBase {
 }
 
 export class O365ConnectorCardMultichoiceInput extends O365ConnectorCardInputBase {
-    private choicesData: teams.IO365ConnectorCardMultichoiceInputChoice[] = [];
-
     constructor(protected session?: builder.Session) {
         super(session);
-        (<teams.IO365ConnectorCardMultichoiceInput>this.data).choices = this.choicesData;
     }
 
     public isMultiSelect(flag: boolean): this {
@@ -486,9 +542,11 @@ export class O365ConnectorCardMultichoiceInput extends O365ConnectorCardInputBas
         return this;
     }
 
-    public style(s: teams.IO365ConnectorCardMultichoiceInputStyle): this {
+    public style(s: teams.O365ConnectorCardMultichoiceInputStyle): this {
         if (s) {
             (<teams.IO365ConnectorCardMultichoiceInput>this.data).style = s;
+        } else {
+            delete (<teams.IO365ConnectorCardMultichoiceInput>this.data).style;
         }
         return this;
     }
@@ -504,16 +562,18 @@ export class O365ConnectorCardMultichoiceInput extends O365ConnectorCardInputBas
     }
 
     public choices(list: teams.IO365ConnectorCardMultichoiceInputChoice[]|teams.IIsO365ConnectorCardMultichoiceInputChoice[]): this {
+        let choicesData: teams.IO365ConnectorCardMultichoiceInputChoice[] = [];
         if (list) {
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 var item = list[i];
                 if ((<teams.IIsO365ConnectorCardMultichoiceInputChoice>item).toChoice) {
-                    this.choicesData.push((<teams.IIsO365ConnectorCardMultichoiceInputChoice>item).toChoice());
+                    choicesData.push((<teams.IIsO365ConnectorCardMultichoiceInputChoice>item).toChoice());
                  } else {
-                    this.choicesData.push(<teams.IO365ConnectorCardMultichoiceInputChoice>item);
+                    choicesData.push(<teams.IO365ConnectorCardMultichoiceInputChoice>item);
                  }    
             }
         }
+        (<teams.IO365ConnectorCardMultichoiceInput>this.data).choices = choicesData;
         return this;
     }
 
@@ -531,6 +591,8 @@ export class O365ConnectorCardMultichoiceInputChoice implements teams.IIsO365Con
     public display(text: string|string[], ...args: any[]): this {
         if (text) {
             this.data.display = fmtText(this.session, text, args);
+        } else {
+            delete this.data.display;
         }
         return this;
     }
@@ -538,6 +600,8 @@ export class O365ConnectorCardMultichoiceInputChoice implements teams.IIsO365Con
     public value(text: string): this {
         if (text) {
             this.data.value = text;
+        } else {
+            delete this.data.value;
         }
         return this;
     }
@@ -558,20 +622,20 @@ export function fmtText(session: builder.Session, prompts: string|string[], args
 
 export function o365ActionToPayload(obj: teams.IO365ConnectorCardActionBase): teams.IO365ConnectorCardActionBase{
     if (obj.type) {
-        Object.defineProperty(obj, '@type', Object.getOwnPropertyDescriptor(obj, 'type'));
-        delete (<any> obj)['type'];
+        (<any> obj)['@type'] = obj.type;
+        delete obj.type;
     }
     if (obj.id) {
-        Object.defineProperty(obj, '@id', Object.getOwnPropertyDescriptor(obj, 'id'));
-        delete (<any> obj)['id'];        
+        (<any> obj)['@id'] = obj.id;
+        delete obj.id;
     }
     return obj;
 }
 
 export function o365InputToPayload(obj: teams.IO365ConnectorCardInputBase): teams.IO365ConnectorCardInputBase{
     if (obj.type) {
-        Object.defineProperty(obj, '@type', Object.getOwnPropertyDescriptor(obj, 'type'));
-        delete (<any> obj)['type'];
+        (<any> obj)['@type'] = obj.type;
+        delete obj.type;
     }
     return obj;
 }

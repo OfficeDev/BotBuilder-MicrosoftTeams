@@ -404,14 +404,14 @@ export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase
  * 
  * @member {array} [choices] Set of choices whose each item can be in any subtype of IO365ConnectorCardMultichoiceInputChoice.
  * 
- * @member {IO365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
+ * @member {O365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
  * 
  * @member {boolean} [isMultiSelect] Define if this input field allows multiple selections. Default value is false.
  *  
  */
 export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase{
   choices: IO365ConnectorCardMultichoiceInputChoice[];
-  style?: IO365ConnectorCardMultichoiceInputStyle;
+  style?: O365ConnectorCardMultichoiceInputStyle;
   isMultiSelect?: boolean; 
 }
 
@@ -420,7 +420,7 @@ export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardIn
  * Type of literal strings used for multi-choice input (IO365ConnectorCardMultichoiceInput) rendering style.
  *
  */
-export type IO365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
+export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
 
 /**
  * @interface
@@ -449,7 +449,7 @@ export interface IIsO365ConnectorCardMultichoiceInputChoice {
  * @member {string} [actionId] Action Id associated with the HttpPOST action button triggered, defined in IO365ConnectorCardActionBase.
  *  
  */
-export interface O365ConnectorCardActionQuery {
+export interface IO365ConnectorCardActionQuery {
   body: string;
   actionId: string;
 }
@@ -603,6 +603,9 @@ export declare class O365ConnectorCardOpenUri implements IIsO365ConnectorCardAct
   /** Action Id. */
   id(actionId: string): O365ConnectorCardOpenUri;
 
+  /** Directly assign target urls associated different platforms. */
+  targets(platformUrlMap: {[os in O365ConnectorCardOpenUriOS]?: string}): O365ConnectorCardOpenUri;
+
   /** Default target URL. It will be also used for desktop / web clients. */
   default(targetUrl: string): O365ConnectorCardOpenUri;
 
@@ -750,7 +753,7 @@ export declare class O365ConnectorCardMultichoiceInput implements IIsO365Connect
   isMultiSelect(flag: boolean): O365ConnectorCardMultichoiceInput;
 
   /** Choice item rendering style. Could be 'compact' (default) or 'expanded'. */
-  style(s: IO365ConnectorCardMultichoiceInputStyle): O365ConnectorCardMultichoiceInput;
+  style(s: O365ConnectorCardMultichoiceInputStyle): O365ConnectorCardMultichoiceInput;
 
   /** Set choice item rendering style to be 'compact' - items will be rendered as a dropdown list. */
   compactStyle(): O365ConnectorCardMultichoiceInput;
@@ -975,7 +978,7 @@ export declare class TenantInfo {
 }
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
-export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: O365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
+export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;

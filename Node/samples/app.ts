@@ -292,8 +292,8 @@ bot.dialog('SendO365Card', function (session: builder.Session) {
                 .activityImage("http://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg")
                 .activityText("activity text")
                 .facts([
-                  new teams.O365ConnectorCardFact(session).name("Fact Name 1").value("Faction value 1"),
-                  new teams.O365ConnectorCardFact(session).name("Fact Name 2").value("Faction value 2"),
+                  new teams.O365ConnectorCardFact(session).name("Fact name 1").value("Fact value 1"),
+                  new teams.O365ConnectorCardFact(session).name("Fact name 2").value("Fact value 2"),
                 ])
                 .images([
                   new teams.O365ConnectorCardImage(session).title("image 1").image("http://connectorsdemo.azurewebsites.net/images/MicrosoftSurface_024_Cafe_OH-06315_VS_R1c.jpg"),
@@ -302,8 +302,8 @@ bot.dialog('SendO365Card', function (session: builder.Session) {
                 ]);
 
   let card = new teams.O365ConnectorCard(session)
-              .summary("O365 card summar")
-              .themeColor("#8899AA")
+              .summary("O365 card summary")
+              .themeColor("#E67A9E")
               .title("card title")
               .text("card text")
               .sections([section])
@@ -331,18 +331,14 @@ bot.dialog('SendO365Card', function (session: builder.Session) {
 });
 
 // example for o365 connector actionable card
-var o365CardActionHandler = function (event: builder.IEvent, query: teams.O365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void): void {
+var o365CardActionHandler = function (event: builder.IEvent, query: teams.IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void): void {
   let userName = event.address.user.name;
   let body = JSON.parse(query.body);
   let msg = new builder.Message()
             .address(event.address)
             .summary("Thanks for your input!")
             .textFormat("xml")
-            .text(`<h2>Thanks, ${userName}!<br/>
-                   <h3>Your input action ID:</h3><br/>
-                   <pre>${query.actionId}</pre><br/>
-                   <h3>Your input body:</h3><br/>
-                   <pre>${JSON.stringify(body, null, 2)}</pre>`);
+            .text(`<h2>Thanks, ${userName}!</h2><br/><h3>Your input action ID:</h3><br/><pre>${query.actionId}</pre><br/><h3>Your input body:</h3><br/><pre>${JSON.stringify(body, null, 2)}</pre>`);
   connector.send([msg.toMessage()], (err: Error, address?: builder.IAddress[]) => {
 
   });
