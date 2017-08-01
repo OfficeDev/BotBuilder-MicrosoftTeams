@@ -154,52 +154,34 @@ export interface TeamsChannelData {
 }
 
 /**
- * @class
- * Initializes a new instance of the O365ConnectorCardFact class.
- * @constructor
- * O365 connector card fact
+ * @interface
+ * Interface of O365 connector card
  *
- * @member {string} [name] Name of the fact
+ * @member {string} [title] Title of the card
  *
- * @member {string} [value] Value for the fact
+ * @member {string} [text] Text for the card
+ *
+ * @member {string} [summary] Summary for the card
+ *
+ * @member {string} [themeColor] Theme color for the card
+ *
+ * @member {array} [sections] Set of sections for the current card
+ *
+ * @member {array} [potentialAction] Set of actions for the current card
  *
  */
-export interface O365ConnectorCardFact {
-  name?: string;
-  value?: string;
+export interface IO365ConnectorCard {
+  title?: string;
+  text?: string;
+  summary: string;
+  themeColor?: string;
+  sections?: IO365ConnectorCardSection[];
+  potentialAction?: IO365ConnectorCardActionBase[];
 }
 
 /**
- * @class
- * Initializes a new instance of the O365ConnectorCardImage class.
- * @constructor
- * O365 connector card image
- *
- * @member {string} [image] URL for the image
- *
- */
-export interface O365ConnectorCardImage {
-  image?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the O365ConnectorCardActionBase class.
- * @constructor
- * O365 connector card action base
- *
- * @member {string} [type] Type of the item
- *
- */
-export interface O365ConnectorCardActionBase {
-  type?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the O365ConnectorCardSection class.
- * @constructor
- * O365 connector card section
+ * @interface
+ * Interface of O365 connector card section
  *
  * @member {string} [title] Title of the section
  *
@@ -213,62 +195,264 @@ export interface O365ConnectorCardActionBase {
  *
  * @member {string} [activityImage] Activity image
  *
- * @member {array} [facts] Set of sections for the current card
+ * @member {boolean} [markdown] Use markdown for all text contents. Default vaule is true.
  *
- * @member {array} [images] Set of sections for the current card
+ * @member {array} [facts] Set of facts for the current section
  *
- * @member {array} [potentialAction] Set of sections for the current card
+ * @member {array} [images] Set of images for the current section
+ *
+ * @member {array} [potentialAction] Set of actions for the current section
  *
  */
-export interface O365ConnectorCardSection {
+export interface IO365ConnectorCardSection {
   title?: string;
   text?: string;
   activityTitle?: string;
   activitySubtitle?: string;
   activityText?: string;
   activityImage?: string;
-  facts?: O365ConnectorCardFact[];
-  images?: O365ConnectorCardImage[];
-  potentialAction?: O365ConnectorCardActionBase[];
+  markdown?: boolean;
+  facts: IO365ConnectorCardFact[];
+  images: IO365ConnectorCardImage[];
+  potentialAction?: IO365ConnectorCardActionBase[];
+}
+
+export interface IIsO365ConnectorCardSection {
+  toSection(): IO365ConnectorCardSection;
 }
 
 /**
- * @class
- * Initializes a new instance of the O365ConnectorCard class.
- * @constructor
- * O365 connector card
+ * @interface
+ * Interface of O365 connector card fact
  *
- * @member {string} [title] Title of the item
+ * @member {string} [name] Display name of the fact
  *
- * @member {string} [text] Text for the card
- *
- * @member {string} [summary] Summary for the card
- *
- * @member {string} [themeColor] Theme color for the card
- *
- * @member {array} [sections] Set of sections for the current card
+ * @member {string} [value] Display value for the fact
  *
  */
-export interface O365ConnectorCard {
+export interface IO365ConnectorCardFact {
+  name: string;
+  value: string;
+}
+
+export interface IIsO365ConnectorCardFact {
+  toFact(): IO365ConnectorCardFact;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card image
+ *
+ * @member {string} [image] URL for the image
+ *
+ * @member {string} [title] Alternative text for the image
+ *
+ */
+export interface IO365ConnectorCardImage {
+  image: string;
   title?: string;
-  text?: string;
-  summary?: string;
-  themeColor?: string;
-  sections?: O365ConnectorCardSection[];
+}
+
+export interface IIsO365ConnectorCardImage {
+  toImage(): IO365ConnectorCardImage;
 }
 
 /**
- * @class
- * Initializes a new instance of the O365ConnectorCardViewAction class.
- * @constructor
- * @member {string} [name] Name of the action
+ * @interface
+ * Base interface of O365 connector card action.
  *
- * @member {array} [target] Target urls
+ * @member {string} [type] Type of the action
+ *
+ * @member {string} [name] Name of the action that will be used as button title
+ *
+ * @member {string} [id] Action Id
  *
  */
-export interface O365ConnectorCardViewAction extends O365ConnectorCardActionBase {
-  name?: string;
-  target?: string[];
+export interface IO365ConnectorCardActionBase {
+  type: string;
+  name: string;
+  id?: string;
+}
+
+export interface IIsO365ConnectorCardActionBase {
+  toAction(): IO365ConnectorCardActionBase;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card ViewAction action
+ *
+ * @member {array} [target] Target urls, only the first url effective for card button
+ *
+ */
+export interface IO365ConnectorCardViewAction extends IO365ConnectorCardActionBase {
+  target: string[];
+}
+
+/**
+ * @type
+ * Type of literal strings used for OpenUri target (IO365ConnectorCardOpenUriTarget) operating systems (os).
+ *
+ */
+export type O365ConnectorCardOpenUriOS = 'default' | 'iOS' | 'android' | 'windows';
+
+/**
+ * @interface
+ * Interface of O365 connector card OpenUri target
+ *
+ * @member {O365ConnectorCardOpenUriOS} [os] Target operating system
+ *
+ * @member {string} [uri] Target url
+ *
+ */
+export interface IO365ConnectorCardOpenUriTarget {
+  os: O365ConnectorCardOpenUriOS;
+  uri: string;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card OpenUri action
+ *
+ * @member {O365ConnectorCardOpenUriOS} [os] Target operating system
+ *
+ * @member {string} [uri] Target url
+ *
+ */
+export interface IO365ConnectorCardOpenUri extends IO365ConnectorCardActionBase {
+  targets: IO365ConnectorCardOpenUriTarget[];
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card HttpPOST action
+ * 
+ * @member {string} [body] Content to be posted back to bots via invoke.
+ *
+ */
+export interface IO365ConnectorCardHttpPOST extends IO365ConnectorCardActionBase {
+  body?: string;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card ActionCard action
+ * 
+ * @member {array} [inputs] Set of inputs contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase
+ * 
+ * @member {array} [actions] Set of actions contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase except IO365ConnectorCardActionCard, as nested ActionCard is forbidden.
+ *
+ */
+export interface IO365ConnectorCardActionCard extends IO365ConnectorCardActionBase {
+  inputs: IO365ConnectorCardInputBase[];
+  actions: IO365ConnectorCardActionBase[];
+}
+
+/**
+ * @interface
+ * Base interface of O365 connector card input for ActionCard action
+ * 
+ * @member {string} [type] Input type name
+ * 
+ * @member {string} [id] Input Id. It must be unique per entire O365 connector card.
+ * 
+ * @member {boolean} [isRequired] Define if this input is a required field. Default value is false.
+ * 
+ * @member {string} [title] Input title that will be shown as the placeholder
+ * 
+ * @member {string} [value] Default value for this input field
+ */
+export interface IO365ConnectorCardInputBase {
+  type: string;
+  id: string;
+  isRequired?: boolean;
+  title: string;
+  value: string;
+}
+
+export interface IIsO365ConnectorCardInputBase {
+  toInput(): IO365ConnectorCardInputBase;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card text input
+ * 
+ * @member {boolean} [isMultiline] Define if text input is allowed for multiple lines. Default value is false.
+ * 
+ * @member {number} [maxLength] Maximum length of text input. Default value is unlimited.
+ *  
+ */
+export interface IO365ConnectorCardTextInput extends IO365ConnectorCardInputBase{
+  isMultiline?: boolean;
+  maxLength?: number;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card date input
+ * 
+ * @member {boolean} [includeTime] Include time input field. Default value  is false (date only).
+ *  
+ */
+export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase{
+  includeTime?: boolean;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card multiple choice input
+ * 
+ * @member {array} [choices] Set of choices whose each item can be in any subtype of IO365ConnectorCardMultichoiceInputChoice.
+ * 
+ * @member {O365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
+ * 
+ * @member {boolean} [isMultiSelect] Define if this input field allows multiple selections. Default value is false.
+ *  
+ */
+export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase{
+  choices: IO365ConnectorCardMultichoiceInputChoice[];
+  style?: O365ConnectorCardMultichoiceInputStyle;
+  isMultiSelect?: boolean; 
+}
+
+/**
+ * @type
+ * Type of literal strings used for multi-choice input (IO365ConnectorCardMultichoiceInput) rendering style.
+ *
+ */
+export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
+
+/**
+ * @interface
+ * Interface of O365 connector card multiple choice input item
+ * 
+ * @member {string} [display] The text rednered on ActionCard.
+ * 
+ * @member {string} [value] The value received as results.
+ * 
+ */
+export interface IO365ConnectorCardMultichoiceInputChoice {
+  display: string;
+  value: string;
+}
+
+export interface IIsO365ConnectorCardMultichoiceInputChoice {
+  toChoice(): IO365ConnectorCardMultichoiceInputChoice;
+}
+
+/**
+ * @interface
+ * Interface of O365 connector card HttpPOST invoke query
+ * 
+ * @member {string} [body] The results of body string defined in IO365ConnectorCardHttpPOST with substituted input values
+ * 
+ * @member {string} [actionId] Action Id associated with the HttpPOST action button triggered, defined in IO365ConnectorCardActionBase.
+ *  
+ */
+export interface IO365ConnectorCardActionQuery {
+  body: string;
+  actionId: string;
 }
 
 /**
