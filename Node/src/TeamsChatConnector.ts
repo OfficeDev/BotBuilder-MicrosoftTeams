@@ -217,7 +217,6 @@ export class TeamsChatConnector extends builder.ChatConnector {
             compExtHandler(invoke, query, callback);
           }
           catch (e) {
-            console.log(e);
             callback(e, null, 500);
           }
         }
@@ -228,7 +227,6 @@ export class TeamsChatConnector extends builder.ChatConnector {
             o365Handler(invoke, query, callback);
           }
           catch (e) {
-            console.log(e);
             callback(e, null, 500);
           }
         }
