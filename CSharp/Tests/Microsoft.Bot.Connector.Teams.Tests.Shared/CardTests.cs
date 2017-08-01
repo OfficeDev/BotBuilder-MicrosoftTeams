@@ -298,6 +298,18 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             });
         }
 
+        /// <summary>
+        /// O365 connector card extensions.
+        /// </summary>
+        [TestMethod]
+        public void CardTests_O365ConnectorCardExtensions()
+        {
+            var card = new O365ConnectorCard();
+            var attachment = card.ToAttachment();
+            Assert.AreEqual(attachment.Content, card);
+            Assert.AreEqual(attachment.ContentType, O365ConnectorCard.ContentType);
+        }
+
         /////// <summary>
         /////// Person card test.
         /////// </summary>
