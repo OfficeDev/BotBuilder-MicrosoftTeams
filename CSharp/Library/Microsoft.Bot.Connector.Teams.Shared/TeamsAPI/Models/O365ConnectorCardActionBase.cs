@@ -21,17 +21,34 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// Initializes a new instance of the O365ConnectorCardActionBase
         /// class.
         /// </summary>
-        /// <param name="type">Type of the item</param>
-        public O365ConnectorCardActionBase(string type = default(string))
+        /// <param name="type">Type of the action</param>
+        /// <param name="name">Name of the action that will be used as button
+        /// title</param>
+        /// <param name="id">Action Id</param>
+        public O365ConnectorCardActionBase(string type = default(string), string name = default(string), string id = default(string))
         {
             Type = type;
+            Name = name;
+            Id = id;
         }
 
         /// <summary>
-        /// Gets or sets type of the item
+        /// Gets or sets type of the action
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "@type")]
         public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets name of the action that will be used as button title
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets action Id
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "@id")]
+        public string Id { get; set; }
 
     }
 }

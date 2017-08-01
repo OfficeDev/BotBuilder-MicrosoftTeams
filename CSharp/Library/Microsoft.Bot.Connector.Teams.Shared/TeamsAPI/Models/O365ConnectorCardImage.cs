@@ -20,9 +20,11 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// Initializes a new instance of the O365ConnectorCardImage class.
         /// </summary>
         /// <param name="image">URL for the image</param>
-        public O365ConnectorCardImage(string image = default(string))
+        /// <param name="title">Alternative text for the image</param>
+        public O365ConnectorCardImage(string image = default(string), string title = default(string))
         {
             Image = image;
+            Title = title;
         }
 
         /// <summary>
@@ -30,6 +32,12 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "image")]
         public string Image { get; set; }
+
+        /// <summary>
+        /// Gets or sets alternative text for the image
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
 
     }
 }
