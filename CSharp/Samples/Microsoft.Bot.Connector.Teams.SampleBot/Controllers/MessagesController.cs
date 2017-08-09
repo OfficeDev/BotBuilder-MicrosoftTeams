@@ -49,10 +49,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Controllers
     using Builder.Dialogs;
     using Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector.Teams.SampleBot.Shared;
-    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using Polly;
 
     /// <summary>
     /// Main messaging controller.
@@ -76,7 +76,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Controllers
                 new Uri("https://smba.trafficmanager.net/amer-client-ss.msg/"),
                 ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppIdKey],
                 ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppPasswordKey]);
-            this.connectorClient.SetRetryPolicy(new ExponentialBackoff(3, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(1)));
+            this.connectorClient.SetRetryPolicy(RetryHelpers.DefaultPolicyBuilder.WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10) }));
         }
 
         /// <summary>

@@ -42,9 +42,9 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
+    using Polly;
 
     /// <summary>
     /// Retry helper tests.
@@ -123,7 +123,14 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
-            conClient.SetRetryPolicy(new Incremental(3, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5)));
+            conClient.SetRetryPolicy(RetryHelpers.DefaultPolicyBuilder.WaitAndRetryAsync(new[]
+            {
+                TimeSpan.FromSeconds(1),
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromSeconds(6),
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20)
+            }));
             await conClient.Conversations.SendToConversationWithRetriesAsync(sampleActivity);
         }
 
