@@ -603,9 +603,21 @@
           "description": "mimetype/Contenttype for the file",
           "type": "string"
         },
+        "contentUrl": {
+          "description": "Content Url",
+          "type": "string"
+        },
         "content": {
           "$ref": "#/definitions/Object",
           "description": "Embedded content"
+        },
+        "name": {
+          "description": "(OPTIONAL) The name of the attachment",
+          "type": "string"
+        },
+        "thumbnailUrl": {
+          "description": "(OPTIONAL) Thumbnail associated with attachment",
+          "type": "string"
         }
       }
     },
@@ -639,7 +651,7 @@
             "$ref": "#/definitions/ComposeExtensionAttachment"
           }
         },
-        "suggestedActions" : {
+        "suggestedActions": {
           "description": "(Only when type is auth or config) Actions",
           "type": "array",
           "items": {

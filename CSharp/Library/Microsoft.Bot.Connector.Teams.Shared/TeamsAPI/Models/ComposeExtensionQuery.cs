@@ -21,14 +21,14 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         /// <param name="commandId">Id of the command assigned by Bot</param>
         /// <param name="parameters">Parameters for the query</param>
-        /// <param name="authenticationCode">Authentication code used by bot
-        /// to authenticate the request.</param>
-        public ComposeExtensionQuery(string commandId = default(string), System.Collections.Generic.IList<ComposeExtensionParameter> parameters = default(System.Collections.Generic.IList<ComposeExtensionParameter>), ComposeExtensionQueryOptions queryOptions = default(ComposeExtensionQueryOptions), string authenticationCode = default(string))
+        /// <param name="state">State parameter passed back to the bot after
+        /// authentication/configuration flow</param>
+        public ComposeExtensionQuery(string commandId = default(string), System.Collections.Generic.IList<ComposeExtensionParameter> parameters = default(System.Collections.Generic.IList<ComposeExtensionParameter>), ComposeExtensionQueryOptions queryOptions = default(ComposeExtensionQueryOptions), string state = default(string))
         {
             CommandId = commandId;
             Parameters = parameters;
             QueryOptions = queryOptions;
-            AuthenticationCode = authenticationCode;
+            State = state;
         }
 
         /// <summary>
@@ -49,11 +49,11 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public ComposeExtensionQueryOptions QueryOptions { get; set; }
 
         /// <summary>
-        /// Gets or sets authentication code used by bot to authenticate the
-        /// request.
+        /// Gets or sets state parameter passed back to the bot after
+        /// authentication/configuration flow
         /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "authenticationCode")]
-        public string AuthenticationCode { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
 
     }
 }

@@ -22,12 +22,18 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <param name="attachmentLayout">Hint for how to deal with multiple
         /// attachments.</param>
         /// <param name="type">The type of the result</param>
-        /// <param name="attachments">Attachments</param>
-        public ComposeExtensionResult(string attachmentLayout = default(string), string type = default(string), System.Collections.Generic.IList<ComposeExtensionAttachment> attachments = default(System.Collections.Generic.IList<ComposeExtensionAttachment>))
+        /// <param name="attachments">(Only when type is result)
+        /// Attachments</param>
+        /// <param name="suggestedActions">(Only when type is auth or config)
+        /// Actions</param>
+        /// <param name="text">(Only when type is message) Text</param>
+        public ComposeExtensionResult(string attachmentLayout = default(string), string type = default(string), System.Collections.Generic.IList<ComposeExtensionAttachment> attachments = default(System.Collections.Generic.IList<ComposeExtensionAttachment>), System.Collections.Generic.IList<CardAction> suggestedActions = default(System.Collections.Generic.IList<CardAction>), string text = default(string))
         {
             AttachmentLayout = attachmentLayout;
             Type = type;
             Attachments = attachments;
+            SuggestedActions = suggestedActions;
+            Text = text;
         }
 
         /// <summary>
@@ -43,10 +49,22 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets attachments
+        /// Gets or sets (Only when type is result) Attachments
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "attachments")]
         public System.Collections.Generic.IList<ComposeExtensionAttachment> Attachments { get; set; }
+
+        /// <summary>
+        /// Gets or sets (Only when type is auth or config) Actions
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "suggestedActions")]
+        public System.Collections.Generic.IList<CardAction> SuggestedActions { get; set; }
+
+        /// <summary>
+        /// Gets or sets (Only when type is message) Text
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "text")]
+        public string Text { get; set; }
 
     }
 }
