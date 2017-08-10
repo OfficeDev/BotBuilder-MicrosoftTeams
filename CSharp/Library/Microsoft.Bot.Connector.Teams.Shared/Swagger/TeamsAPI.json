@@ -588,8 +588,8 @@
         "queryOptions": {
           "$ref": "#/definitions/ComposeExtensionQueryOptions"
         },
-        "authenticationCode": {
-          "description": "Authentication code used by bot to authenticate the request.",
+        "state": {
+          "description": "State parameter passed back to the bot after authentication/configuration flow",
           "type": "string"
         }
       }
@@ -603,21 +603,9 @@
           "description": "mimetype/Contenttype for the file",
           "type": "string"
         },
-        "contentUrl": {
-          "description": "Content Url",
-          "type": "string"
-        },
         "content": {
           "$ref": "#/definitions/Object",
           "description": "Embedded content"
-        },
-        "name": {
-          "description": "(OPTIONAL) The name of the attachment",
-          "type": "string"
-        },
-        "thumbnailUrl": {
-          "description": "(OPTIONAL) Thumbnail associated with attachment",
-          "type": "string"
         }
       }
     },
