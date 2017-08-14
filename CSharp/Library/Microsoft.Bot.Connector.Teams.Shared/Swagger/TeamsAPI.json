@@ -588,8 +588,8 @@
         "queryOptions": {
           "$ref": "#/definitions/ComposeExtensionQueryOptions"
         },
-        "authenticationCode": {
-          "description": "Authentication code used by bot to authenticate the request.",
+        "state": {
+          "description": "State parameter passed back to the bot after authentication/configuration flow",
           "type": "string"
         }
       }
@@ -645,11 +645,23 @@
           "type": "string"
         },
         "attachments": {
-          "description": "Attachments",
+          "description": "(Only when type is result) Attachments",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ComposeExtensionAttachment"
           }
+        },
+        "suggestedActions": {
+          "description": "(Only when type is auth or config) Actions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CardAction",
+            "description": "Action to start authentication or configuration flow"
+          }
+        },
+        "text": {
+          "description": "(Only when type is message) Text",
+          "type": "string"
         }
       }
     },
