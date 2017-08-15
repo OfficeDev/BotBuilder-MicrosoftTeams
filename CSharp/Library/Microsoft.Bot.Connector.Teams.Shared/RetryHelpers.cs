@@ -70,8 +70,8 @@ namespace Microsoft.Bot.Connector
             5,
             (retrycount) =>
             {
-                int jitter = rng.Next() % 2;
-
+                double jitter = rng.NextDouble() % 2;
+                
                 double basenumber = 2.0;
 
                 // 2 -> 2.71320865489534 -> 4.20935737535225 -> 7.92265510992013 -> 19.6958115752911
@@ -80,7 +80,7 @@ namespace Microsoft.Bot.Connector
                     basenumber = Math.Pow(basenumber, PowerFactorBackoff);
                 }
 
-                return new TimeSpan(0, 0, 0, 0, (int)((basenumber + jitter) * 1000));
+                return TimeSpan.FromSeconds(basenumber + jitter);
             });
 
         /// <summary>
