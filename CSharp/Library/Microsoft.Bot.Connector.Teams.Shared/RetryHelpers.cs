@@ -71,7 +71,7 @@ namespace Microsoft.Bot.Connector
             (retrycount) =>
             {
                 double jitter = rng.NextDouble() % 2;
-                
+
                 double basenumber = 2.0;
 
                 // 2 -> 2.71320865489534 -> 4.20935737535225 -> 7.92265510992013 -> 19.6958115752911
