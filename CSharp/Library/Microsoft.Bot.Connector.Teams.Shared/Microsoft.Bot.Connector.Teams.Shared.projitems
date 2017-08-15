@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)TeamsAPI\**\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsConnectorClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TenantFiltering.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TransientExceptionDetectionStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)App.config" />

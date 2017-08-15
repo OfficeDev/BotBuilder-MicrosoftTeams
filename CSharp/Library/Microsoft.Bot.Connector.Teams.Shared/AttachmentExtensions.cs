@@ -50,6 +50,8 @@ namespace Microsoft.Bot.Connector.Teams
         /// <returns>Compose extension attachment</returns>
         public static ComposeExtensionAttachment ToComposeExtensionAttachment(this Attachment attachment, Attachment previewAttachment = null)
         {
+            // We are recreating the attachment so that JsonSerializerSettings with ReferenceLoopHandling set to Error does not generate error
+            // while serializing. Refer to issue - https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/issues/52.
             return new ComposeExtensionAttachment
             {
                 Content = attachment.Content,
@@ -57,7 +59,9 @@ namespace Microsoft.Bot.Connector.Teams
                 ContentUrl = attachment.ContentUrl,
                 Name = attachment.Name,
                 ThumbnailUrl = attachment.ThumbnailUrl,
-                Preview = previewAttachment == null ? attachment : previewAttachment
+                Preview = previewAttachment == null ?
+                    new Attachment(attachment.ContentType, attachment.ContentUrl, attachment.Content, attachment.Name, attachment.ThumbnailUrl) :
+                    previewAttachment
             };
         }
     }
