@@ -53,6 +53,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
   private static queryInvokeName:string = 'composeExtension/query';
   private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
+  private static selectItemInvokeName:string = 'composeExtension/selectItem';
   private static settingInvokeName:string = 'composeExtension/setting';
 
   private allowedTenants: string[];
@@ -61,6 +62,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
+  private selectItemInvokeHandler: ComposeExtensionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -169,6 +171,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.settingsUpdateHandler = handler;
   }
 
+  public onSelectItemInvoke(handler: ComposeExtensionHandlerType) {
+    this.selectItemInvokeHandler = handler;
+  }
+
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
@@ -199,10 +205,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
             compExtHandler = this.querySettingsUrlHandler.bind(this);
             break;
           case TeamsChatConnector.settingInvokeName:
-          {
             compExtHandler = this.settingsUpdateHandler.bind(this);
             break;
-          }
+          case TeamsChatConnector.selectItemInvokeName:
+            compExtHandler = this.selectItemInvokeHandler.bind(this);
+            break;
           case TeamsChatConnector.o365CardActionInvokeName:
             o365Handler = this.o365CardActionHandler.bind(this);
             break;
