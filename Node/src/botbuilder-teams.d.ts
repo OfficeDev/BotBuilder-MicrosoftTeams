@@ -1052,7 +1052,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   /**
   *  Set a handler for compose extension invoke request made when a search result item is selected
   */
-  public onSelectItemInvoke(handler: ComposeExtensionHandlerType): void;
+  public onSelectItem(handler: ComposeExtensionHandlerType): void;
 }
 
 export enum MentionTextLocation {

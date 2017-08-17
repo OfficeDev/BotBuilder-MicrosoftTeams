@@ -171,7 +171,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.settingsUpdateHandler = handler;
   }
 
-  public onSelectItemInvoke(handler: ComposeExtensionHandlerType) {
+  public onSelectItem(handler: ComposeExtensionHandlerType) {
     this.selectItemInvokeHandler = handler;
   }
 
