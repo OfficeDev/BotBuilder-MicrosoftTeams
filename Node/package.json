@@ -10,15 +10,15 @@
   "main": "./lib/botbuilder-teams.js",
   "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
-    "botbuilder": "^3.8.0-beta6",
+    "botbuilder": "^3.9.0",
     "ms-rest": "^1.15.7",
-    "sprintf-js": "^1.0.3"
+    "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^7.0.8",
+    "@types/node": "^7.0.42",
+    "@types/sprintf-js": "0.0.27",
     "mocha": "^2.4.5",
-    "restify": "^4.3.0",
-    "typescript": "^2.2.1",
-    "@types/sprintf-js": "0.0.27"
+    "restify": "^4.3.1",
+    "typescript": "^2.4.2"
   }
 }

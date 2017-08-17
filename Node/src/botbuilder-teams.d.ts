@@ -1048,6 +1048,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Set a handler for compose extension invoke request made after setting flow is successfully finished
   */
   public onSettingsUpdate(handler: ComposeExtensionHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request made when a search result item is selected
+  */
+  public onSelectItemInvoke(handler: ComposeExtensionHandlerType): void;
 }
 
 export enum MentionTextLocation {
