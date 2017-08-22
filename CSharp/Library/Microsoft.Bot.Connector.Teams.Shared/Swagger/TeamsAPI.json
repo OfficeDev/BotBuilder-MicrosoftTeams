@@ -632,6 +632,21 @@
       }
     },
 
+    "ComposeExtensionSuggestedAction": {
+      "description": "Compose extension Actions (Only when type is auth or config)",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "description": "Actions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CardAction",
+            "description": "Action to start authentication or configuration flow"
+          }
+        }
+      }
+    },
+
     "ComposeExtensionResult": {
       "description": "Compose extension result",
       "type": "object",
@@ -652,12 +667,7 @@
           }
         },
         "suggestedActions": {
-          "description": "(Only when type is auth or config) Actions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CardAction",
-            "description": "Action to start authentication or configuration flow"
-          }
+          "$ref": "#/definitions/ComposeExtensionSuggestedAction"
         },
         "text": {
           "description": "(Only when type is message) Text",

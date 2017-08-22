@@ -224,7 +224,8 @@ namespace Microsoft.Bot.Connector
         /// <returns>Task operation result.</returns>
         private static async Task<T> ExecuteWithRetries<T>(Func<Task<T>> func, IConversations conversation)
         {
-            if (retryStrategyMap.TryGetValue(conversation, out RetryPolicy retryPolicy))
+            RetryPolicy retryPolicy;
+            if (retryStrategyMap.TryGetValue(conversation, out retryPolicy))
             {
                 return await retryPolicy.ExecuteAsync(func);
             }
