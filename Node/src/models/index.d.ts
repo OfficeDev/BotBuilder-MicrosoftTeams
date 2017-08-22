@@ -101,11 +101,13 @@ export interface ConversationList {
  *
  * @member {string} [id] Unique identifier representing a team
  *
+ * @member {string} [aadGroupId] AAD group ID
  *
  */
 export interface TeamInfo {
   name?: string;
   id?: string;
+  aadGroupId?: string;
 }
 
 /**
