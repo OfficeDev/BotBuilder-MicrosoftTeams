@@ -37,7 +37,7 @@ import * as util from 'util';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, TeamInfo } from './models';
 
 var WebResource = msRest.WebResource;
 
@@ -85,6 +85,28 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
+        } else {
+          callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
+  *  Return info of a team given team id
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchTeamInfo(teamId, options, callback);
         } else {
           callback(new Error('Failed to authorize request'), null);
         }

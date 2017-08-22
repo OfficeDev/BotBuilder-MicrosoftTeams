@@ -101,11 +101,13 @@ export interface ConversationList {
  *
  * @member {string} [id] Unique identifier representing a team
  *
+ * @member {string} [aadGroupId] AAD group ID
  *
  */
 export interface TeamInfo {
   name?: string;
   id?: string;
+  aadGroupId?: string;
 }
 
 /**
@@ -967,6 +969,7 @@ export declare class TeamRenamedEvent {
 
 export declare class ChannelInfo {
   constructor(name: string, id: string);
+  constructor(name: string, id: string, aadGroupId: string);
 }
 
 export declare class TeamInfo {
@@ -999,6 +1002,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
+
+  /**
+  *  Return info of a team given team id
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void;
 
   /**
   *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).

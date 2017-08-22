@@ -29,8 +29,8 @@ server.listen(3978, function () {
 
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({     
-  appId: appId,     
-  appPassword: appPassword 
+  appId: '15affdfc-53f5-43dc-b4f9-d3806c4becb2',     
+  appPassword: 'XOLUMoNZfk46MaCPDJ2iX7V' 
 }); 
 
 // this will receive nothing, you can put your tenant id in the list to listen
@@ -50,7 +50,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -71,6 +71,9 @@ bot.dialog('/', [
         break;
       case 5:
         session.beginDialog('SendO365Card');
+        break;
+      case 6:
+        session.beginDialog('FetchTeamInfo');
         break;
       default:
         session.endDialog();
@@ -106,6 +109,23 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
     conversationId,
     (err, result) => {
       if (err) {
+        session.endDialog('There is some error');
+      }
+      else {
+        session.endDialog('%s', JSON.stringify(result));
+      }
+    }
+  );
+});
+
+bot.dialog('FetchTeamInfo', function (session: builder.Session) {
+  var teamId = session.message.sourceEvent.teamsTeamId;
+  connector.fetchTeamInfo(
+    (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+    teamId,
+    (err, result) => {
+      if (err) {
+        console.log(err);
         session.endDialog('There is some error');
       }
       else {
