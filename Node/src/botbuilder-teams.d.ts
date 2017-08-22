@@ -969,11 +969,11 @@ export declare class TeamRenamedEvent {
 
 export declare class ChannelInfo {
   constructor(name: string, id: string);
-  constructor(name: string, id: string, aadGroupId: string);
 }
 
 export declare class TeamInfo {
   constructor(name: string, id: string);
+  constructor(name: string, id: string, aadGroupId: string);
 }
 
 export declare class TenantInfo {
