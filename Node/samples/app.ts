@@ -119,7 +119,7 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
 });
 
 bot.dialog('FetchTeamInfo', function (session: builder.Session) {
-  var teamId = session.message.sourceEvent.teamsTeamId;
+  var teamId = session.message.sourceEvent.team.id;
   connector.fetchTeamInfo(
     (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
     teamId,

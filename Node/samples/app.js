@@ -99,7 +99,7 @@ bot.dialog('FetchMemberList', function (session) {
     });
 });
 bot.dialog('FetchTeamInfo', function (session) {
-    var teamId = session.message.sourceEvent.teamsTeamId;
+    var teamId = session.message.sourceEvent.team.id;
     connector.fetchTeamInfo(session.message.address.serviceUrl, teamId, function (err, result) {
         if (err) {
             console.log(err);
