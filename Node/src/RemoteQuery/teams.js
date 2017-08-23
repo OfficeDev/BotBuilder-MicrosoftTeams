@@ -550,21 +550,7 @@ Teams.prototype.beginReplyChainInChannel = function (channelId, message, options
               name: 'Object'
             }
           };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-          if (result && result.hasOwnProperty("id"))
-          {
-            var address = message.address;
-            address.channelId = 'msteams';
-            address.conversation.id = result.id;
-            address.id = result.activityId;
-            return callback(null, address);
-          }
-          else
-          {
-            let error = new Error();
-            error.message = "Failed to start reply chain: no conversation ID returned.";
-            return callback(error);
-          }
+          result = client.deserialize(resultMapper, parsedResponse, 'result');          
         }
       } catch (error) {
         let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);

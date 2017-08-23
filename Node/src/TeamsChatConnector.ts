@@ -49,6 +49,11 @@ export interface IInvokeEvent extends builder.IEvent {
   value: any;
 }
 
+export interface ReplyResult {
+  id: string,
+  activityId: string
+}
+
 export class TeamsChatConnector extends builder.ChatConnector {
   private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
   private static queryInvokeName:string = 'composeExtension/query';
@@ -176,7 +181,23 @@ export class TeamsChatConnector extends builder.ChatConnector {
           options.customHeaders = {
             'Authorization': 'Bearer ' + token
           };
-          remoteQuery.beginReplyChainInChannel(channelId, message.toMessage(), options, callback);
+          var innerCallback = function (err: Error, result: ReplyResult) {
+            if (result && result.hasOwnProperty("id"))
+            {
+              var address: builder.IChatConnectorAddress = message.toMessage().address;
+              address.channelId = 'msteams';
+              address.conversation.id = result.id;
+              address.id = result.activityId;
+              return callback(null, address);
+            }
+            else
+            {
+              let error = new Error();
+              error.message = "Failed to start reply chain: no conversation ID returned.";
+              return callback(error, null);
+            }
+          } 
+          remoteQuery.beginReplyChainInChannel(channelId, message.toMessage(), options, innerCallback);
         } else {
           callback(new Error('Failed to authorize request'), null);
         }
