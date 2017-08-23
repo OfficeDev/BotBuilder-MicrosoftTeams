@@ -161,6 +161,29 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
+  *  Return a newly started reply chain address in channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  @param {builder.Message} message - The message to post in the channel.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public beginReplyChainInChannel(serverUrl: string, channelId: string, message: builder.Message, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.beginReplyChainInChannel(channelId, message.toMessage(), options, callback);
+        } else {
+          callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
