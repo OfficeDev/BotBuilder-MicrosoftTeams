@@ -30,7 +30,7 @@ server.listen(3978, function () {
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
-  appPassword: appName
+  appPassword: appPassword
 }); 
 
 // this will receive nothing, you can put your tenant id in the list to listen
