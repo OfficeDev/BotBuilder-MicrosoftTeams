@@ -33,7 +33,6 @@
 
 
 import * as builder from 'botbuilder';
-import * as util from 'util';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
@@ -91,7 +90,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -113,7 +112,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchTeamInfo(teamId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -138,7 +137,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -160,7 +159,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -169,10 +168,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Return a newly started reply chain address in channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} channelId - The channel id, will post in the channel.  
-  *  @param {builder.Message} message - The message to post in the channel.
+  *  @param {builder.Message|builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
   *  @param {function} callback - This callback returns err or result.
   */
-  public beginReplyChainInChannel(serverUrl: string, channelId: string, message: builder.Message, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
+  public startReplyChain(serverUrl: string, channelId: string, message: builder.Message|builder.IMessage|builder.IIsMessage, callback?: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
     var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
@@ -181,25 +180,59 @@ export class TeamsChatConnector extends builder.ChatConnector {
           options.customHeaders = {
             'Authorization': 'Bearer ' + token
           };
+
           var innerCallback = function (err: Error, result: ReplyResult) {
-            if (result && result.hasOwnProperty("id"))
+            if (result && result.hasOwnProperty("id") && result.hasOwnProperty("activityId"))
             {
-              var address: builder.IChatConnectorAddress = message.toMessage().address;
+              var messageAddress = null;
+              if ((<builder.IIsMessage>message).toMessage) {
+                messageAddress = (<builder.IIsMessage>message).toMessage().address;
+              }
+              else if ((<builder.IMessage>message).address)
+              {
+                messageAddress = (<builder.IMessage>message).address;
+              }
+              else
+              {
+                throw new Error("Message type is wrong. Need either Message or IMessage or IIsMessage");
+              }
+
+              var address: builder.IChatConnectorAddress = { ... messageAddress };
               address.channelId = 'msteams';
               address.conversation.id = result.id;
               address.id = result.activityId;
-              return callback(null, address);
+
+              if (address.user) {
+                  delete address.user;
+              }
+
+              if (callback)
+              {
+                return callback(null, address);
+              }              
             }
             else
             {
-              let error = new Error();
-              error.message = "Failed to start reply chain: no conversation ID returned.";
-              return callback(error, null);
+              let error = new Error("Failed to start reply chain: no conversation ID and activity ID returned.");
+              if (callback)
+              {
+                return callback(error, null);
+              }              
             }
           } 
-          remoteQuery.beginReplyChainInChannel(channelId, message.toMessage(), options, innerCallback);
-        } else {
-          callback(new Error('Failed to authorize request'), null);
+
+          if ((<builder.IIsMessage>message).toMessage) {
+            remoteQuery.beginReplyChainInChannel(channelId, (<builder.IIsMessage>message).toMessage(), options, innerCallback);
+          }
+          else {
+            remoteQuery.beginReplyChainInChannel(channelId, <builder.IMessage>message, options, innerCallback);
+          }          
+        } 
+        else {
+          if (callback)
+          {
+            return callback(new Error('Failed to authorize request'), null);
+          }          
         }
     });
   }
@@ -290,7 +323,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             compExtHandler(invoke, query, callback);
           }
           catch (e) {
-            callback(e, null, 500);
+            return callback(e, null, 500);
           }
         }
 
@@ -300,7 +333,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             o365Handler(invoke, query, callback);
           }
           catch (e) {
-            callback(e, null, 500);
+            return callback(e, null, 500);
           }
         }
       }
@@ -320,7 +353,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
       handler(event, query, callback);
     }
     else {
-      callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
+      return callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
     }
   }
 }

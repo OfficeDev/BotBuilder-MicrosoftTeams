@@ -140,7 +140,7 @@ bot.dialog('FetchTeamInfo', function (session: builder.Session) {
 bot.dialog('StartNewReplyChain', function (session: builder.Session) {
   var channelId = session.message.sourceEvent.channel.id;
   var message = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-  connector.beginReplyChainInChannel(
+  connector.startReplyChain(
     (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
     channelId,
     message,

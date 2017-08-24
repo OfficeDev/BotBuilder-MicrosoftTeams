@@ -115,7 +115,7 @@ bot.dialog('FetchTeamInfo', function (session) {
 bot.dialog('StartNewReplyChain', function (session) {
     var channelId = session.message.sourceEvent.channel.id;
     var message = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-    connector.beginReplyChainInChannel(session.message.address.serviceUrl, channelId, message, function (err, address) {
+    connector.startReplyChain(session.message.address.serviceUrl, channelId, message, function (err, address) {
         if (err) {
             console.log(err);
             session.endDialog('There is some error');
