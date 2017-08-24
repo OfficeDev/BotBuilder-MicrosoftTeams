@@ -168,10 +168,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Return a newly started reply chain address in channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} channelId - The channel id, will post in the channel.  
-  *  @param {builder.Message|builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
+  *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
   *  @param {function} callback - This callback returns err or result.
   */
-  public startReplyChain(serverUrl: string, channelId: string, message: builder.Message|builder.IMessage|builder.IIsMessage, callback?: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
+  public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback?: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
     var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
@@ -182,6 +182,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
 
           var innerCallback = function (err: Error, result: ReplyResult) {
+
+            if (!callback)
+            {
+              return;
+            }
+
             if (result && result.hasOwnProperty("id") && result.hasOwnProperty("activityId"))
             {
               var messageAddress = null;
@@ -197,27 +203,26 @@ export class TeamsChatConnector extends builder.ChatConnector {
                 throw new Error("Message type is wrong. Need either Message or IMessage or IIsMessage");
               }
 
-              var address: builder.IChatConnectorAddress = { ... messageAddress };
+              var address: builder.IChatConnectorAddress = <builder.IChatConnectorAddress>{
+                conversation: {},
+                bot: {}
+              };
               address.channelId = 'msteams';
               address.conversation.id = result.id;
               address.id = result.activityId;
+              address.bot.id = messageAddress.bot.id;
+              address.bot.name = messageAddress.bot.name;
 
               if (address.user) {
                   delete address.user;
               }
 
-              if (callback)
-              {
-                return callback(null, address);
-              }              
+              return callback(null, address);          
             }
             else
             {
               let error = new Error("Failed to start reply chain: no conversation ID and activity ID returned.");
-              if (callback)
-              {
-                return callback(error, null);
-              }              
+              return callback(error, null);            
             }
           } 
 
