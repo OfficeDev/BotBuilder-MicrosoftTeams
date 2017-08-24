@@ -181,6 +181,20 @@ export class TeamsChatConnector extends builder.ChatConnector {
             'Authorization': 'Bearer ' + token
           };
 
+          var iMessage: builder.IMessage = null;
+          if ((<builder.IIsMessage>message).toMessage)
+          {
+            iMessage = (<builder.IIsMessage>message).toMessage();
+          }
+          else if ((<builder.IMessage>message).address)
+          {
+            iMessage = <builder.IMessage>message;
+          }
+          else
+          {
+            throw new Error("Message type is wrong. Need either IMessage or IIsMessage");
+          }
+
           var innerCallback = function (err: Error, result: ReplyResult) {
 
             if (!callback)
@@ -190,19 +204,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
             if (result && result.hasOwnProperty("id") && result.hasOwnProperty("activityId"))
             {
-              var messageAddress = null;
-              if ((<builder.IIsMessage>message).toMessage) {
-                messageAddress = (<builder.IIsMessage>message).toMessage().address;
-              }
-              else if ((<builder.IMessage>message).address)
-              {
-                messageAddress = (<builder.IMessage>message).address;
-              }
-              else
-              {
-                throw new Error("Message type is wrong. Need either Message or IMessage or IIsMessage");
-              }
-
+              var messageAddress = <builder.IChatConnectorAddress>iMessage.address;              
               var address: builder.IChatConnectorAddress = <builder.IChatConnectorAddress>{
                 conversation: {},
                 bot: {}
@@ -212,6 +214,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
               address.id = result.activityId;
               address.bot.id = messageAddress.bot.id;
               address.bot.name = messageAddress.bot.name;
+              address.serviceUrl = messageAddress.serviceUrl;
 
               if (address.user) {
                   delete address.user;
@@ -226,12 +229,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             }
           } 
 
-          if ((<builder.IIsMessage>message).toMessage) {
-            remoteQuery.beginReplyChainInChannel(channelId, (<builder.IIsMessage>message).toMessage(), options, innerCallback);
-          }
-          else {
-            remoteQuery.beginReplyChainInChannel(channelId, <builder.IMessage>message, options, innerCallback);
-          }          
+          remoteQuery.beginReplyChainInChannel(channelId, iMessage, options, innerCallback);         
         } 
         else {
           if (callback)

@@ -151,6 +151,8 @@ bot.dialog('StartNewReplyChain', function (session: builder.Session) {
       }
       else {
         console.log(address);
+        var msg = new teams.TeamsMessage(session).text("this is a reply message.").address(address);
+        session.send(msg);
         session.endDialog();
       }
     }
