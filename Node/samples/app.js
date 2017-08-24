@@ -42,7 +42,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -66,6 +66,9 @@ bot.dialog('/', [
                 break;
             case 6:
                 session.beginDialog('FetchTeamInfo');
+                break;
+            case 7:
+                session.beginDialog('StartNewReplyChain');
                 break;
             default:
                 session.endDialog();
@@ -102,11 +105,26 @@ bot.dialog('FetchTeamInfo', function (session) {
     var teamId = session.message.sourceEvent.team.id;
     connector.fetchTeamInfo(session.message.address.serviceUrl, teamId, function (err, result) {
         if (err) {
-            console.log(err);
             session.endDialog('There is some error');
         }
         else {
             session.endDialog('%s', JSON.stringify(result));
+        }
+    });
+});
+bot.dialog('StartNewReplyChain', function (session) {
+    var channelId = session.message.sourceEvent.channel.id;
+    var message = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
+    connector.startReplyChain(session.message.address.serviceUrl, channelId, message, function (err, address) {
+        if (err) {
+            console.log(err);
+            session.endDialog('There is some error');
+        }
+        else {
+            console.log(address);
+            var msg = new teams.TeamsMessage(session).text("this is a reply message.").address(address);
+            session.send(msg);
+            session.endDialog();
         }
     });
 });

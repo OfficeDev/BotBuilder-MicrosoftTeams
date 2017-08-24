@@ -1030,6 +1030,15 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
   /**
+  *  Return a newly started reply chain address in channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void;
+
+  /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
