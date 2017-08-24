@@ -206,15 +206,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
             {
               var messageAddress = <builder.IChatConnectorAddress>iMessage.address;              
               var address: builder.IChatConnectorAddress = <builder.IChatConnectorAddress>{
-                conversation: {},
-                bot: {}
+                ... messageAddress,
+                channelId : 'msteams',
+                conversation: { id: result.id },
+                id : result.activityId
               };
-              address.channelId = 'msteams';
-              address.conversation.id = result.id;
-              address.id = result.activityId;
-              address.bot.id = messageAddress.bot.id;
-              address.bot.name = messageAddress.bot.name;
-              address.serviceUrl = messageAddress.serviceUrl;
 
               if (address.user) {
                   delete address.user;
