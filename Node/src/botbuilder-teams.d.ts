@@ -790,6 +790,17 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
 }
 
 /**
+ * @interface
+ * Interface of signin auth state verfication query
+ * 
+ * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
+ *  
+ */
+export interface ISigninStateVerificationQuery {
+  state: string;
+}
+
+/**
  * @class
  * Initializes a new instance of the ComposeExtensionQueryOptions class.
  * @constructor
@@ -980,8 +991,9 @@ export declare class TenantInfo {
   constructor(id: string);
 }
 
-export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
-export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -1054,6 +1066,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
   */
   public onO365ConnectorCardAction(handler: O365ConnectorCardActionHandlerType): void;
 
+  /**
+  *  Set a handler to verify the final state sent by client that is originally received from signin web flow when it's finished
+  */
+  public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void;
+  
   /**
   *  Set a handler by commandId of a compose extension query
   */
