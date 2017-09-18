@@ -237,6 +237,16 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
+  * @override
+  *
+  * Change default implementation to ignore endOfCoversation message types
+  *
+  */
+  public send(messages: builder.IMessage[], done: (err: Error, addresses?: builder.IAddress[]) => void): void {
+    return super.send(messages.filter((m) => m.type !== "endOfConversation"), done)
+  }
+
+  /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
