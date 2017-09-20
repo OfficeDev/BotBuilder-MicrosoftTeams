@@ -37,19 +37,28 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector.Teams.Models;
+    using Microsoft.Bot.Connector.Teams.SampleBot.Controllers;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Common code for handling Bot Framework messages.
     /// </summary>
     public class MessageProcessor
     {
+        /// <summary>
+        /// A simple cache where key is user id and value is FB token
+        /// </summary>
+        private static Dictionary<string, string> userIdFacebookTokenCache = new Dictionary<string, string>();
+
         /// <summary>
         /// Handles incoming Bot Framework messages.
         /// </summary>
@@ -155,6 +164,41 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 replyActivity.Attachments.Add(plAttachment);
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
+            else if (activity.Text.Contains("Signin"))
+            {
+                var userId = activity.From.Id;
+                if (userIdFacebookTokenCache.ContainsKey(userId))
+                {
+                    // Use cached token
+                    var token = userIdFacebookTokenCache[userId];
+                    try
+                    {
+                        // Send a thumbnail card with user's FB profile
+                        var card = CreateFBProfileCard(token);
+                        Activity replyActivity = activity.CreateReply();
+                        replyActivity.Text = "Cached credential is found. Use cached token to fetch info.";
+                        replyActivity.Attachments.Add(card);
+                        await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+                    }
+                    catch (Exception)
+                    {
+                        await SendSigninCard(activity, connectorClient);
+                    }
+                }
+                else
+                {
+                    // No token cached: issue a new Signin card
+                    await SendSigninCard(activity, connectorClient);
+                }
+            }
+            else if (activity.Text.Contains("Signout"))
+            {
+                var userId = activity.From.Id;
+                userIdFacebookTokenCache.Remove(userId);
+                Activity replyActivity = activity.CreateReply();
+                replyActivity.Text = "Your credential has been removed.";
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+            }
             else
             {
                 var accountList = connectorClient.Conversations.GetConversationMembers(activity.Conversation.Id);
@@ -166,10 +210,32 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     "<p>Type Create1on1 to create one on one conversation. </p>" +
                     "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>" +
                     "<p>Type TestRetry to get multiple messages from Bot in throttled and retried mechanism. </p>" +
-                    "<p>Type O365Card to get a O365 actionable connector card. </p>";
+                    "<p>Type O365Card to get a O365 actionable connector card. </p>" +
+                    "<p>Type Signin to issue a Signin card to sign in a Facebook app. </p>" +
+                    "<p>Type Signout to logout Facebook app and clear cached credentials. </p>";
                 replyActivity = replyActivity.AddMentionToText(activity.From);
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
+        }
+
+        /// <summary>
+        /// Issue a new Signin card.
+        /// </summary>
+        /// <param name="activity">Incoming request from Bot Framework.</param>
+        /// <param name="connectorClient">Connector client instance for posting to Bot Framework.</param>
+        /// <returns>The returned ResourceResponse</returns>
+        private static async Task<ResourceResponse> SendSigninCard(Activity activity, ConnectorClient connectorClient)
+        {
+            var userId = activity.From.Id;
+            var authUrl = ConfigurationManager.AppSettings["SigninBaseUrl"] + "/auth/start/" + userId;
+            SigninCard card = new SigninCard();
+            card.Text = "Sign in Facebook app";
+            card.Buttons = new List<CardAction>() { new CardAction("signin", "Login", null, authUrl) };
+            Activity replyActivity = activity.CreateReply();
+            replyActivity.Attachments = new List<Attachment>();
+            Attachment plAttachment = card.ToAttachment();
+            replyActivity.Attachments.Add(plAttachment);
+            return await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
         }
 
         /// <summary>
@@ -497,6 +563,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             {
                 return await HandleO365ConnectorCardActionQuery(activity, connectorClient);
             }
+            else if (activity.IsSigninStateVerificationQuery())
+            {
+                return await HandleStateVerificationQuery(activity, connectorClient);
+            }
             else
             {
                 return new HttpResponseMessage(HttpStatusCode.OK);
@@ -525,6 +595,109 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             ";
             await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
+        /// <summary>
+        /// Handles state verification query for signin auth flow.
+        /// </summary>
+        /// <param name="activity">Incoming request from Bot Framework.</param>
+        /// <param name="connectorClient">Connector client instance for posting to Bot Framework.</param>
+        /// <returns>Task tracking operation.</returns>
+        private static async Task<HttpResponseMessage> HandleStateVerificationQuery(Activity activity, ConnectorClient connectorClient)
+        {
+            SigninStateVerificationQuery stateVerifyQuery = activity.GetSigninStateVerificationQueryData();
+            var state = stateVerifyQuery.State;
+
+            // Decrypt state string to get code and original userId
+            var botSecret = ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppPasswordKey];
+            var decryptedState = SimpleAuthController.Decrypt(state, botSecret);
+            var stateObj = JsonConvert.DeserializeObject<JObject>(decryptedState);
+            var code = stateObj.GetValue("accessCode").Value<string>();
+            var userId = stateObj.GetValue("userId").Value<string>();
+
+            // Verify userId
+            var trustableUserId = activity.From.Id;
+            if (userId != trustableUserId)
+            {
+                Activity replyError = activity.CreateReply();
+                replyError.Text = "Unauthorized: User ID verification failed. Please try again.";
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyError);
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            }
+            else
+            {
+                // Prepare FB OAuth request
+                var fbAppId = ConfigurationManager.AppSettings["SigninFbClientId"];
+                var fbOAuthRedirectUrl = ConfigurationManager.AppSettings["SigninBaseUrl"] + "/auth/callback";
+                var fbAppSecret = ConfigurationManager.AppSettings["SigninFbClientSecret"];
+                var fbOAuthTokenUrl = "https://graph.facebook.com/v2.10/oauth/access_token";
+                var fbOAuthTokenParams = $"?client_id={fbAppId}&redirect_uri={fbOAuthRedirectUrl}&client_secret={fbAppSecret}&code={code}";
+
+                // Use access code to exchange FB token
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri(fbOAuthTokenUrl);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage fbResponse = client.GetAsync(fbOAuthTokenParams).Result;  // Blocking call!
+                var tokenObj = fbResponse.Content.ReadAsAsync<JObject>().Result;
+                var token = tokenObj.GetValue("access_token").Value<string>();
+
+                // Update cache
+                userIdFacebookTokenCache[userId] = token;
+
+                // Send a thumbnail card with user's FB profile
+                var card = CreateFBProfileCard(token);
+                Activity replyActivity = activity.CreateReply();
+                replyActivity.Attachments.Add(card);
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+        }
+
+        /// <summary>
+        /// Perform Facebook graph API to create a thumbnail card with user profile.
+        /// </summary>
+        /// <param name="token">Access token.</param>
+        /// <returns>Attachment of a thumbnail card.</returns>
+        private static Attachment CreateFBProfileCard(string token)
+        {
+            // Use FB token to perform graph API to fetch user FB information
+            var fbResponse = PerformFBGraphApi(token, "me", "fields=name,id,email");
+            if (fbResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Performing FB graph API failed");
+            }
+
+            var fbUser = fbResponse.Content.ReadAsAsync<JObject>().Result;
+            var fbUserId = fbUser.GetValue("id").Value<string>();
+            var fbUserPicUrl = PerformFBGraphApi(token, $"{fbUserId}/picture", "height=100").RequestMessage.RequestUri.AbsoluteUri;
+
+            // Send a thumbnail card with user's FB profile
+            var card = new ThumbnailCard()
+            {
+                Title = fbUser.GetValue("name").Value<string>(),
+                Subtitle = fbUser.GetValue("email").Value<string>(),
+                Images = new List<CardImage>() { new CardImage(fbUserPicUrl, fbUserPicUrl, null) }
+            };
+            return card.ToAttachment();
+        }
+
+        /// <summary>
+        /// Perform Facebook graph API.
+        /// </summary>
+        /// <param name="token">Access token.</param>
+        /// <param name="endPoint">Endpoint of graph API.</param>
+        /// <param name="parameters">Parameter string.</param>
+        /// <returns>Json object returned by FB graph.</returns>
+        private static HttpResponseMessage PerformFBGraphApi(string token, string endPoint, string parameters)
+        {
+            var fbGraphUrl = "https://graph.facebook.com/";
+            var fbGraphParams = $"?access_token={token}&" + parameters;
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(fbGraphUrl + endPoint);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
+            var fbResponse = client.GetAsync(fbGraphParams).Result;  // Blocking call!
+            return fbResponse;
         }
 
         /// <summary>
