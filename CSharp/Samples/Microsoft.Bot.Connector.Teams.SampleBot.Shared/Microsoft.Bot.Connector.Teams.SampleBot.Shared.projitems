@@ -10,5 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MessageProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleFBAuthController.cs" />
   </ItemGroup>
 </Project>
