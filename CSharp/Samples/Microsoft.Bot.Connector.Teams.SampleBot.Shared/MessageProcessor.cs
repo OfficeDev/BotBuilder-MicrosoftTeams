@@ -610,7 +610,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
             // Decrypt state string to get code and original userId
             var botSecret = ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppPasswordKey];
-            var decryptedState = SimpleAuthController.Decrypt(state, botSecret);
+            var decryptedState = SimpleFBAuthController.Decrypt(state, botSecret);
             var stateObj = JsonConvert.DeserializeObject<JObject>(decryptedState);
             var code = stateObj.GetValue("accessCode").Value<string>();
             var userId = stateObj.GetValue("userId").Value<string>();
@@ -637,7 +637,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(fbOAuthTokenUrl);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage fbResponse = client.GetAsync(fbOAuthTokenParams).Result;  // Blocking call!
+                HttpResponseMessage fbResponse = await client.GetAsync(fbOAuthTokenParams);
                 var tokenObj = fbResponse.Content.ReadAsAsync<JObject>().Result;
                 var token = tokenObj.GetValue("access_token").Value<string>();
 

@@ -52,7 +52,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Controllers
     /// Simple auth controller.
     /// </summary>
     [RoutePrefix("auth")]
-    public class SimpleAuthController : ApiController
+    public class SimpleFBAuthController : ApiController
     {
         /// <summary>
         /// init vector for encryption.
@@ -63,13 +63,6 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Controllers
         /// key size for encryption.
         /// </summary>
         private const int Keysize = 256;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleAuthController"/> class.
-        /// </summary>
-        public SimpleAuthController()
-        {
-        }
 
         /// <summary>
         /// Encrypt string content with a key.
