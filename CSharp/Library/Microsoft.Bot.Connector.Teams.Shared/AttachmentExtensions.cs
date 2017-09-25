@@ -36,6 +36,7 @@
 namespace Microsoft.Bot.Connector.Teams
 {
     using Microsoft.Bot.Connector.Teams.Models;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Attachment extensions.
@@ -60,7 +61,7 @@ namespace Microsoft.Bot.Connector.Teams
                 Name = attachment.Name,
                 ThumbnailUrl = attachment.ThumbnailUrl,
                 Preview = previewAttachment == null ?
-                    new Attachment(attachment.ContentType, attachment.ContentUrl, attachment.Content, attachment.Name, attachment.ThumbnailUrl) :
+                    JObject.FromObject(attachment).ToObject<Attachment>() :
                     previewAttachment
             };
         }
