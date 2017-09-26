@@ -458,6 +458,17 @@ export interface IO365ConnectorCardActionQuery {
 }
 
 /**
+ * @interface
+ * Interface of signin auth state verfication query
+ * 
+ * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
+ *  
+ */
+export interface ISigninStateVerificationQuery {
+  state: string;
+}
+
+/**
  * @class
  * Initializes a new instance of the ComposeExtensionQueryOptions class.
  * @constructor

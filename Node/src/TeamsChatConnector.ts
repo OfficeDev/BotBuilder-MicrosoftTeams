@@ -36,12 +36,13 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, TeamInfo } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, ISigninStateVerificationQuery, TeamInfo } from './models';
 
 var WebResource = msRest.WebResource;
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -55,6 +56,7 @@ export interface ReplyResult {
 
 export class TeamsChatConnector extends builder.ChatConnector {
   private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
+  private static signinStateVerificationInvokeName:string = 'signin/verifyState';
   private static queryInvokeName:string = 'composeExtension/query';
   private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
   private static selectItemInvokeName:string = 'composeExtension/selectItem';
@@ -63,6 +65,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private allowedTenants: string[];
 
   private o365CardActionHandler: O365ConnectorCardActionHandlerType;
+  private signinStateVerificationHandler: SigninStateVerificationHandlerType;
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
@@ -257,6 +260,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.o365CardActionHandler = handler;
   }
 
+  public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void {
+    this.signinStateVerificationHandler = handler;
+  }
+ 
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
   }
@@ -295,6 +302,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
         let invoke = <IInvokeEvent>event;
         let compExtHandler: ComposeExtensionHandlerType;
         let o365Handler: O365ConnectorCardActionHandlerType;
+        let signinStateHandler: SigninStateVerificationHandlerType;
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
             compExtHandler = this.dispatchQuery.bind(this);
@@ -310,6 +318,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
             break;
           case TeamsChatConnector.o365CardActionInvokeName:
             o365Handler = this.o365CardActionHandler.bind(this);
+            break;
+          case TeamsChatConnector.signinStateVerificationInvokeName:
+            signinStateHandler = this.signinStateVerificationHandler.bind(this);
             break;
           default:
             realEvents.push(event);
@@ -335,6 +346,16 @@ export class TeamsChatConnector extends builder.ChatConnector {
             return callback(e, null, 500);
           }
         }
+
+        if (signinStateHandler) {
+          try {
+            let query = <ISigninStateVerificationQuery>(invoke.value);
+            signinStateHandler(invoke, query, callback);
+          }
+          catch (e) {
+            return callback(e, null, 500);
+          }
+        }        
       }
       else {
         realEvents.push(event);

@@ -13,6 +13,7 @@ var util = require("util");
 var restify = require("restify");
 var builder = require("botbuilder");
 var teams = require("botbuilder-teams");
+var simpleFBAuth_1 = require("./simpleFBAuth");
 // Put your registered bot here, to register bot, go to bot framework
 var appName = 'app name';
 var appId = 'app id';
@@ -34,6 +35,14 @@ connector.setAllowedTenants([]);
 connector.resetAllowedTenants();
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
+// create the bot auth agent
+var botSigninSettings = {
+    baseUrl: 'https://...',                         // put the base url of current service
+    fbAppClientId: 'fb app id',                     // put Facebook app id
+    fbAppClientSecret: 'fb app secret',             // put Facebook app secret
+    fbAppScope: 'public_profile,email,user_friends' // put Facebook access scope
+};
+var botAuth = simpleFBAuth_1.SimpleFBAuth.create(server, connector, botSigninSettings);
 // Strip bot at mention text, set text property to text without specific Bot at mention, find original text in textWithBotMentions
 // e.g. original text "<at>zel-bot-1</at> hello please find <at>Bot</at>" and zel-bot-1 is the Bot we at mentions. 
 // Then it text would be "hello please find <at>Bot</at>", the original text could be found at textWithBotMentions property.
@@ -42,7 +51,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -69,6 +78,12 @@ bot.dialog('/', [
                 break;
             case 7:
                 session.beginDialog('StartNewReplyChain');
+                break;
+            case 8:
+                session.beginDialog('Signin');
+                break;
+            case 9:
+                session.beginDialog('Signout');
                 break;
             default:
                 session.endDialog();
@@ -348,6 +363,10 @@ var o365CardActionHandler = function (event, query, callback) {
     callback(null, null, 200);
 };
 connector.onO365ConnectorCardAction(o365CardActionHandler);
+// example for signin card
+bot.dialog('Signin', function (session) { return botAuth.botSignIn(session); });
+bot.dialog('Signout', function (session) { return botAuth.botSignOut(session); });
+connector.onSigninStateVerification(function (event, query, callback) { return botAuth.verifySigninState(event, query, callback); });
 // example for compose extension
 var composeExtensionHandler = function (event, query, callback) {
     // parameters should be identical to manifest
