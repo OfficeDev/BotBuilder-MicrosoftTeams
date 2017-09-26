@@ -174,7 +174,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     try
                     {
                         // Send a thumbnail card with user's FB profile
-                        var card = CreateFBProfileCard(token);
+                        var card = await CreateFBProfileCard(token);
                         Activity replyActivity = activity.CreateReply();
                         replyActivity.Text = "Cached credential is found. Use cached token to fetch info.";
                         replyActivity.Attachments.Add(card);
@@ -610,7 +610,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
             // Decrypt state string to get code and original userId
             var botSecret = ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppPasswordKey];
-            var decryptedState = SimpleFBAuthController.Decrypt(state, botSecret);
+            var decryptedState = CipherHelper.Decrypt(state, botSecret);
             var stateObj = JsonConvert.DeserializeObject<JObject>(decryptedState);
             var code = stateObj.GetValue("accessCode").Value<string>();
             var userId = stateObj.GetValue("userId").Value<string>();
@@ -638,14 +638,14 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 client.BaseAddress = new Uri(fbOAuthTokenUrl);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage fbResponse = await client.GetAsync(fbOAuthTokenParams);
-                var tokenObj = fbResponse.Content.ReadAsAsync<JObject>().Result;
+                var tokenObj = await fbResponse.Content.ReadAsAsync<JObject>();
                 var token = tokenObj.GetValue("access_token").Value<string>();
 
                 // Update cache
                 userIdFacebookTokenCache[userId] = token;
 
                 // Send a thumbnail card with user's FB profile
-                var card = CreateFBProfileCard(token);
+                var card = await CreateFBProfileCard(token);
                 Activity replyActivity = activity.CreateReply();
                 replyActivity.Attachments.Add(card);
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
@@ -658,10 +658,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
         /// </summary>
         /// <param name="token">Access token.</param>
         /// <returns>Attachment of a thumbnail card.</returns>
-        private static Attachment CreateFBProfileCard(string token)
+        private static async Task<Attachment> CreateFBProfileCard(string token)
         {
             // Use FB token to perform graph API to fetch user FB information
-            var fbResponse = PerformFBGraphApi(token, "me", "fields=name,id,email");
+            var fbResponse = await PerformFBGraphApi(token, "me", "fields=name,id,email");
             if (fbResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new Exception("Performing FB graph API failed");
@@ -669,7 +669,8 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 
             var fbUser = fbResponse.Content.ReadAsAsync<JObject>().Result;
             var fbUserId = fbUser.GetValue("id").Value<string>();
-            var fbUserPicUrl = PerformFBGraphApi(token, $"{fbUserId}/picture", "height=100").RequestMessage.RequestUri.AbsoluteUri;
+            var fbUserPic = await PerformFBGraphApi(token, $"{fbUserId}/picture", "height=100");
+            var fbUserPicUrl = fbUserPic.RequestMessage.RequestUri.AbsoluteUri;
 
             // Send a thumbnail card with user's FB profile
             var card = new ThumbnailCard()
@@ -688,7 +689,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
         /// <param name="endPoint">Endpoint of graph API.</param>
         /// <param name="parameters">Parameter string.</param>
         /// <returns>Json object returned by FB graph.</returns>
-        private static HttpResponseMessage PerformFBGraphApi(string token, string endPoint, string parameters)
+        private static async Task<HttpResponseMessage> PerformFBGraphApi(string token, string endPoint, string parameters)
         {
             var fbGraphUrl = "https://graph.facebook.com/";
             var fbGraphParams = $"?access_token={token}&" + parameters;
@@ -696,7 +697,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             client.BaseAddress = new Uri(fbGraphUrl + endPoint);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
-            var fbResponse = client.GetAsync(fbGraphParams).Result;  // Blocking call!
+            var fbResponse = await client.GetAsync(fbGraphParams);
             return fbResponse;
         }
 

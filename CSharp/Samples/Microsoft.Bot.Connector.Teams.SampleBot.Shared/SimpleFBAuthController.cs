@@ -37,13 +37,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
 {
     using System;
     using System.Configuration;
-    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Security.Cryptography;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Newtonsoft.Json.Linq;
@@ -54,65 +51,6 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
     [RoutePrefix("auth")]
     public class SimpleFBAuthController : ApiController
     {
-        /// <summary>
-        /// init vector for encryption.
-        /// </summary>
-        private const string InitVector = "someRandomContent";
-
-        /// <summary>
-        /// key size for encryption.
-        /// </summary>
-        private const int Keysize = 256;
-
-        /// <summary>
-        /// Encrypt string content with a key.
-        /// </summary>
-        /// <param name="text">Text to encrypt.</param>
-        /// <param name="key">Encrypting with the key.</param>
-        /// <returns>Encrypted result.</returns>
-        public static string Encrypt(string text, string key)
-        {
-            byte[] initVectorBytes = Encoding.UTF8.GetBytes(InitVector);
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(text);
-            PasswordDeriveBytes password = new PasswordDeriveBytes(key, null);
-            byte[] keyBytes = password.GetBytes(Keysize / 8);
-            RijndaelManaged symmetricKey = new RijndaelManaged();
-            symmetricKey.Mode = CipherMode.CBC;
-            ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes);
-            MemoryStream memoryStream = new MemoryStream();
-            CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write);
-            cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
-            cryptoStream.FlushFinalBlock();
-            byte[] encrypted = memoryStream.ToArray();
-            memoryStream.Close();
-            cryptoStream.Close();
-            return Convert.ToBase64String(encrypted);
-        }
-
-        /// <summary>
-        /// Decrypt string content with a key.
-        /// </summary>
-        /// <param name="encryptedText">Encrypted text.</param>
-        /// <param name="key">Encrypted with the key.</param>
-        /// <returns>Decrypted result.</returns>
-        public static string Decrypt(string encryptedText, string key)
-        {
-            byte[] initVectorBytes = Encoding.ASCII.GetBytes(InitVector);
-            byte[] decryptedText = Convert.FromBase64String(encryptedText);
-            PasswordDeriveBytes password = new PasswordDeriveBytes(key, null);
-            byte[] keyBytes = password.GetBytes(Keysize / 8);
-            RijndaelManaged symmetricKey = new RijndaelManaged();
-            symmetricKey.Mode = CipherMode.CBC;
-            ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes);
-            MemoryStream memoryStream = new MemoryStream(decryptedText);
-            CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
-            byte[] plainTextBytes = new byte[decryptedText.Length];
-            int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-            memoryStream.Close();
-            cryptoStream.Close();
-            return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
-        }
-
         /// <summary>
         /// A user agent endpoint where OAuth flow starts from here.
         /// </summary>
@@ -144,7 +82,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             stateObj.Add("accessCode", code);
             stateObj.Add("userId", userId);
             var botSecret = ConfigurationManager.AppSettings[MicrosoftAppCredentials.MicrosoftAppPasswordKey];
-            var state = Encrypt(stateObj.ToString(Newtonsoft.Json.Formatting.None), botSecret);
+            var state = CipherHelper.Encrypt(stateObj.ToString(Newtonsoft.Json.Formatting.None), botSecret);
 
             var html = $@"
                 <html>
