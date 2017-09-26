@@ -667,7 +667,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 throw new Exception("Performing FB graph API failed");
             }
 
-            var fbUser = fbResponse.Content.ReadAsAsync<JObject>().Result;
+            var fbUser = await fbResponse.Content.ReadAsAsync<JObject>();
             var fbUserId = fbUser.GetValue("id").Value<string>();
             var fbUserPic = await PerformFBGraphApi(token, $"{fbUserId}/picture", "height=100");
             var fbUserPicUrl = fbUserPic.RequestMessage.RequestUri.AbsoluteUri;
