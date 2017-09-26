@@ -11,6 +11,7 @@
   "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
     "botbuilder": "^3.9.0",
+    "crypto": "^1.0.1",
     "ms-rest": "^1.15.7",
     "sprintf-js": "^1.1.1"
   },
