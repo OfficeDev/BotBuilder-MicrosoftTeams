@@ -619,6 +619,10 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             var trustableUserId = activity.From.Id;
             if (userId != trustableUserId)
             {
+                // Remove invalid user's cached credential (if any)
+                userIdFacebookTokenCache.Remove(userId);
+
+                // Issue a unauthorized message to clients
                 Activity replyError = activity.CreateReply();
                 replyError.Text = "Unauthorized: User ID verification failed. Please try again.";
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyError);
@@ -630,14 +634,11 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 var fbAppId = ConfigurationManager.AppSettings["SigninFbClientId"];
                 var fbOAuthRedirectUrl = ConfigurationManager.AppSettings["SigninBaseUrl"] + "/auth/callback";
                 var fbAppSecret = ConfigurationManager.AppSettings["SigninFbClientSecret"];
-                var fbOAuthTokenUrl = "https://graph.facebook.com/v2.10/oauth/access_token";
+                var fbOAuthTokenUrl = "/v2.10/oauth/access_token";
                 var fbOAuthTokenParams = $"?client_id={fbAppId}&redirect_uri={fbOAuthRedirectUrl}&client_secret={fbAppSecret}&code={code}";
 
                 // Use access code to exchange FB token
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri(fbOAuthTokenUrl);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage fbResponse = await client.GetAsync(fbOAuthTokenParams);
+                HttpResponseMessage fbResponse = await FBGraphHttpClient.Instance.GetAsync(fbOAuthTokenUrl + fbOAuthTokenParams);
                 var tokenObj = await fbResponse.Content.ReadAsAsync<JObject>();
                 var token = tokenObj.GetValue("access_token").Value<string>();
 
@@ -691,13 +692,8 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
         /// <returns>Json object returned by FB graph.</returns>
         private static async Task<HttpResponseMessage> PerformFBGraphApi(string token, string endPoint, string parameters)
         {
-            var fbGraphUrl = "https://graph.facebook.com/";
             var fbGraphParams = $"?access_token={token}&" + parameters;
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(fbGraphUrl + endPoint);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
-            var fbResponse = await client.GetAsync(fbGraphParams);
+            var fbResponse = await FBGraphHttpClient.Instance.GetAsync(endPoint + fbGraphParams);
             return fbResponse;
         }
 
@@ -745,6 +741,36 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             HttpResponseMessage httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
             httpResponseMessage.Content = stringContent;
             return httpResponseMessage;
+        }
+
+        /// <summary>
+        /// Reusable Facebook graph HTTP client
+        /// </summary>
+        public class FBGraphHttpClient
+        {
+            /// <summary>
+            /// Private instance of singleton
+            /// </summary>
+            private static HttpClient httpClient;
+
+            /// <summary>
+            /// Gets reusable singleton of Facebook graph HTTP client
+            /// </summary>
+            public static HttpClient Instance
+            {
+                get
+                {
+                    if (httpClient == null)
+                    {
+                        httpClient = new HttpClient();
+                        httpClient.BaseAddress = new Uri("https://graph.facebook.com");
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/jpeg"));
+                    }
+
+                    return httpClient;
+                }
+            }
         }
     }
 }
