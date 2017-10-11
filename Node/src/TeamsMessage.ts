@@ -53,7 +53,7 @@ export class TeamsMessage extends builder.Message {
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
-  public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
+  public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage {
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
     }
@@ -183,6 +183,22 @@ export class TeamsMessage extends builder.Message {
     var teamId = team.id;
     var conversation = this.data.address.conversation;
     this.data.address.conversation.id = teamId;
+    return this;
+  }
+
+  /**
+  *  Enable Bot notify user for a message
+  */
+  public notifyUser(isAlert: boolean): TeamsMessage {
+    var address = <builder.IStartConversationAddress>this.data.address;
+    if (address.channelData == null)
+    {
+      address.channelData = {};
+    }
+
+    address.channelData['notification'] = { 'alert' : isAlert };
+    address.channelData['tenant'] = {'id' : TeamsMessage.getTenantId(this.session.message)};
+    this.data.address = address;
     return this;
   }
 

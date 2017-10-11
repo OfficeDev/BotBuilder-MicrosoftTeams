@@ -1127,6 +1127,11 @@ export class TeamsMessage extends builder.Message {
   public routeReplyToGeneralChannel(): TeamsMessage;
 
   /**
+  *  Enable Bot notify user for a message
+  */
+  public notifyUser(isAlert: boolean): TeamsMessage;
+
+  /**
   *  Get message related tenant id
   *  @param {IEvent} message - The message sent to bot.
   */

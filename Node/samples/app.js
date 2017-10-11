@@ -13,13 +13,17 @@ var util = require("util");
 var restify = require("restify");
 var builder = require("botbuilder");
 var teams = require("botbuilder-teams");
-var simpleFBAuth_1 = require("./simpleFBAuth");
 // Put your registered bot here, to register bot, go to bot framework
-var appName = 'app name';
-var appId = 'app id';
-var appPassword = 'app password';
-var userId = 'user id';
-var tenantId = 'tenant id';
+// var appName: string = 'app name';
+// var appId: string = 'app id';
+// var appPassword: string = 'app password';
+// var userId: string = 'user id';
+// var tenantId: string = 'tenant id';
+var appName = 'zel-test-bot-1';
+var appId = '15affdfc-53f5-43dc-b4f9-d3806c4becb2';
+var appPassword = 'XOLUMoNZfk46MaCPDJ2iX7V';
+var userId = '29:1MKP4ZpIvNBO-DNzWH3vulEZNG5msExpk3ybe5RaBpdPnS3wnxSE13OavffQN__3UMnqUgfPPrXx48joN1uwoQw';
+var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
 var server = restify.createServer();
 server.listen(3978, function () {
     console.log('%s listening to %s', server.name, util.inspect(server.address()));
@@ -35,14 +39,6 @@ connector.setAllowedTenants([]);
 connector.resetAllowedTenants();
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
-// create the bot auth agent
-var botSigninSettings = {
-    baseUrl: 'https://...',                         // put the base url of current service
-    fbAppClientId: 'fb app id',                     // put Facebook app id
-    fbAppClientSecret: 'fb app secret',             // put Facebook app secret
-    fbAppScope: 'public_profile,email,user_friends' // put Facebook access scope
-};
-var botAuth = simpleFBAuth_1.SimpleFBAuth.create(server, connector, botSigninSettings);
 // Strip bot at mention text, set text property to text without specific Bot at mention, find original text in textWithBotMentions
 // e.g. original text "<at>zel-bot-1</at> hello please find <at>Bot</at>" and zel-bot-1 is the Bot we at mentions. 
 // Then it text would be "hello please find <at>Bot</at>", the original text could be found at textWithBotMentions property.
@@ -51,7 +47,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Notification Feed');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -80,10 +76,7 @@ bot.dialog('/', [
                 session.beginDialog('StartNewReplyChain');
                 break;
             case 8:
-                session.beginDialog('Signin');
-                break;
-            case 9:
-                session.beginDialog('Signout');
+                session.beginDialog('NotificationFeed');
                 break;
             default:
                 session.endDialog();
@@ -92,6 +85,7 @@ bot.dialog('/', [
     }
 ]);
 bot.on('conversationUpdate', function (message) {
+    console.log(message);
     var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 bot.dialog('FetchChannelList', function (session) {
@@ -152,6 +146,18 @@ bot.dialog('MentionUser', function (session) {
     var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
     var mentionedMsg = msg.addMentionToText(toMention);
     session.send(mentionedMsg);
+    session.endDialog();
+});
+bot.dialog('NotificationFeed', function (session) {
+    // user name/user id
+    var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
+    var notification = msg.notifyUser(false);
+    console.log(util.inspect(notification, false, 4, true));
+    session.send(notification, function (err, response) {
+        if (err) {
+            console.log(err);
+        }
+    });
     session.endDialog();
 });
 bot.dialog('StartNew1on1Chat', function (session) {
@@ -363,10 +369,6 @@ var o365CardActionHandler = function (event, query, callback) {
     callback(null, null, 200);
 };
 connector.onO365ConnectorCardAction(o365CardActionHandler);
-// example for signin card
-bot.dialog('Signin', function (session) { return botAuth.botSignIn(session); });
-bot.dialog('Signout', function (session) { return botAuth.botSignOut(session); });
-connector.onSigninStateVerification(function (event, query, callback) { return botAuth.verifySigninState(event, query, callback); });
 // example for compose extension
 var composeExtensionHandler = function (event, query, callback) {
     // parameters should be identical to manifest
