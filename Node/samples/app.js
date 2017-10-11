@@ -37,9 +37,9 @@ server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
 // create the bot auth agent
 var botSigninSettings = {
-    baseUrl: 'https://...',                         // put the base url of current service
-    fbAppClientId: 'fb app id',                     // put Facebook app id
-    fbAppClientSecret: 'fb app secret',             // put Facebook app secret
+    baseUrl: 'https://...',
+    fbAppClientId: 'fb app id',
+    fbAppClientSecret: 'fb app secret',
     fbAppScope: 'public_profile,email,user_friends' // put Facebook access scope
 };
 var botAuth = simpleFBAuth_1.SimpleFBAuth.create(server, connector, botSigninSettings);
@@ -51,7 +51,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -84,6 +84,9 @@ bot.dialog('/', [
                 break;
             case 9:
                 session.beginDialog('Signout');
+                break;
+            case 10:
+                session.beginDialog('MentionChannel');
                 break;
             default:
                 session.endDialog();
@@ -151,6 +154,22 @@ bot.dialog('MentionUser', function (session) {
     };
     var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
     var mentionedMsg = msg.addMentionToText(toMention);
+    session.send(mentionedMsg);
+    session.endDialog();
+});
+bot.dialog('MentionChannel', function (session) {
+    // user name/user id
+    var channelId = null;
+    if (session.message.address.conversation.id) {
+        var splitted = session.message.address.conversation.id.split(';', 1);
+        channelId = splitted[0];
+    }
+    var toMention = {
+        name: 'All',
+        id: channelId
+    };
+    var msg = new teams.TeamsMessage(session).text('This is a test message to at mention the channel.');
+    var mentionedMsg = msg.addChannelMentionToText(toMention);
     session.send(mentionedMsg);
     session.endDialog();
 });

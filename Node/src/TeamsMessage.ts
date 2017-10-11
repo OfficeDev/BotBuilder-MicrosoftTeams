@@ -90,6 +90,49 @@ export class TeamsMessage extends builder.Message {
   }
 
   /**
+  *  Enable bot to send a message to mention channel or team
+  *  @param {builder.IIdentity} mentionedChannel - The channel id, you can look it up in session object.
+  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
+  *  @param {string} mentionText - text to mention
+  */
+  public addChannelMentionToText(mentionedChannel: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
+    if (!mentionedChannel || !mentionedChannel.id) {
+      throw new Error('Mentioned channel and channel ID cannot be null');
+    }
+
+    if (!mentionedChannel.name && !mentionText) {
+      throw new Error('Either mentioned channel name or mentionText must have a value');
+    }
+
+    if (mentionText) {
+      mentionedChannel.name = mentionText;
+    }
+
+    var mentionEntityText = '<at>'+mentionedChannel.name+'</at>';
+
+    this.data.text = !this.data.text ? '' : this.data.text;
+
+    if (textLocation == MentionTextLocation.AppendText) {
+      this.text(this.data.text + " " + mentionEntityText);
+    }
+    else {
+      this.text(mentionEntityText + " " + this.data.text);
+    }
+
+    this.addEntity({
+      'mentioned' : {
+        'id' : mentionedChannel.id,
+        'name' : mentionedChannel.name,
+        'type': 'channel'
+      },
+      'text' : mentionEntityText,
+      'type' : 'mention'
+    });
+
+    return this;
+  }
+
+  /**
   *  Return conversation update related event 
   *  @param {IConversationUpdate} message - user message like adding member to channel, rename etc
   */

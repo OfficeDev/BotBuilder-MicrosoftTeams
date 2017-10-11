@@ -1103,11 +1103,19 @@ export class TeamsMessage extends builder.Message {
 
   /**
   *  Enable bot to send a message to mention user
-  *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
+  *  @param {builder.IIdentity} mentionedUser - The user to mention
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
+
+  /**
+  *  Enable bot to send a message to mention channel or team
+  *  @param {builder.IIdentity} mentionedChannel - The channel to mention
+  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
+  *  @param {string} mentionText - text to mention
+  */
+  public addChannelMentionToText(mentionedChannel: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
 
   /**
   *  Return conversation update related event

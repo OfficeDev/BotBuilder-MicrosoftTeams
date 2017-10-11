@@ -10,16 +10,16 @@
   "main": "./lib/botbuilder-teams.js",
   "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
-    "botbuilder": "^3.9.0",
+    "botbuilder": "^3.11.0",
     "crypto": "^1.0.1",
     "ms-rest": "^1.15.7",
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^7.0.42",
+    "@types/node": "^7.0.43",
     "@types/sprintf-js": "0.0.27",
     "mocha": "^2.4.5",
     "restify": "^4.3.1",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.3"
   }
 }
