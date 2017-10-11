@@ -148,13 +148,9 @@ bot.dialog('StartNewReplyChain', function (session) {
 });
 bot.dialog('MentionUser', function (session) {
     // user name/user id
-    var toMention = {
-        name: 'Bill Zeng',
-        id: userId
-    };
-    var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-    var mentionedMsg = msg.addMentionToText(toMention);
-    session.send(mentionedMsg);
+    var mention = new teams.UserMention(userId, 'Bill Zeng');
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text(teams.TeamsMessage.getTenantId(session.message));
+    session.send(msg);
     session.endDialog();
 });
 bot.dialog('MentionChannel', function (session) {
@@ -164,13 +160,9 @@ bot.dialog('MentionChannel', function (session) {
         var splitted = session.message.address.conversation.id.split(';', 1);
         channelId = splitted[0];
     }
-    var toMention = {
-        name: 'All',
-        id: channelId
-    };
-    var msg = new teams.TeamsMessage(session).text('This is a test message to at mention the channel.');
-    var mentionedMsg = msg.addChannelMentionToText(toMention);
-    session.send(mentionedMsg);
+    var mention = new teams.ChannelMention(channelId, 'All');
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel.' + mention.text);
+    session.send(msg);
     session.endDialog();
 });
 bot.dialog('StartNew1on1Chat', function (session) {

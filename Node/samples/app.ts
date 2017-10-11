@@ -181,13 +181,9 @@ bot.dialog('StartNewReplyChain', function (session: builder.Session) {
 
 bot.dialog('MentionUser', function (session: builder.Session) {
   // user name/user id
-  var toMention: builder.IIdentity = {
-    name: 'Bill Zeng',
-    id: userId
-  };
-  var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-  var mentionedMsg = (<teams.TeamsMessage>msg).addMentionToText(toMention);
-  session.send(mentionedMsg);
+  let mention = new teams.UserMention(userId, 'Bill Zeng');
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' ' + teams.TeamsMessage.getTenantId(session.message));
+  session.send(msg);
   session.endDialog();
 });
 
@@ -200,13 +196,9 @@ bot.dialog('MentionChannel', function (session: builder.Session) {
     channelId = splitted[0];
   }
 
-  var toMention: builder.IIdentity = {
-    name: 'All',
-    id: channelId
-  };
-  var msg = new teams.TeamsMessage(session).text('This is a test message to at mention the channel.');
-  var mentionedMsg = (<teams.TeamsMessage>msg).addChannelMentionToText(toMention);
-  session.send(mentionedMsg);
+  let mention = new teams.ChannelMention(channelId, 'All');
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel. ' + mention.text);
+  session.send(msg);
   session.endDialog();
 });
 

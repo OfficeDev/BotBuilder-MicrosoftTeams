@@ -41,6 +41,40 @@ export enum MentionTextLocation {
   AppendText
 }
 
+export class MentionEntity {
+  type: string;
+  mentioned: any;
+  text: string;
+}
+
+export class UserMention extends MentionEntity
+{
+    constructor(userId: string, name: string) {
+      super();
+      this.type = 'mention';
+      this.text = '<at>'+name+'</at>';
+      this.mentioned = {
+        'id' : userId,
+        'name' : name,
+        'type': 'user'
+      };
+    }
+}
+
+export class ChannelMention extends MentionEntity
+{
+    constructor(channelId: string, name: string) {
+      super();
+      this.type = 'mention';
+      this.text = '<at>'+name+'</at>';
+      this.mentioned = {
+        'id' : channelId,
+        'name' : name,
+        'type': 'channel'
+      };
+    }
+}
+
 export class TeamsMessage extends builder.Message {
   
   constructor(private session?: builder.Session) {
@@ -48,12 +82,13 @@ export class TeamsMessage extends builder.Message {
   }
 
   /**
+  *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
-  public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
+  public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage {
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
     }
@@ -81,49 +116,6 @@ export class TeamsMessage extends builder.Message {
       'mentioned' : {
         'id' : mentionedUser.id,
         'name' : mentionedUser.name
-      },
-      'text' : mentionEntityText,
-      'type' : 'mention'
-    });
-
-    return this;
-  }
-
-  /**
-  *  Enable bot to send a message to mention channel or team
-  *  @param {builder.IIdentity} mentionedChannel - The channel id, you can look it up in session object.
-  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
-  *  @param {string} mentionText - text to mention
-  */
-  public addChannelMentionToText(mentionedChannel: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage{
-    if (!mentionedChannel || !mentionedChannel.id) {
-      throw new Error('Mentioned channel and channel ID cannot be null');
-    }
-
-    if (!mentionedChannel.name && !mentionText) {
-      throw new Error('Either mentioned channel name or mentionText must have a value');
-    }
-
-    if (mentionText) {
-      mentionedChannel.name = mentionText;
-    }
-
-    var mentionEntityText = '<at>'+mentionedChannel.name+'</at>';
-
-    this.data.text = !this.data.text ? '' : this.data.text;
-
-    if (textLocation == MentionTextLocation.AppendText) {
-      this.text(this.data.text + " " + mentionEntityText);
-    }
-    else {
-      this.text(mentionEntityText + " " + this.data.text);
-    }
-
-    this.addEntity({
-      'mentioned' : {
-        'id' : mentionedChannel.id,
-        'name' : mentionedChannel.name,
-        'type': 'channel'
       },
       'text' : mentionEntityText,
       'type' : 'mention'
@@ -303,3 +295,5 @@ export class TeamsMessage extends builder.Message {
   }
 
 }
+
+

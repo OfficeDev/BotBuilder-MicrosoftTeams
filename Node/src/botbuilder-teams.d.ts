@@ -1102,20 +1102,13 @@ export class TeamsMessage extends builder.Message {
   constructor(session?: builder.Session);
 
   /**
+  *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The user to mention
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
-
-  /**
-  *  Enable bot to send a message to mention channel or team
-  *  @param {builder.IIdentity} mentionedChannel - The channel to mention
-  *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
-  *  @param {string} mentionText - text to mention
-  */
-  public addChannelMentionToText(mentionedChannel: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
 
   /**
   *  Return conversation update related event
@@ -1151,4 +1144,20 @@ export class StripBotAtMentions implements builder.IMiddlewareMap
 {
     /** Called in series once an incoming message has been bound to a session. Executed after [receive](#receive) middleware.  */
     public readonly botbuilder: builder.ISessionMiddleware|builder.ISessionMiddleware[];
+}
+
+export class MentionEntity {
+  type: string;
+  mentioned: any;
+  text: string;
+}
+
+export class UserMention extends MentionEntity
+{
+    constructor(userId: string, name: string);
+}
+
+export class ChannelMention extends MentionEntity
+{
+    constructor(channelId: string, name: string);
 }
