@@ -36,7 +36,9 @@ server.listen(3978, function () {
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
-  appPassword: appPassword
+  appPassword: appPassword,
+  openIdMetadata: 'https://intercom-api-ppe.azurewebsites.net/v1/.well-known/openidconfiguration',
+  stateEndpoint: 'https://intercom-api-ppe.azurewebsites.net'
 }); 
 
 // this will receive nothing, you can put your tenant id in the list to listen
@@ -56,6 +58,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
+    session.beginDialog('NotificationFeed');
     builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Notification Feed');
   },
   function (session, results) {
@@ -86,7 +89,7 @@ bot.dialog('/', [
         break;
       case 8:
         session.beginDialog('NotificationFeed');
-         break;
+        break;
       default:
         session.endDialog();
         break;
@@ -184,7 +187,7 @@ bot.dialog('MentionUser', function (session: builder.Session) {
 bot.dialog('NotificationFeed', function (session: builder.Session) {
   // user name/user id
   var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
-  var notification = (<teams.TeamsMessage>msg).notifyUser(false);
+  var notification = (<teams.TeamsMessage>msg).notifyUser(true);
   console.log(util.inspect(notification, false, 4, true));
   session.send(notification, function (err, response) {
     if (err) {
