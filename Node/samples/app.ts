@@ -23,17 +23,16 @@ var appPassword: string = 'app password';
 var userId: string = 'user id';
 var tenantId: string = 'tenant id';
 
-
-var server = restify.createServer(); 
-server.listen(3978, function () {    
-  console.log('%s listening to %s', server.name, util.inspect(server.address())); 
-});  
-
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
   appPassword: appPassword
 }); 
+
+var server = restify.createServer(); 
+server.listen(3978, function () {    
+  console.log('%s listening to %s', server.name, util.inspect(server.address())); 
+});  
 
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
@@ -61,6 +60,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
+    session.beginDialog('MentionChannel');
     builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel');
   },
   function (session, results) {

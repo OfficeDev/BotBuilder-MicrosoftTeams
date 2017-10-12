@@ -20,14 +20,25 @@ var appId = 'app id';
 var appPassword = 'app password';
 var userId = 'user id';
 var tenantId = 'tenant id';
-var server = restify.createServer();
-server.listen(3978, function () {
-    console.log('%s listening to %s', server.name, util.inspect(server.address()));
-});
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({
     appId: appId,
     appPassword: appPassword
+});
+var appName = 'zel-test-bot-1';
+var appId = '15affdfc-53f5-43dc-b4f9-d3806c4becb2';
+var appPassword = 'XOLUMoNZfk46MaCPDJ2iX7V';
+var userId = '29:1MKP4ZpIvNBO-DNzWH3vulEZNG5msExpk3ybe5RaBpdPnS3wnxSE13OavffQN__3UMnqUgfPPrXx48joN1uwoQw';
+var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
+var connector = new teams.TeamsChatConnector({
+    appId: appId,
+    appPassword: appPassword,
+    openIdMetadata: 'https://intercom-api-ppe.azurewebsites.net/v1/.well-known/openidconfiguration',
+    stateEndpoint: 'https://intercom-api-ppe.azurewebsites.net'
+});
+var server = restify.createServer();
+server.listen(3978, function () {
+    console.log('%s listening to %s', server.name, util.inspect(server.address()));
 });
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
@@ -51,6 +62,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
+        session.beginDialog('MentionChannel');
         builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel');
     },
     function (session, results) {
