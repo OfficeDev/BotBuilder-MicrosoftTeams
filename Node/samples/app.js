@@ -148,8 +148,12 @@ bot.dialog('StartNewReplyChain', function (session) {
 });
 bot.dialog('MentionUser', function (session) {
     // user name/user id
-    var mention = new teams.UserMention(userId, 'Bill Zeng');
-    var msg = new teams.TeamsMessage(session).addEntity(mention).text(teams.TeamsMessage.getTenantId(session.message));
+    var user = {
+        id: userId,
+        name: 'Bill Zeng'
+    };
+    var mention = new teams.UserMention(user);
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' ' + teams.TeamsMessage.getTenantId(session.message));
     session.send(msg);
     session.endDialog();
 });
@@ -160,8 +164,12 @@ bot.dialog('MentionChannel', function (session) {
         var splitted = session.message.address.conversation.id.split(';', 1);
         channelId = splitted[0];
     }
-    var mention = new teams.ChannelMention(channelId, 'All');
-    var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel.' + mention.text);
+    var channel = {
+        id: channelId,
+        name: 'All'
+    };
+    var mention = new teams.ChannelMention(channel);
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel. ' + mention.text);
     session.send(msg);
     session.endDialog();
 });

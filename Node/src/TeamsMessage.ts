@@ -41,35 +41,52 @@ export enum MentionTextLocation {
   AppendText
 }
 
+/**
+ * @class
+ * At mention entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class MentionEntity {
   type: string;
   mentioned: any;
   text: string;
 }
 
-export class UserMention extends MentionEntity
-{
-    constructor(userId: string, name: string) {
+export class UserMention extends MentionEntity {
+    constructor(user: builder.IIdentity, text?: string) {
       super();
       this.type = 'mention';
-      this.text = '<at>'+name+'</at>';
+      if (text != null)
+      {
+        this.text = '<at>'+text+'</at>';
+      }
+      else 
+      {
+        this.text = '<at>'+user.name+'</at>';
+      }
+      
       this.mentioned = {
-        'id' : userId,
-        'name' : name,
+        'id' : user.id,
+        'name' : user.name,
         'type': 'user'
       };
     }
 }
 
-export class ChannelMention extends MentionEntity
-{
-    constructor(channelId: string, name: string) {
+export class ChannelMention extends MentionEntity {
+    constructor(channel: ChannelInfo) {
       super();
       this.type = 'mention';
-      this.text = '<at>'+name+'</at>';
+      this.text = '<at>'+channel.name+'</at>';
       this.mentioned = {
-        'id' : channelId,
-        'name' : name,
+        'id' : channel.id,
+        'name' : channel.name,
         'type': 'channel'
       };
     }

@@ -1146,6 +1146,18 @@ export class StripBotAtMentions implements builder.IMiddlewareMap
     public readonly botbuilder: builder.ISessionMiddleware|builder.ISessionMiddleware[];
 }
 
+
+/**
+ * @class
+ * At mention entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class MentionEntity {
   type: string;
   mentioned: any;
@@ -1154,10 +1166,19 @@ export class MentionEntity {
 
 export class UserMention extends MentionEntity
 {
-    constructor(userId: string, name: string);
+    /**
+    *  Initialize a new instance of at mention user entity
+    *  @param {IIdentity} user - User object to at mention.
+    *  @param {string} text - At mention string to display.
+    */
+    constructor(user: builder.IIdentity, text?: string);
 }
 
 export class ChannelMention extends MentionEntity
 {
-    constructor(channelId: string, name: string);
+    /**
+    *  Initialize a new instance of at mention channel entity
+    *  @param {ChannelInfo} channel - The channel to at mention.
+    */
+    constructor(channel: ChannelInfo);
 }
