@@ -89,6 +89,10 @@ export class TeamsMessage extends builder.Message {
   *  @param {string} mentionText - text to mention
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage {
+    
+    // Deprecated
+    console.warn("new TeamsMessage(session).addMentionToText is deprecated. Use UserMention or ChannelMention instead.");
+
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
     }
