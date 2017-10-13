@@ -58,6 +58,17 @@ export class MentionEntity {
   text: string;
 }
 
+/**
+ * @class
+ * At mention user entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class UserMention extends MentionEntity {
   /**
     *  Initialize a new instance of at mention user entity
@@ -88,6 +99,17 @@ export class UserMention extends MentionEntity {
   }
 }
 
+/**
+ * @class
+ * At mention channel entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class ChannelMention extends MentionEntity {
   /**
     *  Initialize a new instance of at mention channel entity
