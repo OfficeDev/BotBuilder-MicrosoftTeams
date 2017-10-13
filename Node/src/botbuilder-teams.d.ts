@@ -1164,8 +1164,7 @@ export class MentionEntity {
   text: string;
 }
 
-export class UserMention extends MentionEntity
-{
+export class UserMention extends MentionEntity {
     /**
     *  Initialize a new instance of at mention user entity
     *  @param {IIdentity} user - User object to at mention.
@@ -1174,8 +1173,7 @@ export class UserMention extends MentionEntity
     constructor(user: builder.IIdentity, text?: string);
 }
 
-export class ChannelMention extends MentionEntity
-{
+export class ChannelMention extends MentionEntity {
     /**
     *  Initialize a new instance of at mention channel entity
     *  @param {ChannelInfo} channel - The channel to at mention.

@@ -25,17 +25,6 @@ var connector = new teams.TeamsChatConnector({
     appId: appId,
     appPassword: appPassword
 });
-var appName = 'zel-test-bot-1';
-var appId = '15affdfc-53f5-43dc-b4f9-d3806c4becb2';
-var appPassword = 'XOLUMoNZfk46MaCPDJ2iX7V';
-var userId = '29:1MKP4ZpIvNBO-DNzWH3vulEZNG5msExpk3ybe5RaBpdPnS3wnxSE13OavffQN__3UMnqUgfPPrXx48joN1uwoQw';
-var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
-var connector = new teams.TeamsChatConnector({
-    appId: appId,
-    appPassword: appPassword,
-    openIdMetadata: 'https://intercom-api-ppe.azurewebsites.net/v1/.well-known/openidconfiguration',
-    stateEndpoint: 'https://intercom-api-ppe.azurewebsites.net'
-});
 var server = restify.createServer();
 server.listen(3978, function () {
     console.log('%s listening to %s', server.name, util.inspect(server.address()));

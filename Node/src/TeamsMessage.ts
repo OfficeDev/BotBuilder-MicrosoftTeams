@@ -59,37 +59,58 @@ export class MentionEntity {
 }
 
 export class UserMention extends MentionEntity {
-    constructor(user: builder.IIdentity, text?: string) {
-      super();
-      this.type = 'mention';
-      if (text != null)
-      {
-        this.text = '<at>'+text+'</at>';
-      }
-      else 
-      {
-        this.text = '<at>'+user.name+'</at>';
-      }
-      
-      this.mentioned = {
-        'id' : user.id,
-        'name' : user.name,
-        'type': 'user'
-      };
+  /**
+    *  Initialize a new instance of at mention user entity
+    *  @param {IIdentity} user - User object to at mention.
+    *  @param {string} text - At mention string to display.
+    */  
+  constructor(user: builder.IIdentity, text?: string) {
+    super();
+    if (!user || !user.id) {
+      throw new Error('Mentioned user and user ID cannot be null');
     }
+
+    if (!user.name && !text) {
+      throw new Error('Either mentioned user name or mentionText must have a value');
+    }
+
+    if (text) {
+      user.name = text;
+    }
+
+    this.type = 'mention';   
+    this.text = '<at>'+user.name+'</at>';
+    this.mentioned = {
+      'id' : user.id,
+      'name' : user.name,
+      'type': 'user'
+    };
+  }
 }
 
 export class ChannelMention extends MentionEntity {
-    constructor(channel: ChannelInfo) {
-      super();
-      this.type = 'mention';
-      this.text = '<at>'+channel.name+'</at>';
-      this.mentioned = {
-        'id' : channel.id,
-        'name' : channel.name,
-        'type': 'channel'
-      };
+  /**
+    *  Initialize a new instance of at mention channel entity
+    *  @param {ChannelInfo} channel - The channel to at mention.
+    */
+  constructor(channel: ChannelInfo) {
+    super();
+    if (!channel || !channel.id) {
+      throw new Error('Mentioned channel and channel ID cannot be null');
     }
+
+    if (!channel.name) {
+      throw new Error('Channel name must have a value');
+    }
+
+    this.type = 'mention';
+    this.text = '<at>'+channel.name+'</at>';
+    this.mentioned = {
+      'id' : channel.id,
+      'name' : channel.name,
+      'type': 'channel'
+    };
+  }
 }
 
 export class TeamsMessage extends builder.Message {
