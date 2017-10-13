@@ -171,6 +171,28 @@ describe('TeamsMessage', function () {
         }
       ], msg.entities);
     });
+
+    it('should mention team with TeamMention', function () {
+      let team = {
+        id: 'test',
+        name: 'test'
+      };
+
+      let mention = tm.ChannelMention(team);
+      var message = new TeamsMessage(null);
+      var msg = message.addEntity(mention);
+      assert([
+        {
+          'mentioned': {
+            'id': 'test',
+            'name': 'test',
+            'type': 'team'
+          },
+          'text': '<at>test</at>',
+          'type': 'mention'
+        }
+      ], msg.entities);
+    });
   });
 
   describe('#getConversationUpdateData', function (done) {

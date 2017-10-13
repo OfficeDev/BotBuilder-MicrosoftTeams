@@ -27,7 +27,8 @@ var tenantId: string = 'tenant id';
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
   appPassword: appPassword
-}); 
+});
+
 
 var server = restify.createServer(); 
 server.listen(3978, function () {    
@@ -61,7 +62,9 @@ bot.use(stripBotAtMentions);
 bot.dialog('/', [
   function (session) {
     session.beginDialog('MentionChannel');
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel');
+    session.beginDialog('MentionTeam');
+    session.beginDialog('MentionUser');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -96,8 +99,11 @@ bot.dialog('/', [
         session.beginDialog('Signout');
         break;
       case 10:
-         session.beginDialog('MentionChannel');
-         break;
+        session.beginDialog('MentionChannel');
+        break;
+      case 11:
+        session.beginDialog('MentionTeam');
+        break;
       default:
         session.endDialog();
         break;
@@ -201,13 +207,56 @@ bot.dialog('MentionChannel', function (session: builder.Session) {
     channelId = splitted[0];
   }
 
-  let channel: teams.ChannelInfo = {
+  var teamId = session.message.sourceEvent.team.id;
+  connector.fetchChannelList(
+    (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+    teamId,
+    (err, result) => {
+      if (err) {
+        session.endDialog('There is some error');
+      }
+      else {
+        var channelName = null;
+        for (var i in result)
+        {
+          var channelInfo = result[i];
+          if (channelId == channelInfo['id'])
+          {
+            channelName = channelInfo['name'] || 'General';
+            break;
+          }
+        }
+
+        let channel: teams.ChannelInfo = {
+          id: channelId,
+          name: channelName
+        };
+
+        let mention = new teams.ChannelMention(channel);
+        var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel. ' + mention.text);
+        session.send(msg);
+        session.endDialog();
+      }
+    }
+  );
+});
+
+bot.dialog('MentionTeam', function (session: builder.Session) {
+  // user name/user id
+  var channelId = null;
+  if (session.message.address.conversation.id)
+  {
+    var splitted = session.message.address.conversation.id.split(';', 1);
+    channelId = splitted[0];
+  }
+
+  let team: teams.TeamInfo = {
     id: channelId,
     name: 'All'
   };
 
-  let mention = new teams.ChannelMention(channel);
-  var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel. ' + mention.text);
+  let mention = new teams.TeamMention(team);
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the team. ' + mention.text);
   session.send(msg);
   session.endDialog();
 });

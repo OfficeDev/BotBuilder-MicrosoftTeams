@@ -132,6 +132,42 @@ export class ChannelMention extends MentionEntity {
   }
 }
 
+/**
+ * @class
+ * At mention team entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class TeamMention extends MentionEntity {
+  /**
+    *  Initialize a new instance of at mention team entity
+    *  @param {TeamInfo} team - The team to at mention.
+    */
+  constructor(team: TeamInfo) {
+    super();
+    if (!team || !team.id) {
+      throw new Error('Mentioned team and team ID cannot be null');
+    }
+
+    if (!team.name) {
+      throw new Error('Team name must have a value, use General as name if it is a team');
+    }
+
+    this.type = 'mention';
+    this.text = '<at>'+team.name+'</at>';
+    this.mentioned = {
+      'id' : team.id,
+      'name' : team.name,
+      'type': 'team'
+    };
+  }
+}
+
 export class TeamsMessage extends builder.Message {
   
   constructor(private session?: builder.Session) {

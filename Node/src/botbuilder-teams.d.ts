@@ -1180,3 +1180,11 @@ export class ChannelMention extends MentionEntity {
     */
     constructor(channel: ChannelInfo);
 }
+
+export class TeamMention extends MentionEntity {
+    /**
+    *  Initialize a new instance of at mention team entity
+    *  @param {TeamInfo} team - The team to at mention.
+    */
+    constructor(team: TeamInfo);
+}
