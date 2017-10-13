@@ -85,15 +85,12 @@ export class UserMention extends MentionEntity {
       throw new Error('Either mentioned user name or mentionText must have a value');
     }
 
-    if (text) {
-      user.name = text;
-    }
-
+    let mentionEntityText = text || user.name;
     this.type = 'mention';   
-    this.text = '<at>'+user.name+'</at>';
+    this.text = '<at>'+mentionEntityText+'</at>';
     this.mentioned = {
       'id' : user.id,
-      'name' : user.name,
+      'name' : mentionEntityText,
       'type': 'user'
     };
   }
