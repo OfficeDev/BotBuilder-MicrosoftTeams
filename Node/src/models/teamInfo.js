@@ -50,7 +50,6 @@ class TeamInfo {
   constructor(name, id) {
     this.id = id;
     this.name = name;
-    this.aadGroupId = aadGroupId
   }
 
   constructor(name, id, aadGroupId) {
