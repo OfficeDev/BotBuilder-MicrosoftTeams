@@ -129,63 +129,47 @@ describe('TeamsMessage', function () {
     });
 
     it('should mention user with UserMention', function () {
-      var connector = new builder.ConsoleConnector();
-      var bot = new builder.UniversalBot(connector);
-      bot.dialog('/', function (session) { 
-        let user = {
-          id: 'test',
-          name: 'test'
-        };
+      let user = {
+        id: 'test',
+        name: 'test'
+      };
 
-        let mention = tm.UserMention(user);
-        var message = new TeamsMessage(session);
-        var msg = message.addEntity(mention);
-        assert([
-          {
-            'mentioned': {
-              'id': 'test',
-              'name': 'test',
-              'type': 'user'
-            },
-            'text': '<at>test</at>',
-            'type': 'mention'
-          }
-        ], msg.entities); 
-      });
-      bot.on('send', function (message) {
-        done();
-      });
-      connector.processMessage('start');
+      let mention = tm.UserMention(user);
+      var message = new TeamsMessage(null);
+      var msg = message.addEntity(mention);
+      assert([
+        {
+          'mentioned': {
+            'id': 'test',
+            'name': 'test',
+            'type': 'user'
+          },
+          'text': '<at>test</at>',
+          'type': 'mention'
+        }
+      ], msg.entities);
     });
 
     it('should mention channel with ChannelMention', function () {
-      var connector = new builder.ConsoleConnector();
-      var bot = new builder.UniversalBot(connector);
-      bot.dialog('/', function (session) { 
-        let channel = {
-          id: 'test',
-          name: 'test'
-        };
+      let channel = {
+        id: 'test',
+        name: 'test'
+      };
 
-        let mention = tm.ChannelMention(channel);
-        var message = new TeamsMessage(session);
-        var msg = message.addEntity(mention);
-        assert([
-          {
-            'mentioned': {
-              'id': 'test',
-              'name': 'test',
-              'type': 'channel'
-            },
-            'text': '<at>test</at>',
-            'type': 'mention'
-          }
-        ], msg.entities); 
-      });
-      bot.on('send', function (message) {
-        done();
-      });
-      connector.processMessage('start');
+      let mention = tm.ChannelMention(channel);
+      var message = new TeamsMessage(null);
+      var msg = message.addEntity(mention);
+      assert([
+        {
+          'mentioned': {
+            'id': 'test',
+            'name': 'test',
+            'type': 'channel'
+          },
+          'text': '<at>test</at>',
+          'type': 'mention'
+        }
+      ], msg.entities);
     });
   });
 

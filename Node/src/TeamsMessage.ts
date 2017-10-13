@@ -119,7 +119,7 @@ export class ChannelMention extends MentionEntity {
     }
 
     if (!channel.name) {
-      throw new Error('Channel name must have a value');
+      throw new Error('Channel name must have a value, use General as name if it is a team');
     }
 
     this.type = 'mention';
