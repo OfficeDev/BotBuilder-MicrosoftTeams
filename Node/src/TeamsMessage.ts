@@ -72,7 +72,7 @@ export class MentionEntity {
 export class UserMention extends MentionEntity {
   /**
     *  Initialize a new instance of at mention user entity
-    *  @param {IIdentity} user - User object to at mention.
+    *  @param {IIdentity} user - User object to at mention. User must have id and name values.
     *  @param {string} text - At mention string to display.
     */  
   constructor(user: builder.IIdentity, text?: string) {
@@ -98,7 +98,7 @@ export class UserMention extends MentionEntity {
 
 /**
  * @class
- * At mention channel entity in message.
+ * At mention channel entity in message. 
  *
  * @member {string} [type] at mention type, its value is always mention.
  *
@@ -110,7 +110,7 @@ export class UserMention extends MentionEntity {
 export class ChannelMention extends MentionEntity {
   /**
     *  Initialize a new instance of at mention channel entity
-    *  @param {ChannelInfo} channel - The channel to at mention.
+    *  @param {ChannelInfo} channel - The channel to at mention. Both channel.id and channel.name are required. If you don't know the name of the channel, you can get it from the Fetch Channel List API, or use a generic name like 'channel'
     */
   constructor(channel: ChannelInfo) {
     super();
@@ -119,7 +119,7 @@ export class ChannelMention extends MentionEntity {
     }
 
     if (!channel.name) {
-      throw new Error('Channel name must have a value, use General as name if it is a team');
+      throw new Error('Channel name must have a value. General channel will not have name, need to set name as General mannually');
     }
 
     this.type = 'mention';
@@ -146,7 +146,7 @@ export class ChannelMention extends MentionEntity {
 export class TeamMention extends MentionEntity {
   /**
     *  Initialize a new instance of at mention team entity
-    *  @param {TeamInfo} team - The team to at mention.
+    *  @param {TeamInfo} team - The team to at mention. Team must have id and name values
     */
   constructor(team: TeamInfo) {
     super();
@@ -155,7 +155,7 @@ export class TeamMention extends MentionEntity {
     }
 
     if (!team.name) {
-      throw new Error('Team name must have a value, use General as name if it is a team');
+      throw new Error('Team name must have a value');
     }
 
     this.type = 'mention';

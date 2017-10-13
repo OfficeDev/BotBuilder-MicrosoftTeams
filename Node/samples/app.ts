@@ -63,7 +63,6 @@ bot.dialog('/', [
   function (session) {
     session.beginDialog('MentionChannel');
     session.beginDialog('MentionTeam');
-    session.beginDialog('MentionUser');
     builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam');
   },
   function (session, results) {
@@ -233,7 +232,7 @@ bot.dialog('MentionChannel', function (session: builder.Session) {
         };
 
         let mention = new teams.ChannelMention(channel);
-        var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the channel. ' + mention.text);
+        var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the channel.');
         session.send(msg);
         session.endDialog();
       }
@@ -256,7 +255,7 @@ bot.dialog('MentionTeam', function (session: builder.Session) {
   };
 
   let mention = new teams.TeamMention(team);
-  var msg = new teams.TeamsMessage(session).addEntity(mention).text('This is a test message to at mention the team. ' + mention.text);
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the team. ');
   session.send(msg);
   session.endDialog();
 });

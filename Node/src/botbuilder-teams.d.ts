@@ -1164,27 +1164,60 @@ export class MentionEntity {
   text: string;
 }
 
+/**
+ * @class
+ * At mention user entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class UserMention extends MentionEntity {
     /**
     *  Initialize a new instance of at mention user entity
-    *  @param {IIdentity} user - User object to at mention.
+    *  @param {IIdentity} user - User object to at mention. User must have id and name values.
     *  @param {string} text - At mention string to display.
     */
     constructor(user: builder.IIdentity, text?: string);
 }
 
+/**
+ * @class
+ * At mention channel entity in message. 
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class ChannelMention extends MentionEntity {
     /**
     *  Initialize a new instance of at mention channel entity
-    *  @param {ChannelInfo} channel - The channel to at mention.
+    *  @param {ChannelInfo} channel - The channel to at mention. Both channel.id and channel.name are required. If you don't know the name of the channel, you can get it from the Fetch Channel List API, or use a generic name like 'channel'
     */
     constructor(channel: ChannelInfo);
 }
 
+/**
+ * @class
+ * At mention team entity in message. 
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
 export class TeamMention extends MentionEntity {
     /**
     *  Initialize a new instance of at mention team entity
-    *  @param {TeamInfo} team - The team to at mention.
+    *  @param {TeamInfo} team - The team to at mention. Team must have id and name values
     */
     constructor(team: TeamInfo);
 }
