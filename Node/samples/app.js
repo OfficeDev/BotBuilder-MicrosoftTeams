@@ -14,26 +14,19 @@ var restify = require("restify");
 var builder = require("botbuilder");
 var teams = require("botbuilder-teams");
 // Put your registered bot here, to register bot, go to bot framework
-// var appName: string = 'app name';
-// var appId: string = 'app id';
-// var appPassword: string = 'app password';
-// var userId: string = 'user id';
-// var tenantId: string = 'tenant id';
-var appName = 'zel-test-bot-1';
-var appId = '15affdfc-53f5-43dc-b4f9-d3806c4becb2';
-var appPassword = 'XOLUMoNZfk46MaCPDJ2iX7V';
-var userId = '29:1MKP4ZpIvNBO-DNzWH3vulEZNG5msExpk3ybe5RaBpdPnS3wnxSE13OavffQN__3UMnqUgfPPrXx48joN1uwoQw';
-var tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47';
-var server = restify.createServer();
-server.listen(3978, function () {
-    console.log('%s listening to %s', server.name, util.inspect(server.address()));
-});
+var appName = 'app name';
+var appId = 'app id';
+var appPassword = 'app password';
+var userId = 'user id';
+var tenantId = 'tenant id';
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({
     appId: appId,
-    appPassword: appPassword,
-    openIdMetadata: 'https://intercom-api-ppe.azurewebsites.net/v1/.well-known/openidconfiguration',
-    stateEndpoint: 'https://intercom-api-ppe.azurewebsites.net'
+    appPassword: appPassword
+});
+var server = restify.createServer();
+server.listen(3978, function () {
+    console.log('%s listening to %s', server.name, util.inspect(server.address()));
 });
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
@@ -49,8 +42,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        session.beginDialog('NotificationFeed');
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Notification Feed');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -79,6 +71,18 @@ bot.dialog('/', [
                 session.beginDialog('StartNewReplyChain');
                 break;
             case 8:
+                session.beginDialog('Signin');
+                break;
+            case 9:
+                session.beginDialog('Signout');
+                break;
+            case 10:
+                session.beginDialog('MentionChannel');
+                break;
+            case 11:
+                session.beginDialog('MentionTeam');
+                break;
+            case 12:
                 session.beginDialog('NotificationFeed');
                 break;
             default:
@@ -142,21 +146,76 @@ bot.dialog('StartNewReplyChain', function (session) {
 });
 bot.dialog('MentionUser', function (session) {
     // user name/user id
-    var toMention = {
-        name: 'Bill Zeng',
-        id: userId
+    var user = {
+        id: userId,
+        name: 'Bill Zeng'
     };
-    var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-    var mentionedMsg = msg.addMentionToText(toMention);
-    session.send(mentionedMsg);
+    var mention = new teams.UserMention(user);
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' ' + teams.TeamsMessage.getTenantId(session.message));
+    session.send(msg);
+    session.endDialog();
+});
+bot.dialog('MentionChannel', function (session) {
+    // user name/user id
+    var channelId = null;
+    if (session.message.address.conversation.id) {
+        var splitted = session.message.address.conversation.id.split(';', 1);
+        channelId = splitted[0];
+    }
+    var teamId = session.message.sourceEvent.team.id;
+    connector.fetchChannelList(session.message.address.serviceUrl, teamId, function (err, result) {
+        if (err) {
+            session.endDialog('There is some error');
+        }
+        else {
+            var channelName = null;
+            for (var i in result) {
+                var channelInfo = result[i];
+                if (channelId == channelInfo['id']) {
+                    channelName = channelInfo['name'] || 'General';
+                    break;
+                }
+            }
+            var channel = {
+                id: channelId,
+                name: channelName
+            };
+            var mention = new teams.ChannelMention(channel);
+            var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the channel.');
+            session.send(msg);
+            session.endDialog();
+        }
+    });
+});
+bot.dialog('MentionTeam', function (session) {
+    // user name/user id
+    var channelId = null;
+    if (session.message.address.conversation.id) {
+        var splitted = session.message.address.conversation.id.split(';', 1);
+        channelId = splitted[0];
+    }
+    var team = {
+        id: channelId,
+        name: 'All'
+    };
+    var mention = new teams.TeamMention(team);
+    var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the team. ');
+    session.send(msg);
     session.endDialog();
 });
 bot.dialog('NotificationFeed', function (session) {
     // user name/user id
     var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
-    var notification = msg.notifyUser(true);
-    console.log(util.inspect(notification, false, 4, true));
-    session.send(notification, function (err, response) {
+    var fakeNotification = msg.notifyUser(false);
+    // this should NOT trigger an alert
+    session.send(fakeNotification, function (err, response) {
+        if (err) {
+            console.log(err);
+        }
+    });
+    var trueNotification = msg.notifyUser(true);
+    // this should trigger an alert
+    session.send(trueNotification, function (err, response) {
         if (err) {
             console.log(err);
         }

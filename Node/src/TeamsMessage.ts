@@ -36,9 +36,151 @@ import * as builder from 'botbuilder';
 import { TeamEventBase, MembersAddedEvent, MembersRemovedEvent, TeamRenamedEvent, ChannelCreatedEvent, ChannelDeletedEvent, ChannelRenamedEvent } from './ConversationUpdate'
 import { ChannelInfo, TeamInfo, TenantInfo } from './models';
 
+/**
+ * @class
+ * This an internal class to extend IMessage interface.
+ * Initializes a new instance of the NotificationMessage.
+ * @constructor
+ * Describes a message which would be sent as a notification showing in Teams Activity tab for 1 on 1 chat only.
+ *
+ * @member {object} [channelData] Value to decide if message is a notification.
+ *
+ */
+interface NotificationMessage extends builder.IMessage
+{
+  channelData: any;
+}
+
 export enum MentionTextLocation {
   PrependText,
   AppendText
+}
+
+/**
+ * @class
+ * At mention entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class MentionEntity {
+  type: string;
+  mentioned: any;
+  text: string;
+}
+
+/**
+ * @class
+ * At mention user entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class UserMention extends MentionEntity {
+  /**
+    *  Initialize a new instance of at mention user entity
+    *  @param {IIdentity} user - User object to at mention. User must have id and name values.
+    *  @param {string} text - At mention string to display.
+    */  
+  constructor(user: builder.IIdentity, text?: string) {
+    super();
+    if (!user || !user.id) {
+      throw new Error('Mentioned user and user ID cannot be null');
+    }
+
+    if (!user.name && !text) {
+      throw new Error('Either mentioned user name or mentionText must have a value');
+    }
+
+    let mentionEntityText = text || user.name;
+    this.type = 'mention';   
+    this.text = '<at>'+mentionEntityText+'</at>';
+    this.mentioned = {
+      'id' : user.id,
+      'name' : mentionEntityText,
+      'type': 'user'
+    };
+  }
+}
+
+/**
+ * @class
+ * At mention channel entity in message. 
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class ChannelMention extends MentionEntity {
+  /**
+    *  Initialize a new instance of at mention channel entity
+    *  @param {ChannelInfo} channel - The channel to at mention. Both channel.id and channel.name are required. If you don't know the name of the channel, you can get it from the Fetch Channel List API, or use a generic name like 'channel'
+    */
+  constructor(channel: ChannelInfo) {
+    super();
+    if (!channel || !channel.id) {
+      throw new Error('Mentioned channel and channel ID cannot be null');
+    }
+
+    if (!channel.name) {
+      throw new Error('Channel name must have a value. General channel will not have name, need to set name as General mannually');
+    }
+
+    this.type = 'mention';
+    this.text = '<at>'+channel.name+'</at>';
+    this.mentioned = {
+      'id' : channel.id,
+      'name' : channel.name,
+      'type': 'channel'
+    };
+  }
+}
+
+/**
+ * @class
+ * At mention team entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class TeamMention extends MentionEntity {
+  /**
+    *  Initialize a new instance of at mention team entity
+    *  @param {TeamInfo} team - The team to at mention. Team must have id and name values
+    */
+  constructor(team: TeamInfo) {
+    super();
+    if (!team || !team.id) {
+      throw new Error('Mentioned team and team ID cannot be null');
+    }
+
+    if (!team.name) {
+      throw new Error('Team name must have a value');
+    }
+
+    this.type = 'mention';
+    this.text = '<at>'+team.name+'</at>';
+    this.mentioned = {
+      'id' : team.id,
+      'name' : team.name,
+      'type': 'team'
+    };
+  }
 }
 
 export class TeamsMessage extends builder.Message {
@@ -48,12 +190,17 @@ export class TeamsMessage extends builder.Message {
   }
 
   /**
+  *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage {
+
+    // Deprecated
+    console.warn("new TeamsMessage(session).addMentionToText is deprecated. Use UserMention or ChannelMention instead.");
+
     if (!mentionedUser || !mentionedUser.id) {
       throw new Error('Mentioned user and user ID cannot be null');
     }
@@ -190,15 +337,9 @@ export class TeamsMessage extends builder.Message {
   *  Enable Bot notify user for a message
   */
   public notifyUser(isAlert: boolean): TeamsMessage {
-    var address = <builder.IStartConversationAddress>this.data.address;
-    if (address.channelData == null)
-    {
-      address.channelData = {};
-    }
-
-    address.channelData['notification'] = { 'alert' : isAlert };
-    address.channelData['tenant'] = {'id' : TeamsMessage.getTenantId(this.session.message)};
-    this.data.address = address;
+    var notificationMessage = <NotificationMessage>this.data;
+    notificationMessage.channelData = { 'notification' : { 'alert' : isAlert } };
+    this.data = notificationMessage;
     return this;
   }
 
@@ -276,3 +417,5 @@ export class TeamsMessage extends builder.Message {
   }
 
 }
+
+
