@@ -26,12 +26,13 @@ var tenantId: string = 'tenant id';
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
   appPassword: appPassword
-}); 
+});
+
 
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
-});  
+});   
 
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
