@@ -54,6 +54,11 @@ export interface ReplyResult {
   activityId: string
 }
 
+export interface IFunctionResponse {
+  status?: number;
+  body?: any;
+}
+
 export class TeamsChatConnector extends builder.ChatConnector {
   private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
   private static signinStateVerificationInvokeName:string = 'signin/verifyState';
@@ -74,6 +79,42 @@ export class TeamsChatConnector extends builder.ChatConnector {
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
     this.allowedTenants = null;
+  }
+
+  /**
+   * Add Azure Functions support to ChatConnector
+   */
+  public listen(): (context: any, req: any) => void {
+    var _listen = super.listen();
+    return (context, req) => {
+        var response: IFunctionResponse = {};
+        _listen(req, {
+            send: function (status: number, body?: any): void {
+                if (context) {
+                    response.status = status;
+                    if (body) {
+                        response.body = body;
+                    }
+                    context.res = response;
+                    context.done();
+                    context = null;
+                }
+            },
+            status: function (val?: number): number {
+                if (typeof val === 'number') {
+                    response.status = val;
+                }
+                return response.status || 200;
+            },
+            end: function () {
+                if (context) {
+                    context.res = response;
+                    context.done();
+                    context = null;
+                }
+            }
+        });
+    };
   }
 
   /**
