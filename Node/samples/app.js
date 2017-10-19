@@ -216,7 +216,7 @@ bot.dialog('NotificationFeed', function (session) {
     // user name/user id
     var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
     // This is a dictionary which could be merged with other properties
-    var alertFlag = teams.TeamsMessage.AlertFlag();
+    var alertFlag = teams.TeamsMessage.AlertFlag;
     var notification = msg.sourceEvent({
         '*': alertFlag
     });

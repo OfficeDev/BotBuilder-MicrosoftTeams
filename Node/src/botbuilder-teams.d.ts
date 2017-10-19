@@ -1104,7 +1104,7 @@ export class TeamsMessage extends builder.Message {
   /**
   *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
   */
-  public static AlertFlag(): any;
+  public static AlertFlag: any;
 
   /**
   *  Deprecated, please use UserMention and ChannelMention
