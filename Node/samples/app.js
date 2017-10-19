@@ -221,11 +221,7 @@ bot.dialog('NotificationFeed', function (session) {
         '*': alertFlag
     });
     // this should trigger an alert
-    session.send(notification, function (err, response) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    session.send(notification);
     session.endDialog();
 });
 bot.dialog('StartNew1on1Chat', function (session) {

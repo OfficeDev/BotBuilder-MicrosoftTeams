@@ -271,11 +271,7 @@ bot.dialog('NotificationFeed', function (session: builder.Session) {
   });
 
   // this should trigger an alert
-  session.send(notification, function (err, response) {
-    if (err) {
-      console.log(err);
-    }
-  });
+  session.send(notification);
   session.endDialog();
 });
 
