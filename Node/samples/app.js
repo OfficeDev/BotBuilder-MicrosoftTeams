@@ -215,16 +215,13 @@ bot.dialog('MentionTeam', function (session) {
 bot.dialog('NotificationFeed', function (session) {
     // user name/user id
     var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
-    var fakeNotification = msg.notifyUser(false);
-    // this should NOT trigger an alert
-    session.send(fakeNotification, function (err, response) {
-        if (err) {
-            console.log(err);
-        }
+    // This is a dictionary which could be merged with other properties
+    var alertFlag = teams.TeamsMessage.AlertFlag();
+    var notification = msg.sourceEvent({
+        '*': alertFlag
     });
-    var trueNotification = msg.notifyUser(true);
     // this should trigger an alert
-    session.send(trueNotification, function (err, response) {
+    session.send(notification, function (err, response) {
         if (err) {
             console.log(err);
         }

@@ -29,7 +29,6 @@ var connector = new teams.TeamsChatConnector({
   appPassword: appPassword
 });
 
-
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
@@ -265,17 +264,14 @@ bot.dialog('MentionTeam', function (session: builder.Session) {
 bot.dialog('NotificationFeed', function (session: builder.Session) {
   // user name/user id
   var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
-  var fakeNotification = (<teams.TeamsMessage>msg).notifyUser(false);
-  // this should NOT trigger an alert
-  session.send(fakeNotification, function (err, response) {
-    if (err) {
-      console.log(err);
-    }
+  // This is a dictionary which could be merged with other properties
+  var alertFlag = teams.TeamsMessage.AlertFlag();
+  var notification = (<teams.TeamsMessage>msg).sourceEvent({
+    '*' : alertFlag
   });
 
-  var trueNotification = (<teams.TeamsMessage>msg).notifyUser(true);
   // this should trigger an alert
-  session.send(trueNotification, function (err, response) {
+  session.send(notification, function (err, response) {
     if (err) {
       console.log(err);
     }

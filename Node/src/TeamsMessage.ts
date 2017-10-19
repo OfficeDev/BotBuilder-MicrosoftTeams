@@ -36,21 +36,6 @@ import * as builder from 'botbuilder';
 import { TeamEventBase, MembersAddedEvent, MembersRemovedEvent, TeamRenamedEvent, ChannelCreatedEvent, ChannelDeletedEvent, ChannelRenamedEvent } from './ConversationUpdate'
 import { ChannelInfo, TeamInfo, TenantInfo } from './models';
 
-/**
- * @class
- * This an internal class to extend IMessage interface.
- * Initializes a new instance of the NotificationMessage.
- * @constructor
- * Describes a message which would be sent as a notification showing in Teams Activity tab for 1 on 1 chat only.
- *
- * @member {object} [channelData] Value to decide if message is a notification.
- *
- */
-interface NotificationMessage extends builder.IMessage
-{
-  channelData: any;
-}
-
 export enum MentionTextLocation {
   PrependText,
   AppendText
@@ -187,6 +172,13 @@ export class TeamsMessage extends builder.Message {
   
   constructor(private session?: builder.Session) {
     super(session);
+  }
+
+  /**
+  *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
+  */
+  public static AlertFlag(): any {
+    return { 'notification': { 'alert': true } };
   }
 
   /**
@@ -329,16 +321,6 @@ export class TeamsMessage extends builder.Message {
     var teamId = team.id;
     var conversation = this.data.address.conversation;
     this.data.address.conversation.id = teamId;
-    return this;
-  }
-
-  /**
-  *  Enable Bot notify user for a message
-  */
-  public notifyUser(isAlert: boolean): TeamsMessage {
-    var notificationMessage = <NotificationMessage>this.data;
-    notificationMessage.channelData = { 'notification' : { 'alert' : isAlert } };
-    this.data = notificationMessage;
     return this;
   }
 
