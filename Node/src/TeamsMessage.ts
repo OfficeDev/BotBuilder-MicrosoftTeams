@@ -175,6 +175,13 @@ export class TeamsMessage extends builder.Message {
   }
 
   /**
+  *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
+  */
+  public static AlertFlag(): any {
+    return { 'notification': { 'alert': true } };
+  }
+
+  /**
   *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
@@ -182,7 +189,6 @@ export class TeamsMessage extends builder.Message {
   *  @param {string} mentionText - text to mention
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation: MentionTextLocation = MentionTextLocation.PrependText, mentionText: string): TeamsMessage {
-    
     // Deprecated
     console.warn("new TeamsMessage(session).addMentionToText is deprecated. Use UserMention or ChannelMention instead.");
 

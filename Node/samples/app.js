@@ -51,9 +51,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        session.beginDialog('MentionChannel');
-        session.beginDialog('MentionTeam');
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -93,6 +91,9 @@ bot.dialog('/', [
             case 11:
                 session.beginDialog('MentionTeam');
                 break;
+            case 12:
+                session.beginDialog('NotificationFeed');
+                break;
             default:
                 session.endDialog();
                 break;
@@ -100,6 +101,7 @@ bot.dialog('/', [
     }
 ]);
 bot.on('conversationUpdate', function (message) {
+    console.log(message);
     var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 bot.dialog('FetchChannelList', function (session) {
@@ -208,6 +210,18 @@ bot.dialog('MentionTeam', function (session) {
     var mention = new teams.TeamMention(team);
     var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the team. ');
     session.send(msg);
+    session.endDialog();
+});
+bot.dialog('NotificationFeed', function (session) {
+    // user name/user id
+    var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
+    // This is a dictionary which could be merged with other properties
+    var alertFlag = teams.TeamsMessage.AlertFlag();
+    var notification = msg.sourceEvent({
+        '*': alertFlag
+    });
+    // this should trigger an alert
+    session.send(notification);
     session.endDialog();
 });
 bot.dialog('StartNew1on1Chat', function (session) {

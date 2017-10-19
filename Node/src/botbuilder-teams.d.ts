@@ -1102,6 +1102,11 @@ export class TeamsMessage extends builder.Message {
   constructor(session?: builder.Session);
 
   /**
+  *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
+  */
+  public static AlertFlag(): any;
+
+  /**
   *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The user to mention

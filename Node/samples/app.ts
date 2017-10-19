@@ -29,11 +29,10 @@ var connector = new teams.TeamsChatConnector({
   appPassword: appPassword
 });
 
-
 var server = restify.createServer(); 
 server.listen(3978, function () {    
   console.log('%s listening to %s', server.name, util.inspect(server.address())); 
-});  
+});   
 
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
@@ -61,9 +60,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
-    session.beginDialog('MentionChannel');
-    session.beginDialog('MentionTeam');
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -103,6 +100,9 @@ bot.dialog('/', [
       case 11:
         session.beginDialog('MentionTeam');
         break;
+      case 12:
+        session.beginDialog('NotificationFeed');
+        break;
       default:
         session.endDialog();
         break;
@@ -111,6 +111,7 @@ bot.dialog('/', [
 ]); 
 
 bot.on('conversationUpdate', function (message) {
+  console.log(message);
   var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 
@@ -257,6 +258,20 @@ bot.dialog('MentionTeam', function (session: builder.Session) {
   let mention = new teams.TeamMention(team);
   var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the team. ');
   session.send(msg);
+  session.endDialog();
+});
+
+bot.dialog('NotificationFeed', function (session: builder.Session) {
+  // user name/user id
+  var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
+  // This is a dictionary which could be merged with other properties
+  var alertFlag = teams.TeamsMessage.AlertFlag();
+  var notification = (<teams.TeamsMessage>msg).sourceEvent({
+    '*' : alertFlag
+  });
+
+  // this should trigger an alert
+  session.send(notification);
   session.endDialog();
 });
 
@@ -481,7 +496,6 @@ var o365CardActionHandler = function (event: builder.IEvent, query: teams.IO365C
 connector.onO365ConnectorCardAction(o365CardActionHandler);
 
 // example for signin card
-
 bot.dialog('Signin', (session: builder.Session) => botAuth.botSignIn(session));
 
 bot.dialog('Signout', (session: builder.Session) => botAuth.botSignOut(session));
