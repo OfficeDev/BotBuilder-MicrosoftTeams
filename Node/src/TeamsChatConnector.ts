@@ -33,24 +33,30 @@
 
 
 import * as builder from 'botbuilder';
-import * as util from 'util';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, ISigninStateVerificationQuery, TeamInfo } from './models';
 
 var WebResource = msRest.WebResource;
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
   value: any;
 }
 
+export interface ReplyResult {
+  id: string,
+  activityId: string
+}
+
 export class TeamsChatConnector extends builder.ChatConnector {
   private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
+  private static signinStateVerificationInvokeName:string = 'signin/verifyState';
   private static queryInvokeName:string = 'composeExtension/query';
   private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
   private static selectItemInvokeName:string = 'composeExtension/selectItem';
@@ -59,6 +65,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private allowedTenants: string[];
 
   private o365CardActionHandler: O365ConnectorCardActionHandlerType;
+  private signinStateVerificationHandler: SigninStateVerificationHandlerType;
   private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
@@ -86,7 +93,29 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchChannelList(teamId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
+  *  Return info of a team given team id
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchTeamInfo(teamId, options, callback);
+        } else {
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -111,7 +140,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
         }
     });
   }
@@ -133,7 +162,79 @@ export class TeamsChatConnector extends builder.ChatConnector {
           };
           remoteQuery.fetchMemberList(conversationId, options, callback);
         } else {
-          callback(new Error('Failed to authorize request'), null);
+          return callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
+  *  Return a newly started reply chain address in channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback?: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
+    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+
+          var iMessage: builder.IMessage = null;
+          if ((<builder.IIsMessage>message).toMessage)
+          {
+            iMessage = (<builder.IIsMessage>message).toMessage();
+          }
+          else if ((<builder.IMessage>message).address)
+          {
+            iMessage = <builder.IMessage>message;
+          }
+          else
+          {
+            throw new Error("Message type is wrong. Need either IMessage or IIsMessage");
+          }
+
+          var innerCallback = function (err: Error, result: ReplyResult) {
+
+            if (!callback)
+            {
+              return;
+            }
+
+            if (result && result.hasOwnProperty("id") && result.hasOwnProperty("activityId"))
+            {
+              var messageAddress = <builder.IChatConnectorAddress>iMessage.address;              
+              var address: builder.IChatConnectorAddress = <builder.IChatConnectorAddress>{
+                ... messageAddress,
+                channelId : 'msteams',
+                conversation: { id: result.id },
+                id : result.activityId
+              };
+
+              if (address.user) {
+                  delete address.user;
+              }
+
+              return callback(null, address);          
+            }
+            else
+            {
+              let error = new Error("Failed to start reply chain: no conversation ID and activity ID returned.");
+              return callback(error, null);            
+            }
+          } 
+
+          remoteQuery.beginReplyChainInChannel(channelId, iMessage, options, innerCallback);         
+        } 
+        else {
+          if (callback)
+          {
+            return callback(new Error('Failed to authorize request'), null);
+          }          
         }
     });
   }
@@ -159,6 +260,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.o365CardActionHandler = handler;
   }
 
+  public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void {
+    this.signinStateVerificationHandler = handler;
+  }
+ 
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     this.queryHandlers[commandId] = handler;
   }
@@ -197,6 +302,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
         let invoke = <IInvokeEvent>event;
         let compExtHandler: ComposeExtensionHandlerType;
         let o365Handler: O365ConnectorCardActionHandlerType;
+        let signinStateHandler: SigninStateVerificationHandlerType;
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
             compExtHandler = this.dispatchQuery.bind(this);
@@ -213,6 +319,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
           case TeamsChatConnector.o365CardActionInvokeName:
             o365Handler = this.o365CardActionHandler.bind(this);
             break;
+          case TeamsChatConnector.signinStateVerificationInvokeName:
+            signinStateHandler = this.signinStateVerificationHandler.bind(this);
+            break;
           default:
             realEvents.push(event);
             break;
@@ -224,7 +333,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             compExtHandler(invoke, query, callback);
           }
           catch (e) {
-            callback(e, null, 500);
+            return callback(e, null, 500);
           }
         }
 
@@ -234,9 +343,19 @@ export class TeamsChatConnector extends builder.ChatConnector {
             o365Handler(invoke, query, callback);
           }
           catch (e) {
-            callback(e, null, 500);
+            return callback(e, null, 500);
           }
         }
+
+        if (signinStateHandler) {
+          try {
+            let query = <ISigninStateVerificationQuery>(invoke.value);
+            signinStateHandler(invoke, query, callback);
+          }
+          catch (e) {
+            return callback(e, null, 500);
+          }
+        }        
       }
       else {
         realEvents.push(event);
@@ -254,7 +373,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
       handler(event, query, callback);
     }
     else {
-      callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
+      return callback(new Error("Query handler [" + query.commandId + "] not found."), null, 500);
     }
   }
 }

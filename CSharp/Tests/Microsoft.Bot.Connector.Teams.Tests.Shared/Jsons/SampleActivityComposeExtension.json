@@ -15,7 +15,7 @@
     "id": "ConversationId"
   },
   "recipient": {
-    "id": "28:c79b1cd5-05cd-4454-8318-27beba71ff78",
+    "id": "28:00000000-1111-2222-3333-444444444444",
     "name": "TestBot"
   },
   "entities": [

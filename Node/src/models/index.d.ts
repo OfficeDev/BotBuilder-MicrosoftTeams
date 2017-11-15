@@ -101,11 +101,13 @@ export interface ConversationList {
  *
  * @member {string} [id] Unique identifier representing a team
  *
+ * @member {string} [aadGroupId] AAD group ID
  *
  */
 export interface TeamInfo {
   name?: string;
   id?: string;
+  aadGroupId?: string;
 }
 
 /**
@@ -453,6 +455,17 @@ export interface IIsO365ConnectorCardMultichoiceInputChoice {
 export interface IO365ConnectorCardActionQuery {
   body: string;
   actionId: string;
+}
+
+/**
+ * @interface
+ * Interface of signin auth state verfication query
+ * 
+ * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
+ *  
+ */
+export interface ISigninStateVerificationQuery {
+  state: string;
 }
 
 /**

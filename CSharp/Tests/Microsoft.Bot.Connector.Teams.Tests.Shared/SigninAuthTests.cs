@@ -33,37 +33,36 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.Bot.Connector.Teams
+namespace Microsoft.Bot.Connector.Teams.Tests.Shared
 {
-    using Microsoft.Bot.Connector.Teams.Models;
-    using Newtonsoft.Json.Linq;
+    using System.IO;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Newtonsoft.Json;
 
     /// <summary>
-    /// Attachment extensions.
+    /// Signin card auth flow tests.
     /// </summary>
-    public static class AttachmentExtensions
+    [TestClass]
+    public class SigninAuthTests
     {
         /// <summary>
-        /// Converts normal attachment into the compose extension attachment.
+        /// Tests IsSigninStateVerificationQuery logic by providing a file where the invoke payload is valid.
         /// </summary>
-        /// <param name="attachment">The attachment.</param>
-        /// <param name="previewAttachment">The preview attachment.</param>
-        /// <returns>Compose extension attachment</returns>
-        public static ComposeExtensionAttachment ToComposeExtensionAttachment(this Attachment attachment, Attachment previewAttachment = null)
+        [TestMethod]
+        public void SigninAuthTests_IsSigninAuthValidStateVerificationInvoke()
         {
-            // We are recreating the attachment so that JsonSerializerSettings with ReferenceLoopHandling set to Error does not generate error
-            // while serializing. Refer to issue - https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/issues/52.
-            return new ComposeExtensionAttachment
-            {
-                Content = attachment.Content,
-                ContentType = attachment.ContentType,
-                ContentUrl = attachment.ContentUrl,
-                Name = attachment.Name,
-                ThumbnailUrl = attachment.ThumbnailUrl,
-                Preview = previewAttachment == null ?
-                    JObject.FromObject(attachment).ToObject<Attachment>() :
-                    previewAttachment
-            };
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivitySigninAuthStateVerification.json"));
+            Assert.IsTrue(sampleActivity.IsSigninStateVerificationQuery());
+        }
+
+        /// <summary>
+        /// Tests IsSigninStateVerificationQuery logic by providing a file where the invoke payload is invalid.
+        /// </summary>
+        [TestMethod]
+        public void SigninAuthTests_IsSigninAuthInvalidStateVerificationInvoke()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityInvoke.json"));
+            Assert.IsFalse(sampleActivity.IsSigninStateVerificationQuery());
         }
     }
 }

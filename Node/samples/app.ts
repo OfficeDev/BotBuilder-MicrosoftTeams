@@ -14,6 +14,7 @@ import * as restify from 'restify';
 import * as builder from 'botbuilder';
 import * as https from 'https';
 import * as teams from 'botbuilder-teams';
+import { SimpleFBAuth, IFacebookAppSigninSettings } from './simpleFBAuth';
 
 // Put your registered bot here, to register bot, go to bot framework
 var appName: string = 'app name';
@@ -22,16 +23,16 @@ var appPassword: string = 'app password';
 var userId: string = 'user id';
 var tenantId: string = 'tenant id';
 
-var server = restify.createServer(); 
-server.listen(3978, function () {    
-  console.log('%s listening to %s', server.name, util.inspect(server.address())); 
-});  
-
 // Create chat bot 
 var connector = new teams.TeamsChatConnector({     
   appId: appId,     
-  appPassword: appPassword 
-}); 
+  appPassword: appPassword
+});
+
+var server = restify.createServer(); 
+server.listen(3978, function () {    
+  console.log('%s listening to %s', server.name, util.inspect(server.address())); 
+});   
 
 // this will receive nothing, you can put your tenant id in the list to listen
 connector.setAllowedTenants([]);
@@ -40,6 +41,15 @@ connector.resetAllowedTenants();
 
 server.post('/api/v1/bot/messages', connector.listen());
 var bot = new builder.UniversalBot(connector);
+
+// create the bot auth agent
+let botSigninSettings: IFacebookAppSigninSettings = {
+  baseUrl: 'https://...',                         // put the base url of current service
+  fbAppClientId: 'fb app id',                     // put Facebook app id
+  fbAppClientSecret: 'fb app secret',             // put Facebook app secret
+  fbAppScope: 'public_profile,email,user_friends' // put Facebook access scope
+};
+var botAuth = SimpleFBAuth.create(server, connector, botSigninSettings);
 
 // Strip bot at mention text, set text property to text without specific Bot at mention, find original text in textWithBotMentions
 // e.g. original text "<at>zel-bot-1</at> hello please find <at>Bot</at>" and zel-bot-1 is the Bot we at mentions. 
@@ -50,7 +60,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -72,6 +82,27 @@ bot.dialog('/', [
       case 5:
         session.beginDialog('SendO365Card');
         break;
+      case 6:
+        session.beginDialog('FetchTeamInfo');
+        break;
+      case 7:
+        session.beginDialog('StartNewReplyChain');
+        break;
+      case 8:
+        session.beginDialog('Signin');
+        break;
+      case 9:
+        session.beginDialog('Signout');
+        break;
+      case 10:
+        session.beginDialog('MentionChannel');
+        break;
+      case 11:
+        session.beginDialog('MentionTeam');
+        break;
+      case 12:
+        session.beginDialog('NotificationFeed');
+        break;
       default:
         session.endDialog();
         break;
@@ -80,6 +111,7 @@ bot.dialog('/', [
 ]); 
 
 bot.on('conversationUpdate', function (message) {
+  console.log(message);
   var event = teams.TeamsMessage.getConversationUpdateData(message);
 });
 
@@ -115,15 +147,131 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
   );
 });
 
+bot.dialog('FetchTeamInfo', function (session: builder.Session) {
+  var teamId = session.message.sourceEvent.team.id;
+  connector.fetchTeamInfo(
+    (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+    teamId,
+    (err, result) => {
+      if (err) {
+        session.endDialog('There is some error');
+      }
+      else {
+        session.endDialog('%s', JSON.stringify(result));
+      }
+    }
+  );
+});
+
+bot.dialog('StartNewReplyChain', function (session: builder.Session) {
+  var channelId = session.message.sourceEvent.channel.id;
+  var message = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
+  connector.startReplyChain(
+    (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+    channelId,
+    message,
+    (err, address) => {
+      if (err) {
+        console.log(err);
+        session.endDialog('There is some error');
+      }
+      else {
+        console.log(address);
+        var msg = new teams.TeamsMessage(session).text("this is a reply message.").address(address);
+        session.send(msg);
+        session.endDialog();
+      }
+    }
+  );
+});
+
 bot.dialog('MentionUser', function (session: builder.Session) {
   // user name/user id
-  var toMention: builder.IIdentity = {
-    name: 'Bill Zeng',
-    id: userId
+  let user: builder.IIdentity = {
+    id: userId,
+    name: 'Bill Zeng'
   };
-  var msg = new teams.TeamsMessage(session).text(teams.TeamsMessage.getTenantId(session.message));
-  var mentionedMsg = (<teams.TeamsMessage>msg).addMentionToText(toMention);
-  session.send(mentionedMsg);
+
+  let mention = new teams.UserMention(user);
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' ' + teams.TeamsMessage.getTenantId(session.message));
+  session.send(msg);
+  session.endDialog();
+});
+
+bot.dialog('MentionChannel', function (session: builder.Session) {
+  // user name/user id
+  var channelId = null;
+  if (session.message.address.conversation.id)
+  {
+    var splitted = session.message.address.conversation.id.split(';', 1);
+    channelId = splitted[0];
+  }
+
+  var teamId = session.message.sourceEvent.team.id;
+  connector.fetchChannelList(
+    (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+    teamId,
+    (err, result) => {
+      if (err) {
+        session.endDialog('There is some error');
+      }
+      else {
+        var channelName = null;
+        for (var i in result)
+        {
+          var channelInfo = result[i];
+          if (channelId == channelInfo['id'])
+          {
+            channelName = channelInfo['name'] || 'General';
+            break;
+          }
+        }
+
+        let channel: teams.ChannelInfo = {
+          id: channelId,
+          name: channelName
+        };
+
+        let mention = new teams.ChannelMention(channel);
+        var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the channel.');
+        session.send(msg);
+        session.endDialog();
+      }
+    }
+  );
+});
+
+bot.dialog('MentionTeam', function (session: builder.Session) {
+  // user name/user id
+  var channelId = null;
+  if (session.message.address.conversation.id)
+  {
+    var splitted = session.message.address.conversation.id.split(';', 1);
+    channelId = splitted[0];
+  }
+
+  let team: teams.TeamInfo = {
+    id: channelId,
+    name: 'All'
+  };
+
+  let mention = new teams.TeamMention(team);
+  var msg = new teams.TeamsMessage(session).addEntity(mention).text(mention.text + ' This is a test message to at mention the team. ');
+  session.send(msg);
+  session.endDialog();
+});
+
+bot.dialog('NotificationFeed', function (session: builder.Session) {
+  // user name/user id
+  var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
+  // This is a dictionary which could be merged with other properties
+  var alertFlag = teams.TeamsMessage.AlertFlag();
+  var notification = (<teams.TeamsMessage>msg).sourceEvent({
+    '*' : alertFlag
+  });
+
+  // this should trigger an alert
+  session.send(notification);
   session.endDialog();
 });
 
@@ -347,6 +495,13 @@ var o365CardActionHandler = function (event: builder.IEvent, query: teams.IO365C
 
 connector.onO365ConnectorCardAction(o365CardActionHandler);
 
+// example for signin card
+bot.dialog('Signin', (session: builder.Session) => botAuth.botSignIn(session));
+
+bot.dialog('Signout', (session: builder.Session) => botAuth.botSignOut(session));
+
+connector.onSigninStateVerification((event: builder.IEvent, query: teams.ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => botAuth.verifySigninState(event, query, callback));
+
 // example for compose extension
 var composeExtensionHandler = function (event: builder.IEvent, query: teams.ComposeExtensionQuery, callback: (err: Error, result: teams.IComposeExtensionResponse, statusCode: number) => void): void {
   // parameters should be identical to manifest
@@ -381,3 +536,4 @@ var composeExtensionHandler = function (event: builder.IEvent, query: teams.Comp
 }
 
 connector.onQuery('composeExtensionHandler', composeExtensionHandler);
+

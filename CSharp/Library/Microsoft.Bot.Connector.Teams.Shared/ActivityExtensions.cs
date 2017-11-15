@@ -375,6 +375,28 @@ namespace Microsoft.Bot.Connector.Teams
         }
 
         /// <summary>
+        /// Checks if the activity is a signin state verification query.
+        /// </summary>
+        /// <param name="activity">Incoming activity.</param>
+        /// <returns>True is activity is a signin state verification query, false otherwise.</returns>
+        public static bool IsSigninStateVerificationQuery(this IInvokeActivity activity)
+        {
+            return activity.Type == ActivityTypes.Invoke &&
+                !string.IsNullOrEmpty(activity.Name) &&
+                activity.Name.StartsWith("signin/verifyState", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Gets signin state verification query data.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <returns>Signin state verification query data.</returns>
+        public static SigninStateVerificationQuery GetSigninStateVerificationQueryData(this IInvokeActivity activity)
+        {
+            return JObject.FromObject(activity.Value).ToObject<SigninStateVerificationQuery>();
+        }
+
+        /// <summary>
         /// Checks if the activity is a compose extension query.
         /// </summary>
         /// <param name="activity">Incoming activity.</param>

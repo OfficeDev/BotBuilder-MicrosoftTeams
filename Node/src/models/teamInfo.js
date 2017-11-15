@@ -44,12 +44,20 @@
  *
  * @member {string} [name] Name of team.
  *
+ * @member {string} [aadGroupId] AAD group ID
  */
 class TeamInfo {
   constructor(name, id) {
     this.id = id;
     this.name = name;
   }
+
+  constructor(name, id, aadGroupId) {
+    this.id = id;
+    this.name = name;
+    this.aadGroupId = aadGroupId
+  }
+
   /**
    * Defines the metadata of TeamInfo
    *
@@ -74,6 +82,13 @@ class TeamInfo {
           name: {
             required: false,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          aadGroupId: {
+            required: false,
+            serializedName: 'aadGroupId',
             type: {
               name: 'String'
             }

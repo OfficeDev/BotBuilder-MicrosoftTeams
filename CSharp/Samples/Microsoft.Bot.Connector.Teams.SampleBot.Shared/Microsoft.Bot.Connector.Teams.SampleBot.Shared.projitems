@@ -9,6 +9,8 @@
     <Import_RootNamespace>Microsoft.Bot.Connector.Teams.SampleBot.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CipherHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MessageProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleFBAuthController.cs" />
   </ItemGroup>
 </Project>

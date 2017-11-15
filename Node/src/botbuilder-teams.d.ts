@@ -101,11 +101,13 @@ export interface ConversationList {
  *
  * @member {string} [id] Unique identifier representing a team
  *
+ * @member {string} [aadGroupId] AAD group ID
  *
  */
 export interface TeamInfo {
   name?: string;
   id?: string;
+  aadGroupId?: string;
 }
 
 /**
@@ -788,6 +790,17 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
 }
 
 /**
+ * @interface
+ * Interface of signin auth state verfication query
+ * 
+ * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
+ *  
+ */
+export interface ISigninStateVerificationQuery {
+  state: string;
+}
+
+/**
  * @class
  * Initializes a new instance of the ComposeExtensionQueryOptions class.
  * @constructor
@@ -971,14 +984,16 @@ export declare class ChannelInfo {
 
 export declare class TeamInfo {
   constructor(name: string, id: string);
+  constructor(name: string, id: string, aadGroupId: string);
 }
 
 export declare class TenantInfo {
   constructor(id: string);
 }
 
-export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode: number) => void) => void;
-export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode: number) => void) => void;
+export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -1001,6 +1016,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
 
   /**
+  *  Return info of a team given team id
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} teamId - The team id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void;
+
+  /**
   *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
   *  Return a list of members in a conversation or channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
@@ -1019,6 +1042,15 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
   /**
+  *  Return a newly started reply chain address in channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void;
+
+  /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
   *  @param {array} tenants - Ids of allowed tenants.
   */
@@ -1034,6 +1066,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
   */
   public onO365ConnectorCardAction(handler: O365ConnectorCardActionHandlerType): void;
 
+  /**
+  *  Set a handler to verify the final state sent by client that is originally received from signin web flow when it's finished
+  */
+  public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void;
+  
   /**
   *  Set a handler by commandId of a compose extension query
   */
@@ -1065,8 +1102,14 @@ export class TeamsMessage extends builder.Message {
   constructor(session?: builder.Session);
 
   /**
+  *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
+  */
+  public static AlertFlag(): any;
+
+  /**
+  *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
-  *  @param {builder.IIdentity} mentionedUser - The team id, you can look it up in session object.
+  *  @param {builder.IIdentity} mentionedUser - The user to mention
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
   */
@@ -1106,4 +1149,80 @@ export class StripBotAtMentions implements builder.IMiddlewareMap
 {
     /** Called in series once an incoming message has been bound to a session. Executed after [receive](#receive) middleware.  */
     public readonly botbuilder: builder.ISessionMiddleware|builder.ISessionMiddleware[];
+}
+
+
+/**
+ * @class
+ * At mention entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class MentionEntity {
+  type: string;
+  mentioned: any;
+  text: string;
+}
+
+/**
+ * @class
+ * At mention user entity in message.
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class UserMention extends MentionEntity {
+    /**
+    *  Initialize a new instance of at mention user entity
+    *  @param {IIdentity} user - User object to at mention. User must have id and name values.
+    *  @param {string} text - At mention string to display.
+    */
+    constructor(user: builder.IIdentity, text?: string);
+}
+
+/**
+ * @class
+ * At mention channel entity in message. 
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class ChannelMention extends MentionEntity {
+    /**
+    *  Initialize a new instance of at mention channel entity
+    *  @param {ChannelInfo} channel - The channel to at mention. Both channel.id and channel.name are required. If you don't know the name of the channel, you can get it from the Fetch Channel List API, or use a generic name like 'channel'
+    */
+    constructor(channel: ChannelInfo);
+}
+
+/**
+ * @class
+ * At mention team entity in message. 
+ *
+ * @member {string} [type] at mention type, its value is always mention.
+ *
+ * @member {object} [mentioned] mentioned object with id, type and text value.
+ *
+ * @member {string} [text] text value to display in the message
+ *
+ */
+export class TeamMention extends MentionEntity {
+    /**
+    *  Initialize a new instance of at mention team entity
+    *  @param {TeamInfo} team - The team to at mention. Team must have id and name values
+    */
+    constructor(team: TeamInfo);
 }

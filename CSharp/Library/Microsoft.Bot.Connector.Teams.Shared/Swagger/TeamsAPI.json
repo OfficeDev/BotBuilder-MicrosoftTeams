@@ -590,6 +590,17 @@
       }
     },
 
+    "SigninStateVerificationQuery": {
+      "description": "Signin state (part of signin action auth flow) verification invoke query",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": " The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)",
+          "type": "string"
+        }
+      }
+    },
+
     "ComposeExtensionQueryOptions": {
       "description": "Compose extensions query options",
       "type": "object",
