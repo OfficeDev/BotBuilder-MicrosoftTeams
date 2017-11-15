@@ -15,6 +15,7 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
+
   "host": "api.botframework.com",
   "schemes": [ "https" ],
   "paths": {
@@ -45,8 +46,38 @@
         },
         "deprecated": false
       }
+    },
+
+    "/v3/teams/{teamsId}": {
+      "get": {
+        "tags": [ "Teams" ],
+        "summary": "Fetches details related to a team",
+        "description": "Fetch details for a team",
+        "operationId": "Teams_FetchTeamDetails",
+        "consumes": [],
+        "produces": [ "application/json", "text/json", "application/xml", "text/xml" ],
+        "parameters": [
+          {
+            "name": "teamsId",
+            "in": "path",
+            "description": "Team Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "﻿Details for the team.",
+            "schema": {
+              "$ref": "#/definitions/TeamDetails"
+            }
+          }
+        },
+        "deprecated": false
+      }
     }
   },
+
   "definitions": {
     "ChannelInfo": {
       "description": "A channel info object which decribes the channel.",
@@ -72,6 +103,25 @@
           "items": {
             "$ref": "#/definitions/ChannelInfo"
           }
+        }
+      }
+    },
+
+    "TeamDetails": {
+      "description": "Details related to a team",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier representing a team"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of team."
+        },
+        "aadGroupId": {
+          "type": "string",
+          "description": "Azure Active Directory (AAD) Group Id for the team."
         }
       }
     },

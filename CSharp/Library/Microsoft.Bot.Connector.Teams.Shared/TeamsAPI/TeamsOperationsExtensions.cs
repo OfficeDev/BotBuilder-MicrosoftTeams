@@ -52,5 +52,45 @@ namespace Microsoft.Bot.Connector.Teams
                 }
             }
 
+            /// <summary>
+            /// Fetches details related to a team
+            /// </summary>
+            /// <remarks>
+            /// Fetch details for a team
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='teamsId'>
+            /// Team Id
+            /// </param>
+            public static TeamDetails FetchTeamDetails(this ITeamsOperations operations, string teamsId)
+            {
+                return System.Threading.Tasks.Task.Factory.StartNew(s => ((ITeamsOperations)s).FetchTeamDetailsAsync(teamsId), operations, System.Threading.CancellationToken.None, System.Threading.Tasks.TaskCreationOptions.None, System.Threading.Tasks.TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Fetches details related to a team
+            /// </summary>
+            /// <remarks>
+            /// Fetch details for a team
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='teamsId'>
+            /// Team Id
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async System.Threading.Tasks.Task<TeamDetails> FetchTeamDetailsAsync(this ITeamsOperations operations, string teamsId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+            {
+                using (var _result = await operations.FetchTeamDetailsWithHttpMessagesAsync(teamsId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
     }
 }
