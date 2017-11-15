@@ -41,7 +41,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <remarks>
         /// Fetch the channel list.
         /// </remarks>
-        /// <param name='teamsId'>
+        /// <param name='teamId'>
         /// Team Id
         /// </param>
         /// <param name='customHeaders'>
@@ -62,11 +62,11 @@ namespace Microsoft.Bot.Connector.Teams
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async System.Threading.Tasks.Task<Microsoft.Rest.HttpOperationResponse<ConversationList>> FetchChannelListWithHttpMessagesAsync(string teamsId, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Microsoft.Rest.HttpOperationResponse<ConversationList>> FetchChannelListWithHttpMessagesAsync(string teamId, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (teamsId == null)
+            if (teamId == null)
             {
-                throw new Microsoft.Rest.ValidationException(Microsoft.Rest.ValidationRules.CannotBeNull, "teamsId");
+                throw new Microsoft.Rest.ValidationException(Microsoft.Rest.ValidationRules.CannotBeNull, "teamId");
             }
             // Tracing
             bool _shouldTrace = Microsoft.Rest.ServiceClientTracing.IsEnabled;
@@ -75,14 +75,14 @@ namespace Microsoft.Bot.Connector.Teams
             {
                 _invocationId = Microsoft.Rest.ServiceClientTracing.NextInvocationId.ToString();
                 System.Collections.Generic.Dictionary<string, object> tracingParameters = new System.Collections.Generic.Dictionary<string, object>();
-                tracingParameters.Add("teamsId", teamsId);
+                tracingParameters.Add("teamId", teamId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 Microsoft.Rest.ServiceClientTracing.Enter(_invocationId, this, "FetchChannelList", tracingParameters);
             }
             // Construct URL
             var _baseUrl = this.Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "v3/teams/{teamsId}/conversations").ToString();
-            _url = _url.Replace("{teamsId}", System.Uri.EscapeDataString(teamsId));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "v3/teams/{teamId}/conversations").ToString();
+            _url = _url.Replace("{teamId}", System.Uri.EscapeDataString(teamId));
             // Create HTTP transport objects
             System.Net.Http.HttpRequestMessage _httpRequest = new System.Net.Http.HttpRequestMessage();
             System.Net.Http.HttpResponseMessage _httpResponse = null;
@@ -180,7 +180,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <remarks>
         /// Fetch details for a team
         /// </remarks>
-        /// <param name='teamsId'>
+        /// <param name='teamId'>
         /// Team Id
         /// </param>
         /// <param name='customHeaders'>
@@ -201,11 +201,11 @@ namespace Microsoft.Bot.Connector.Teams
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async System.Threading.Tasks.Task<Microsoft.Rest.HttpOperationResponse<TeamDetails>> FetchTeamDetailsWithHttpMessagesAsync(string teamsId, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<Microsoft.Rest.HttpOperationResponse<TeamDetails>> FetchTeamDetailsWithHttpMessagesAsync(string teamId, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> customHeaders = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (teamsId == null)
+            if (teamId == null)
             {
-                throw new Microsoft.Rest.ValidationException(Microsoft.Rest.ValidationRules.CannotBeNull, "teamsId");
+                throw new Microsoft.Rest.ValidationException(Microsoft.Rest.ValidationRules.CannotBeNull, "teamId");
             }
             // Tracing
             bool _shouldTrace = Microsoft.Rest.ServiceClientTracing.IsEnabled;
@@ -214,14 +214,14 @@ namespace Microsoft.Bot.Connector.Teams
             {
                 _invocationId = Microsoft.Rest.ServiceClientTracing.NextInvocationId.ToString();
                 System.Collections.Generic.Dictionary<string, object> tracingParameters = new System.Collections.Generic.Dictionary<string, object>();
-                tracingParameters.Add("teamsId", teamsId);
+                tracingParameters.Add("teamId", teamId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 Microsoft.Rest.ServiceClientTracing.Enter(_invocationId, this, "FetchTeamDetails", tracingParameters);
             }
             // Construct URL
             var _baseUrl = this.Client.BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "v3/teams/{teamsId}").ToString();
-            _url = _url.Replace("{teamsId}", System.Uri.EscapeDataString(teamsId));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "v3/teams/{teamId}").ToString();
+            _url = _url.Replace("{teamId}", System.Uri.EscapeDataString(teamId));
             // Create HTTP transport objects
             System.Net.Http.HttpRequestMessage _httpRequest = new System.Net.Http.HttpRequestMessage();
             System.Net.Http.HttpResponseMessage _httpResponse = null;
