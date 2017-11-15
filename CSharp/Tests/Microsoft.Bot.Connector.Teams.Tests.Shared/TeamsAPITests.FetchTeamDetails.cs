@@ -233,7 +233,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         /// </summary>
         [ExpectedException(typeof(SerializationException))]
         [TestMethod]
-        public void TeamsAPI_FetchTeamDetailsTestInvalidResonse()
+        public void TeamsAPI_FetchTeamDetailsTestInvalidResponse()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
