@@ -38,7 +38,7 @@
  * @class
  * Initializes a new instance of the ChannelInfo class.
  * @constructor
- * A channel info object which decribes the channel.
+ * A channel info object which describes the channel.
  *
  * @member {string} [id] Unique identifier representing a channel
  *

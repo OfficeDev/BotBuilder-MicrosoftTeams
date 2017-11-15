@@ -38,7 +38,7 @@ import * as builder from 'botbuilder';
  * @class
  * Initializes a new instance of the ChannelInfo class.
  * @constructor
- * A channel info object which decribes the channel.
+ * A channel info object which describes the channel.
  * @member {string} [name] Name of the channel
  *
  * @member {string} [id] Unique identifier representing a channel
@@ -54,7 +54,7 @@ export interface ChannelInfo {
  * @class
  * Initializes a new instance of the ChannelAccount class.
  * @constructor
- * A channel account object which decribes the member.
+ * A channel account object which describes the member.
  * @member {string} [id] Unique identifier representing a member
  *
  * @member {string} [objectId] User Id
@@ -197,7 +197,7 @@ export interface IO365ConnectorCard {
  *
  * @member {string} [activityImage] Activity image
  *
- * @member {boolean} [markdown] Use markdown for all text contents. Default vaule is true.
+ * @member {boolean} [markdown] Use markdown for all text contents. Default value is true.
  *
  * @member {array} [facts] Set of facts for the current section
  *
@@ -429,7 +429,7 @@ export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
  * @interface
  * Interface of O365 connector card multiple choice input item
  * 
- * @member {string} [display] The text rednered on ActionCard.
+ * @member {string} [display] The text rendered on ActionCard.
  * 
  * @member {string} [value] The value received as results.
  * 
@@ -459,7 +459,7 @@ export interface IO365ConnectorCardActionQuery {
 
 /**
  * @interface
- * Interface of signin auth state verfication query
+ * Interface of signin auth state verification query
  * 
  * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
  *  
