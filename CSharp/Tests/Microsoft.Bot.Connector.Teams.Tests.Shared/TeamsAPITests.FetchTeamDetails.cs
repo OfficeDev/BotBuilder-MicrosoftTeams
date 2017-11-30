@@ -41,40 +41,35 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.Bot.Connector.Teams.Models;
     using Microsoft.Rest;
-    using Models;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
-    using VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Teams Fetch Channel list tests.
+    /// Fetch team details tests.
     /// </summary>
-    [TestClass]
     public partial class TeamsAPITests
     {
         /// <summary>
-        /// Teams API test for fetching channel list.
+        /// Teams API test for fetching team details.
         /// </summary>
         [TestMethod]
-        public void TeamsAPI_FetchChannelListTest()
+        public void TeamsAPI_FetchTeamDetails()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
-            ConversationList conversationList = new ConversationList
+            TeamDetails teamDetails = new TeamDetails
             {
-                Conversations = new List<ChannelInfo>
-                {
-                    new ChannelInfo
-                    {
-                        Id = "ChannelId",
-                        Name = "ChannelName"
-                    }
-                }
+                Id = "TeamId",
+                AadGroupId = "GroupId",
+                Name = "TeamName"
             };
 
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
             {
-                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(teamDetails));
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = stringContent;
                 return Task.FromResult(response);
@@ -88,38 +83,30 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
+            TeamDetails teamDetailsResult = teamsConnectorClient.Teams.FetchTeamDetails("TestTeamId");
 
-            Assert.IsNotNull(conversationListResponse);
-            Assert.IsNotNull(conversationListResponse.Conversations);
-            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
+            Assert.IsNotNull(teamDetailsResult);
+            Assert.IsNotNull(teamDetailsResult.Id);
+            Assert.IsNotNull(teamDetailsResult.Name);
+            Assert.IsNotNull(teamDetailsResult.AadGroupId);
+            Assert.AreEqual(teamDetailsResult.Id, teamDetails.Id);
+            Assert.AreEqual(teamDetailsResult.Name, teamDetails.Name);
+            Assert.AreEqual(teamDetailsResult.AadGroupId, teamDetails.AadGroupId);
         }
 
         /// <summary>
-        /// Teams API test for fetching channel list async.
+        /// Teams API test for fetching team details async.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
         [TestMethod]
-        public async Task TeamsAPI_FetchChannelListAsyncTest()
+        public async Task TeamsAPI_FetchTeamDetailsAsyncTest()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
-            ConversationList conversationList = new ConversationList
-            {
-                Conversations = new List<ChannelInfo>
-                {
-                    new ChannelInfo
-                    {
-                        Id = "ChannelId",
-                        Name = "ChannelName"
-                    }
-                }
-            };
+            TeamDetails teamDetails = new TeamDetails("TeamId", "TeamName", "GroupId");
 
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
             {
-                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(teamDetails));
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = stringContent;
                 return Task.FromResult(response);
@@ -133,38 +120,35 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            ConversationList conversationListResponse = await teamsConnectorClient.Teams.FetchChannelListAsync("TestTeamId");
+            TeamDetails teamDetailsResult = await teamsConnectorClient.Teams.FetchTeamDetailsAsync("TestTeamId");
 
-            Assert.IsNotNull(conversationListResponse);
-            Assert.IsNotNull(conversationListResponse.Conversations);
-            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
+            Assert.IsNotNull(teamDetailsResult);
+            Assert.IsNotNull(teamDetailsResult.Id);
+            Assert.IsNotNull(teamDetailsResult.Name);
+            Assert.IsNotNull(teamDetailsResult.AadGroupId);
+            Assert.AreEqual(teamDetailsResult.Id, teamDetails.Id);
+            Assert.AreEqual(teamDetailsResult.Name, teamDetails.Name);
+            Assert.AreEqual(teamDetailsResult.AadGroupId, teamDetails.AadGroupId);
         }
 
         /// <summary>
-        /// Teams API test for fetching channel list async with advanced options.
+        /// Teams API test for fetching team details with advanced options.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
         [TestMethod]
-        public async Task TeamsAPI_FetchChannelListAsyncWithHttpMessagesTest()
+        public async Task TeamsAPI_FetchTeamDetailsAsyncWithHttpMessagesTest()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
-            ConversationList conversationList = new ConversationList
+            TeamDetails teamDetails = new TeamDetails
             {
-                Conversations = new List<ChannelInfo>
-                {
-                    new ChannelInfo
-                    {
-                        Id = "ChannelId",
-                        Name = "ChannelName"
-                    }
-                }
+                Id = "TeamId",
+                AadGroupId = "GroupId",
+                Name = "TeamName"
             };
 
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
             {
-                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(conversationList));
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(teamDetails));
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = stringContent;
                 Assert.IsNotNull(request.Headers.GetValues("Authorization"));
@@ -181,23 +165,25 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
 
-            ConversationList conversationListResponse = (await teamsConnectorClient.Teams.FetchChannelListWithHttpMessagesAsync(
+            TeamDetails teamDetailsResult = (await teamsConnectorClient.Teams.FetchTeamDetailsWithHttpMessagesAsync(
                     "TestTeamId",
                     new Dictionary<string, List<string>>() { { "Authorization", new List<string>() { "CustomValue" } } })).Body;
 
-            Assert.IsNotNull(conversationListResponse);
-            Assert.IsNotNull(conversationListResponse.Conversations);
-            Assert.AreEqual(conversationListResponse.Conversations.Count, 1);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Id, conversationList.Conversations[0].Id);
-            Assert.AreEqual(conversationListResponse.Conversations[0].Name, conversationList.Conversations[0].Name);
+            Assert.IsNotNull(teamDetailsResult);
+            Assert.IsNotNull(teamDetailsResult.Id);
+            Assert.IsNotNull(teamDetailsResult.Name);
+            Assert.IsNotNull(teamDetailsResult.AadGroupId);
+            Assert.AreEqual(teamDetailsResult.Id, teamDetails.Id);
+            Assert.AreEqual(teamDetailsResult.Name, teamDetails.Name);
+            Assert.AreEqual(teamDetailsResult.AadGroupId, teamDetails.AadGroupId);
         }
 
         /// <summary>
-        /// Teams API test for fetch channel list with invalid http code in response.
+        /// Teams API test for fetch team details with invalid http code in response.
         /// </summary>
         [ExpectedException(typeof(HttpOperationException))]
         [TestMethod]
-        public void TeamsAPI_FetchChannelListTestInvalidHttpCode()
+        public void TeamsAPI_FetchTeamDetailsTestInvalidHttpCode()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
@@ -215,15 +201,15 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
+            teamsConnectorClient.Teams.FetchTeamDetails("TestTeamId");
         }
 
         /// <summary>
-        /// Teams API test for fetch channel list with invalid http code and no response body.
+        /// Teams API test for fetch team details with invalid http code and no response body.
         /// </summary>
         [ExpectedException(typeof(HttpOperationException))]
         [TestMethod]
-        public void TeamsAPI_FetchChannelListTestInvalidHttpCodeWithoutResponseContent()
+        public void TeamsAPI_FetchTeamDetailsTestInvalidHttpCodeWithoutResponseContent()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
@@ -239,15 +225,15 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
+            teamsConnectorClient.Teams.FetchTeamDetails("TestTeamId");
         }
 
         /// <summary>
-        /// Teams API test for fetch channel list with invalid http code in response and response body.
+        /// Teams API test for fetch team details with invalid http code in response and response body.
         /// </summary>
         [ExpectedException(typeof(SerializationException))]
         [TestMethod]
-        public void TeamsAPI_FetchChannelListTestInvalidResonse()
+        public void TeamsAPI_FetchTeamDetailsTestInvalidResponse()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
@@ -265,15 +251,15 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList("TestTeamId");
+            teamsConnectorClient.Teams.FetchTeamDetails("TestTeamId");
         }
 
         /// <summary>
-        /// Teams API test for fetch channel list with invalid team Id.
+        /// Teams API test for fetch team details with invalid team Id.
         /// </summary>
         [ExpectedException(typeof(ValidationException))]
         [TestMethod]
-        public void TeamsAPI_FetchChannelListTestInvalidTeamId()
+        public void TeamsAPI_FetchTeamDetailsTestInvalidTeamId()
         {
             Microsoft.Rest.ServiceClientTracing.IsEnabled = true;
             TestDelegatingHandler testHandler = new TestDelegatingHandler((request) =>
@@ -291,7 +277,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 testHandler);
 
             TeamsConnectorClient teamsConnectorClient = connectorClient.GetTeamsConnectorClient();
-            ConversationList conversationListResponse = teamsConnectorClient.Teams.FetchChannelList(null);
+            teamsConnectorClient.Teams.FetchTeamDetails(null);
         }
     }
 }
