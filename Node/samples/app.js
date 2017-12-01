@@ -1,3 +1,4 @@
+"use strict";
 /*-----------------------------------------------------------------------------
 This Bot demonstrates how to use teams extension for a bot.
 
@@ -6,7 +7,6 @@ This Bot demonstrates how to use teams extension for a bot.
     "hello" to wake the bot up.
     
 -----------------------------------------------------------------------------*/
-"use strict";
 exports.__esModule = true;
 /// <reference path="./typings/index.d.ts" />
 var util = require("util");
@@ -51,7 +51,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -93,6 +93,9 @@ bot.dialog('/', [
                 break;
             case 12:
                 session.beginDialog('NotificationFeed');
+                break;
+            case 13:
+                session.beginDialog('BotDeleteMessage');
                 break;
             default:
                 session.endDialog();
@@ -216,7 +219,7 @@ bot.dialog('NotificationFeed', function (session) {
     // user name/user id
     var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
     // This is a dictionary which could be merged with other properties
-    var alertFlag = teams.TeamsMessage.AlertFlag();
+    var alertFlag = teams.TeamsMessage.alertFlag;
     var notification = msg.sourceEvent({
         '*': alertFlag
     });
@@ -241,6 +244,63 @@ bot.dialog('StartNew1on1Chat', function (session) {
         useAuth: true
     };
     bot.beginDialog(address, '/');
+});
+bot.dialog('BotDeleteMessage', function (session) {
+    var msg = new teams.TeamsMessage(session).text("Bot will delete this message in 5 sec.");
+    bot.send(msg, function (err, response) {
+        if (err) {
+            console.log(err);
+            session.endDialog();
+        }
+        console.log('Proactive message response:');
+        console.log(response);
+        console.log('---------------------------------------------------');
+        setTimeout(function () {
+            var activityId = null;
+            var messageAddress = null;
+            if (response[0]) {
+                messageAddress = response[0];
+                activityId = messageAddress.id;
+            }
+            if (activityId == null) {
+                console.log('Message failed to send.');
+                session.endDialog();
+                return;
+            }
+            // Bot delete message
+            var address = {
+                channelId: 'msteams',
+                user: messageAddress.user,
+                bot: messageAddress.bot,
+                id: activityId,
+                serviceUrl: session.message.address.serviceUrl,
+                conversation: {
+                    id: session.message.address.conversation.id
+                }
+            };
+            connector["delete"](address, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Message: " + activityId + " deleted successfully.");
+                }
+                // Try editing deleted message would fail
+                var newMsg = new builder.Message().address(address).text("To edit message.");
+                connector.update(newMsg.toMessage(), function (err, address) {
+                    if (err) {
+                        console.log(err);
+                        console.log('Deleted message can not be edited.');
+                    }
+                    else {
+                        console.log("There is something wrong. Message: " + activityId + " edited successfully.");
+                        console.log(address);
+                    }
+                    session.endDialog();
+                });
+            });
+        }, 5000);
+    });
 });
 bot.dialog('RouteMessageToGeneral', function (session) {
     // user name/user id

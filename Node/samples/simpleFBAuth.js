@@ -4,7 +4,7 @@ var builder = require("botbuilder");
 var restify = require("restify");
 var crypto = require("crypto");
 var request = require("request");
-var SimpleFBAuth = (function () {
+var SimpleFBAuth = /** @class */ (function () {
     function SimpleFBAuth(server) {
         var _this = this;
         this.userIdFacebookTokenCache = {};
@@ -212,11 +212,11 @@ var SimpleFBAuth = (function () {
         var parsedState = JSON.parse(state);
         return parsedState;
     };
+    // Endpoints used in this service
+    SimpleFBAuth.AuthStartPath = "/auth/start";
+    SimpleFBAuth.AuthStartOAuthPath = "/auth/oauth";
+    SimpleFBAuth.AuthCallbackPath = "/auth/callback";
+    SimpleFBAuth.TeamsSDK = 'https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js';
     return SimpleFBAuth;
 }());
-// Endpoints used in this service
-SimpleFBAuth.AuthStartPath = "/auth/start";
-SimpleFBAuth.AuthStartOAuthPath = "/auth/oauth";
-SimpleFBAuth.AuthCallbackPath = "/auth/callback";
-SimpleFBAuth.TeamsSDK = 'https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js';
 exports.SimpleFBAuth = SimpleFBAuth;

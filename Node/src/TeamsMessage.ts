@@ -177,9 +177,7 @@ export class TeamsMessage extends builder.Message {
   /**
   *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
   */
-  public static AlertFlag(): any {
-    return { 'notification': { 'alert': true } };
-  }
+  public static alertFlag: any = { 'notification': { 'alert': true } };
 
   /**
   *  Deprecated, please use UserMention and ChannelMention
