@@ -17,7 +17,7 @@
 // without limitation the rights to use, copy, modify, merge, publish,
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
+// the following conditions:A
 //
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -1104,7 +1104,7 @@ export class TeamsMessage extends builder.Message {
   /**
   *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
   */
-  public static AlertFlag: any;
+  public static alertFlag: any;
 
   /**
   *  Deprecated, please use UserMention and ChannelMention
