@@ -106,6 +106,11 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     }
 }
 
+export enum O365ConnectorCardSectionActivityImageTypes {
+  Avatar,
+  Article
+}
+
 export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSection {
     private data = <teams.IO365ConnectorCardSection>{};
     
@@ -166,12 +171,15 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
         return this;
     }
 
-    public activityImageType(imageType: string): this {
+    public activityImageType(imageType: O365ConnectorCardSectionActivityImageTypes): this {
         if (imageType) {
-            if (imageType === 'avatar' || imageType === 'article')
-                this.data.activityImageType = imageType;
-            else
+            if (imageType as O365ConnectorCardSectionActivityImageTypes === O365ConnectorCardSectionActivityImageTypes.Avatar) {
+                this.data.activityImageType = 'avatar';
+            } else if (imageType as O365ConnectorCardSectionActivityImageTypes === O365ConnectorCardSectionActivityImageTypes.Article) {
+                this.data.activityImageType = 'article';
+            } else {
                 throw new Error('Only avatar or article is allowed for imageType.');
+            }
         } else {
             delete this.data.activityImageType;
         }

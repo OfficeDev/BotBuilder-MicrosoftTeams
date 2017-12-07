@@ -47,6 +47,7 @@ exports.TenantInfo = require('./tenantInfo');
 exports.TeamsChannelData = require('./teamsChannelData');
 exports.O365ConnectorCard = require('./o365ConnectorCard');
 exports.O365ConnectorCardSection = require('./o365ConnectorCard');
+exports.O365ConnectorCardSectionActivityImageTypes = require('./o365ConnectorCard')
 exports.O365ConnectorCardFact = require('./o365ConnectorCard');
 exports.O365ConnectorCardImage = require('./o365ConnectorCard');
 exports.O365ConnectorCardViewAction = require('./o365ConnectorCard');
