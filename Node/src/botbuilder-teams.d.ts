@@ -197,6 +197,8 @@ export interface IO365ConnectorCard {
  *
  * @member {string} [activityImage] Activity image
  *
+ * @member {string} [activityImageType] Activity image type
+ *
  * @member {boolean} [markdown] Use markdown for all text contents. Default vaule is true.
  *
  * @member {array} [facts] Set of facts for the current section
@@ -213,6 +215,7 @@ export interface IO365ConnectorCardSection {
   activitySubtitle?: string;
   activityText?: string;
   activityImage?: string;
+  activityImageType?: string;
   markdown?: boolean;
   facts: IO365ConnectorCardFact[];
   images: IO365ConnectorCardImage[];
@@ -513,6 +516,9 @@ export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSec
 
   /** Activity image. */
   activityImage(imageUrl: string): O365ConnectorCardSection;
+
+  /** Activity image type. Only avatar and article allowed. */
+  activityImageType(imageType: string): O365ConnectorCardSection;
 
   /** Use markdown for all text contents. Default value is true. */
   markdown(flag: boolean): O365ConnectorCardSection;

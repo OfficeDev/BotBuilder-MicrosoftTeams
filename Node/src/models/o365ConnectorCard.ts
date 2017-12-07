@@ -166,6 +166,18 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
         return this;
     }
 
+    public activityImageType(imageType: string): this {
+        if (imageType) {
+            if (imageType === 'avatar' || imageType === 'article')
+                this.data.activityImageType = imageType;
+            else
+                throw new Error('Only avatar or article is allowed for imageType.');
+        } else {
+            delete this.data.activityImageType;
+        }
+        return this;
+    }
+
     public markdown(flag: boolean): this {
         this.data.markdown = !!flag;
         return this;
