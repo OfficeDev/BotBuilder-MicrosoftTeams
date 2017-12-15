@@ -214,6 +214,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 "This is the section's activitySubtitle property",
                 "This is the section's activityText property.",
                 "http://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg",
+                "avatar",
                 true,
                 new List<O365ConnectorCardFact>()
                 {

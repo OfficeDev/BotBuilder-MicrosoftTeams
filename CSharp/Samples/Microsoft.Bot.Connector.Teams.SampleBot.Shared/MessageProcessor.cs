@@ -420,6 +420,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 "activity subtitle",
                 "activity text",
                 "http://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg",
+                "avatar",
                 true,
                 new List<O365ConnectorCardFact>
                 {

@@ -298,6 +298,11 @@
           "description": "Activity image",
           "type": "string"
         },
+        "activityImageType": {
+          "description": "Describes how Activity image is rendered",
+          "type": "string",
+          "enum": ["avatar", "article"]
+        },
         "markdown": {
           "description": "Use markdown for all text contents. Default vaule is true.",
           "type": "boolean"
