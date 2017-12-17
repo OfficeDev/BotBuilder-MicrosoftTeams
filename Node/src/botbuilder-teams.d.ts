@@ -59,6 +59,8 @@ export interface ChannelInfo {
  *
  * @member {string} [obejctId] User Id
  *
+ * @member {string} [name] The display name for the member
+ *
  * @member {string} [givenName] Name of the member
  *
  * @member {string} [surname] Name of the member
@@ -72,6 +74,7 @@ export interface ChannelInfo {
 export interface ChannelAccount {
   id: string;
   objectId: string;
+  name: string;
   givenName: string;
   surname: string;
   email: string;
