@@ -4,8 +4,6 @@ var models = require('../lib/models');
 var O365ConnectorCardSection = models.O365ConnectorCardSection;
 var O365ConnectorCardActivityImageTypes = models.O365ConnectorCardActivityImageTypes;
 
-console.log(O365ConnectorCardActivityImageTypes.Avatar)
-
 describe('O365ConnectorCard', function () {
   describe('#O365ConnectorCardSection.activityImageType', function (done) {
     it('should throw error if pass in invalid image type', function () {
