@@ -181,7 +181,7 @@ export interface IO365ConnectorCard {
   potentialAction?: IO365ConnectorCardActionBase[];
 }
 
-export enum O365ConnectorCardSectionActivityImageTypes {
+export enum O365ConnectorCardActivityImageTypes {
   Avatar,
   Article
 }

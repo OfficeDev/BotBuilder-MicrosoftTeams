@@ -181,7 +181,7 @@ export interface IO365ConnectorCard {
   potentialAction?: IO365ConnectorCardActionBase[];
 }
 
-export enum O365ConnectorCardSectionActivityImageTypes {
+export enum O365ConnectorCardActivityImageTypes {
   Avatar,
   Article
 }
@@ -523,7 +523,7 @@ export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSec
   activityImage(imageUrl: string): O365ConnectorCardSection;
 
   /** Activity image type. Only avatar and article allowed. */
-  activityImageType(imageType: O365ConnectorCardSectionActivityImageTypes): O365ConnectorCardSection;
+  activityImageType(imageType: O365ConnectorCardActivityImageTypes): O365ConnectorCardSection;
 
   /** Use markdown for all text contents. Default value is true. */
   markdown(flag: boolean): O365ConnectorCardSection;

@@ -7,8 +7,6 @@ This Bot demonstrates how to use teams extension for a bot.
     
 -----------------------------------------------------------------------------*/
 
-/// <reference path="./typings/index.d.ts" />
-
 import * as util from 'util';
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
