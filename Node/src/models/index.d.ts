@@ -184,6 +184,14 @@ export interface IO365ConnectorCard {
   potentialAction?: IO365ConnectorCardActionBase[];
 }
 
+/**
+ * @enum
+ * Activity Image types of O365 connector card
+ *
+ * @member {number} [Avatar] Default; activityImage will be cropped as a circle
+ *
+ * @member {number} [Article] activityImage will be displayed as a rectangle and retain its aspect ratio
+ */
 export enum O365ConnectorCardActivityImageTypes {
   Avatar,
   Article
@@ -205,9 +213,9 @@ export enum O365ConnectorCardActivityImageTypes {
  *
  * @member {string} [activityImage] Activity image
  *
- * @member {string} [activityImageType] Activity image type
+ * @member {string} [activityImageType] Activity image type. Default value would be avatar if not specified.
  *
- * @member {boolean} [markdown] Use markdown for all text contents. Default vaule is true.
+ * @member {boolean} [markdown] Use markdown for all text contents. Default value is true.
  *
  * @member {array} [facts] Set of facts for the current section
  *

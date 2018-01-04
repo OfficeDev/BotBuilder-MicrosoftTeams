@@ -165,19 +165,21 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activityImage(imageUrl: string): this {
         if (imageUrl) {
             this.data.activityImage = imageUrl;
+            if (!this.data.activityImageType) {
+                this.data.activityImageType = 'avatar';
+            }
         } else {
             delete this.data.activityImage;
+            delete this.data.activityImageType;
         }
         return this;
     }
 
     public activityImageType(imageType: O365ConnectorCardActivityImageTypes): this {
-        if (imageType as O365ConnectorCardActivityImageTypes === O365ConnectorCardActivityImageTypes.Avatar) {
-            this.data.activityImageType = 'avatar';
-        } else if (imageType as O365ConnectorCardActivityImageTypes === O365ConnectorCardActivityImageTypes.Article) {
+        if (imageType as O365ConnectorCardActivityImageTypes === O365ConnectorCardActivityImageTypes.Article) {
             this.data.activityImageType = 'article';
         } else {
-            delete this.data.activityImageType;
+            this.data.activityImageType = 'avatar';
         }
         return this;
     }

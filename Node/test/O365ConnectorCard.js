@@ -6,10 +6,16 @@ var O365ConnectorCardActivityImageTypes = models.O365ConnectorCardActivityImageT
 
 describe('O365ConnectorCard', function () {
   describe('#O365ConnectorCardSection.activityImageType', function (done) {
-    it('should throw error if pass in invalid image type', function () {
+    it('should use avatar by default', function () {
+      section = new O365ConnectorCardSection();
+      section.activityImage("a imageUrl");
+      assert.equal('avatar', section.data.activityImageType);
+    });
+
+    it('should use avatar by default if pass in invalid image type', function () {
       section = new O365ConnectorCardSection();
       section.activityImageType("Invalid imageType");
-      assert.equal(null, section.data.activityImageType);
+      assert.equal('avatar', section.data.activityImageType);
     });
 
     it('should work with valid image types', function () {
