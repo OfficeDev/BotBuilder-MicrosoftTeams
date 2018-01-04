@@ -25,13 +25,15 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <param name="activitySubtitle">Activity subtitle</param>
         /// <param name="activityText">Activity text</param>
         /// <param name="activityImage">Activity image</param>
+        /// <param name="activityImageType">Describes how Activity image is
+        /// rendered. Possible values include: 'avatar', 'article'</param>
         /// <param name="markdown">Use markdown for all text contents. Default
         /// vaule is true.</param>
         /// <param name="facts">Set of facts for the current section</param>
         /// <param name="images">Set of images for the current section</param>
         /// <param name="potentialAction">Set of actions for the current
         /// section</param>
-        public O365ConnectorCardSection(string title = default(string), string text = default(string), string activityTitle = default(string), string activitySubtitle = default(string), string activityText = default(string), string activityImage = default(string), bool? markdown = default(bool?), System.Collections.Generic.IList<O365ConnectorCardFact> facts = default(System.Collections.Generic.IList<O365ConnectorCardFact>), System.Collections.Generic.IList<O365ConnectorCardImage> images = default(System.Collections.Generic.IList<O365ConnectorCardImage>), System.Collections.Generic.IList<O365ConnectorCardActionBase> potentialAction = default(System.Collections.Generic.IList<O365ConnectorCardActionBase>))
+        public O365ConnectorCardSection(string title = default(string), string text = default(string), string activityTitle = default(string), string activitySubtitle = default(string), string activityText = default(string), string activityImage = default(string), string activityImageType = default(string), bool? markdown = default(bool?), System.Collections.Generic.IList<O365ConnectorCardFact> facts = default(System.Collections.Generic.IList<O365ConnectorCardFact>), System.Collections.Generic.IList<O365ConnectorCardImage> images = default(System.Collections.Generic.IList<O365ConnectorCardImage>), System.Collections.Generic.IList<O365ConnectorCardActionBase> potentialAction = default(System.Collections.Generic.IList<O365ConnectorCardActionBase>))
         {
             Title = title;
             Text = text;
@@ -39,6 +41,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
             ActivitySubtitle = activitySubtitle;
             ActivityText = activityText;
             ActivityImage = activityImage;
+            ActivityImageType = activityImageType;
             Markdown = markdown;
             Facts = facts;
             Images = images;
@@ -80,6 +83,13 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "activityImage")]
         public string ActivityImage { get; set; }
+
+        /// <summary>
+        /// Gets or sets describes how Activity image is rendered. Possible
+        /// values include: 'avatar', 'article'
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty(PropertyName = "activityImageType")]
+        public string ActivityImageType { get; set; }
 
         /// <summary>
         /// Gets or sets use markdown for all text contents. Default vaule is
