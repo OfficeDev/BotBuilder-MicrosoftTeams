@@ -106,6 +106,11 @@ export class O365ConnectorCard implements builder.IIsAttachment {
     }
 }
 
+export enum O365ConnectorCardActivityImageTypes {
+  Avatar,
+  Article
+}
+
 export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSection {
     private data = <teams.IO365ConnectorCardSection>{};
     
@@ -160,8 +165,21 @@ export class O365ConnectorCardSection implements teams.IIsO365ConnectorCardSecti
     public activityImage(imageUrl: string): this {
         if (imageUrl) {
             this.data.activityImage = imageUrl;
+            if (!this.data.activityImageType) {
+                this.data.activityImageType = 'avatar';
+            }
         } else {
             delete this.data.activityImage;
+            delete this.data.activityImageType;
+        }
+        return this;
+    }
+
+    public activityImageType(imageType: O365ConnectorCardActivityImageTypes): this {
+        if (imageType as O365ConnectorCardActivityImageTypes === O365ConnectorCardActivityImageTypes.Article) {
+            this.data.activityImageType = 'article';
+        } else {
+            this.data.activityImageType = 'avatar';
         }
         return this;
     }

@@ -8,7 +8,6 @@ This Bot demonstrates how to use teams extension for a bot.
     
 -----------------------------------------------------------------------------*/
 exports.__esModule = true;
-/// <reference path="./typings/index.d.ts" />
 var util = require("util");
 var restify = require("restify");
 var builder = require("botbuilder");
