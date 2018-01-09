@@ -341,7 +341,7 @@ export class TeamsMessage extends builder.Message {
   }
 
   /**
-  *  Retrun message without mentions
+  *  Return message without mentions
   *  @param {IMessage} message - The message with mentions
   */
   public static getTextWithoutMentions(message: builder.IMessage): string {

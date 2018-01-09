@@ -38,7 +38,7 @@ import * as builder from 'botbuilder';
  * @class
  * Initializes a new instance of the ChannelInfo class.
  * @constructor
- * A channel info object which decribes the channel.
+ * A channel info object which describes the channel.
  * @member {string} [name] Name of the channel
  *
  * @member {string} [id] Unique identifier representing a channel
@@ -54,10 +54,10 @@ export interface ChannelInfo {
  * @class
  * Initializes a new instance of the ChannelAccount class.
  * @constructor
- * A channel account object which decribes the member.
+ * A channel account object which describes the member.
  * @member {string} [id] Unique identifier representing a member
  *
- * @member {string} [obejctId] User Id
+ * @member {string} [objectId] User Id
  *
  * @member {string} [name] The display name for the member
  *
@@ -447,7 +447,7 @@ export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
  * @interface
  * Interface of O365 connector card multiple choice input item
  * 
- * @member {string} [display] The text rednered on ActionCard.
+ * @member {string} [display] The text rendered on ActionCard.
  * 
  * @member {string} [value] The value received as results.
  * 
@@ -782,7 +782,7 @@ export declare class O365ConnectorCardMultichoiceInput implements IIsO365Connect
   /** Set choice item rendering style to be 'compact' - items will be rendered as a dropdown list. */
   compactStyle(): O365ConnectorCardMultichoiceInput;
 
-  /** Set choice item rendering style to be 'expanded' - items will be rednered as an expanded item list (radiobox or checkbox). */
+  /** Set choice item rendering style to be 'expanded' - items will be rendered as an expanded item list (radiobox or checkbox). */
   expandedStyle(): O365ConnectorCardMultichoiceInput;
 
   /** Set of choices. */
@@ -801,7 +801,7 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
    */  
   constructor(session?: builder.Session);
 
-  /** The text rednered on ActionCard. */
+  /** The text rendered on ActionCard. */
   display(text: string|string[], ...args: any[]): O365ConnectorCardMultichoiceInputChoice;
 
   /** The value received as results. */
@@ -813,7 +813,7 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
 
 /**
  * @interface
- * Interface of signin auth state verfication query
+ * Interface of signin auth state verification query
  * 
  * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
  *  
@@ -1161,7 +1161,7 @@ export class TeamsMessage extends builder.Message {
   public static getTenantId(message: builder.IEvent): string;
 
   /**
-  *  Retrun message without mentions
+  *  Return message without mentions
   *  @param {IMessage} message - The message with mentions
   */
   public static getTextWithoutMentions(message: builder.IMessage): string;
