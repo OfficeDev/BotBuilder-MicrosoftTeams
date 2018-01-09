@@ -7,8 +7,6 @@ This Bot demonstrates how to use teams extension for a bot.
     
 -----------------------------------------------------------------------------*/
 
-/// <reference path="./typings/index.d.ts" />
-
 import * as util from 'util';
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
@@ -60,7 +58,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -103,6 +101,9 @@ bot.dialog('/', [
       case 12:
         session.beginDialog('NotificationFeed');
         break;
+      case 13:
+        session.beginDialog('BotDeleteMessage');
+        break
       default:
         session.endDialog();
         break;
@@ -265,7 +266,7 @@ bot.dialog('NotificationFeed', function (session: builder.Session) {
   // user name/user id
   var msg = new teams.TeamsMessage(session).text("This is a test notification message.");
   // This is a dictionary which could be merged with other properties
-  var alertFlag = teams.TeamsMessage.AlertFlag();
+  var alertFlag = teams.TeamsMessage.alertFlag;
   var notification = (<teams.TeamsMessage>msg).sourceEvent({
     '*' : alertFlag
   });
@@ -295,6 +296,75 @@ bot.dialog('StartNew1on1Chat', function (session: builder.Session) {
     }
     bot.beginDialog(address, '/');
 });
+
+bot.dialog('BotDeleteMessage', function (session: builder.Session) {
+  var msg = new teams.TeamsMessage(session).text("Bot will delete this message in 5 sec.")
+  bot.send(msg, function (err, response) {
+    if (err) {
+      console.log(err);
+      session.endDialog();
+    }
+
+    console.log('Proactive message response:');
+    console.log(response);
+    console.log('---------------------------------------------------')
+    setTimeout(function () {
+      var activityId: string = null;
+      var messageAddress: builder.IChatConnectorAddress = null;
+      if (response[0]){
+        messageAddress = response[0];
+        activityId = messageAddress.id;
+      }    
+
+      if (activityId == null)
+      {
+        console.log('Message failed to send.');
+        session.endDialog();
+        return;
+      }
+
+      // Bot delete message
+      let address: builder.IChatConnectorAddress  = {
+        channelId: 'msteams',
+        user: messageAddress.user,
+        bot: messageAddress.bot,
+        id : activityId,        
+        serviceUrl : (<builder.IChatConnectorAddress>session.message.address).serviceUrl,
+        conversation: {
+          id: session.message.address.conversation.id
+        }
+      };
+
+      connector.delete(address, function (err) {
+        if (err) 
+        {
+          console.log(err);          
+        }
+        else 
+        {
+          console.log("Message: " + activityId + " deleted successfully.");
+        }
+
+        // Try editing deleted message would fail
+        var newMsg = new builder.Message().address(address).text("To edit message.");
+        connector.update(newMsg.toMessage(), function (err, address) {
+          if (err) 
+          {
+            console.log(err);
+            console.log('Deleted message can not be edited.');
+          }
+          else 
+          {
+            console.log("There is something wrong. Message: " + activityId + " edited successfully.");
+            console.log(address);
+          }
+
+          session.endDialog();
+        });
+      });
+    }, 5000);
+  });
+})
 
 bot.dialog('RouteMessageToGeneral', function (session: builder.Session) {
   // user name/user id

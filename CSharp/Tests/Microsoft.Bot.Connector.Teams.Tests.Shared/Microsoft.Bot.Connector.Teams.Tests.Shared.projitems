@@ -17,7 +17,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdateTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryHelperTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SigninAuthTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TeamsAPITests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TeamsAPITests.FetchChannelList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TeamsAPITests.FetchTeamDetails.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestDelegatingHandler.cs" />
   </ItemGroup>
   <ItemGroup>

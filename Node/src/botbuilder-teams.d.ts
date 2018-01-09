@@ -17,7 +17,7 @@
 // without limitation the rights to use, copy, modify, merge, publish,
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
+// the following conditions:A
 //
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
@@ -59,6 +59,8 @@ export interface ChannelInfo {
  *
  * @member {string} [objectId] User Id
  *
+ * @member {string} [name] The display name for the member
+ *
  * @member {string} [givenName] Name of the member
  *
  * @member {string} [surname] Name of the member
@@ -72,6 +74,7 @@ export interface ChannelInfo {
 export interface ChannelAccount {
   id: string;
   objectId: string;
+  name: string;
   givenName: string;
   surname: string;
   email: string;
@@ -182,6 +185,19 @@ export interface IO365ConnectorCard {
 }
 
 /**
+ * @enum
+ * Activity Image types of O365 connector card
+ *
+ * @member {number} [Avatar] Default; activityImage will be cropped as a circle
+ *
+ * @member {number} [Article] activityImage will be displayed as a rectangle and retain its aspect ratio
+ */
+export enum O365ConnectorCardActivityImageTypes {
+  Avatar,
+  Article
+}
+
+/**
  * @interface
  * Interface of O365 connector card section
  *
@@ -196,6 +212,8 @@ export interface IO365ConnectorCard {
  * @member {string} [activityText] Activity text
  *
  * @member {string} [activityImage] Activity image
+ *
+ * @member {string} [activityImageType] Activity image type. Default value would be avatar if not specified. 
  *
  * @member {boolean} [markdown] Use markdown for all text contents. Default value is true.
  *
@@ -213,6 +231,7 @@ export interface IO365ConnectorCardSection {
   activitySubtitle?: string;
   activityText?: string;
   activityImage?: string;
+  activityImageType?: string;
   markdown?: boolean;
   facts: IO365ConnectorCardFact[];
   images: IO365ConnectorCardImage[];
@@ -513,6 +532,9 @@ export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSec
 
   /** Activity image. */
   activityImage(imageUrl: string): O365ConnectorCardSection;
+
+  /** Activity image type. Only avatar and article allowed. */
+  activityImageType(imageType: O365ConnectorCardActivityImageTypes): O365ConnectorCardSection;
 
   /** Use markdown for all text contents. Default value is true. */
   markdown(flag: boolean): O365ConnectorCardSection;
@@ -1104,7 +1126,7 @@ export class TeamsMessage extends builder.Message {
   /**
   *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
   */
-  public static AlertFlag(): any;
+  public static alertFlag: any;
 
   /**
   *  Deprecated, please use UserMention and ChannelMention

@@ -199,6 +199,24 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 replyActivity.Text = "Your credential has been removed.";
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
+            else if (activity.Text.Contains("GetTeamDetails"))
+            {
+                if (string.IsNullOrEmpty(activity.GetChannelData<TeamsChannelData>()?.Team?.Id))
+                {
+                    Activity replyActivity = activity.CreateReply();
+                    replyActivity.Text = "This call can only be made from a Team.";
+                    await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+                }
+                else
+                {
+                    var teamDetails = await connectorClient.GetTeamsConnectorClient().Teams.FetchTeamDetailsAsync(activity.GetChannelData<TeamsChannelData>().Team.Id);
+                    Activity replyActivity = activity.CreateReply();
+                    replyActivity.Text = "<p>Team Id " + teamDetails.Id + " </p>" +
+                        "<p>Team Name " + teamDetails.Name + " </p>" +
+                        "<p>Team AAD Group Id " + teamDetails.AadGroupId + " </p>";
+                    await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+                }
+            }
             else
             {
                 var accountList = connectorClient.Conversations.GetConversationMembers(activity.Conversation.Id);
@@ -212,7 +230,8 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     "<p>Type TestRetry to get multiple messages from Bot in throttled and retried mechanism. </p>" +
                     "<p>Type O365Card to get a O365 actionable connector card. </p>" +
                     "<p>Type Signin to issue a Signin card to sign in a Facebook app. </p>" +
-                    "<p>Type Signout to logout Facebook app and clear cached credentials. </p>";
+                    "<p>Type Signout to logout Facebook app and clear cached credentials. </p>" +
+                    "<p>Type GetTeamDetails to get details for the current team. </p>";
                 replyActivity = replyActivity.AddMentionToText(activity.From);
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
@@ -401,6 +420,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 "activity subtitle",
                 "activity text",
                 "http://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg",
+                "avatar",
                 true,
                 new List<O365ConnectorCardFact>
                 {
