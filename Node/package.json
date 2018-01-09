@@ -12,7 +12,7 @@
   "dependencies": {
     "botbuilder": "^3.11.0",
     "crypto": "^1.0.1",
-    "ms-rest": "^2.0",
+    "ms-rest": "^1.15.7",
     "nodemon": "^1.12.1",
     "sprintf-js": "^1.1.1"
   },

@@ -43,7 +43,7 @@
  * @class
  * Initializes a new instance of the ChannelAccount class.
  * @constructor
- * A channel account object which decribes the member.
+ * A channel account object which describes the member.
  *
  * @member {string} [id] ID of the user in Microsoft Teams
  *
