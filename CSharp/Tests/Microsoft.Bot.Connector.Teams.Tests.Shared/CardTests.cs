@@ -49,7 +49,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     /// Custom card tests.
     /// </summary>
     [TestClass]
-    public class CardTests
+    public partial class CardTests
     {
         /// <summary>
         /// O365 connector card.

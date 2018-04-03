@@ -144,6 +144,42 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public const string Type = "MultichoiceInput";
     }
 
+    /// <summary>
+    /// Content type for <see cref="FileConsentCard"/>
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
+    public partial class FileConsentCard
+    {
+        /// <summary>
+        /// Content type to be used in the type property.
+        /// </summary>
+        public const string ContentType = "application/vnd.microsoft.teams.card.file.consent";
+    }
+
+    /// <summary>
+    /// Content type for <see cref="FileDownloadInfo"/>
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
+    public partial class FileDownloadInfo
+    {
+        /// <summary>
+        /// Content type to be used in the type property.
+        /// </summary>
+        public const string ContentType = "application/vnd.microsoft.teams.file.download.info";
+    }
+
+    /// <summary>
+    /// Content type for <see cref="FileConsentCard"/>
+    /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
+    public partial class FileInfoCard
+    {
+        /// <summary>
+        /// Content type to be used in the type property.
+        /// </summary>
+        public const string ContentType = "application/vnd.microsoft.teams.card.file.info";
+    }
+
     /////// <summary>
     /////// Content type for <see cref="PersonCard"/>
     /////// </summary>
