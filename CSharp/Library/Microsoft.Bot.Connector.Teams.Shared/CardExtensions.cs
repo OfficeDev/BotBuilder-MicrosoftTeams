@@ -36,7 +36,7 @@
 namespace Microsoft.Bot.Connector.Teams.Models
 {
     /// <summary>
-    ///  O365ConnectorCard extensions
+    ///  Card extension methods.
     /// </summary>
     public static partial class CardExtensions
     {
