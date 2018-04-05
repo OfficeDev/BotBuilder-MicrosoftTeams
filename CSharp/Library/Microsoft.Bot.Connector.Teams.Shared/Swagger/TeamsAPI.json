@@ -301,7 +301,7 @@
         "activityImageType": {
           "description": "Describes how Activity image is rendered",
           "type": "string",
-          "enum": ["avatar", "article"]
+          "enum": [ "avatar", "article" ]
         },
         "markdown": {
           "description": "Use markdown for all text contents. Default vaule is true.",
@@ -806,6 +806,72 @@
           }
         }
       ]
+    },
+
+    "FileConsentCard": {
+      "description": "File consent card attachment.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "File description.",
+          "type": "string"
+        },
+        "sizeInBytes": {
+          "description": "Size of the file to be uploaded in Bytes.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "acceptContext": {
+          "description": "Context sent back to the Bot if user consented to upload. This is free flow schema and is sent back in Value field of Activity.",
+          "type": "object"
+        },
+        "declineContext": {
+          "description": "Context sent back to the Bot if user declined. This is free flow schema and is sent back in Value field of Activity.",
+          "type": "object"
+        }
+      }
+    },
+
+    "FileDownloadInfo": {
+      "description": "File download info attachment.",
+      "type": "object",
+      "properties": {
+        "downloadUrl": {
+          "description": "File download url.",
+          "type": "string"
+        },
+        "uniqueId": {
+          "description": "Unique Id for the file.",
+          "type": "string"
+        },
+        "fileType": {
+          "description": "Type of file.",
+          "type": "string"
+        },
+        "etag": {
+          "description": "ETag for the file.",
+          "type": "object"
+        }
+      }
+    },
+
+    "FileInfoCard": {
+      "description": "File info card.",
+      "type": "object",
+      "properties": {
+        "uniqueId": {
+          "description": "Unique Id for the file.",
+          "type": "string"
+        },
+        "fileType": {
+          "description": "Type of file.",
+          "type": "string"
+        },
+        "etag": {
+          "description": "ETag for the file.",
+          "type": "object"
+        }
+      }
     }
   }
 }

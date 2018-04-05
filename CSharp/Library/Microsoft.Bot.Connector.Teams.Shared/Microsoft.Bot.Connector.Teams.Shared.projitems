@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ActivityExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdditionalProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AttachmentExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)O365ConnectorCardExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectorClientExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\ChannelCreatedEvent.cs" />
