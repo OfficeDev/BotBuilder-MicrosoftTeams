@@ -34,444 +34,288 @@
 
 import * as builder from 'botbuilder';
 
-/**
- * @class
- * Initializes a new instance of the ChannelInfo class.
- * @constructor
- * A channel info object which describes the channel.
- * @member {string} [name] Name of the channel
- *
- * @member {string} [id] Unique identifier representing a channel
- *
- *
- */
-export interface ChannelInfo {
-  name?: string;
-  id?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ChannelAccount class.
- * @constructor
- * A channel account object which describes the member.
- * @member {string} [id] Unique identifier representing a member
- *
- * @member {string} [objectId] User Id
- *
- * @member {string} [name] The display name for the member
- *
- * @member {string} [givenName] Name of the member
- *
- * @member {string} [surname] Name of the member
- *
- * @member {string} [userPrincipalName] Name of the member
- *
- * @member {string} [email] Email of the member
- *
- *
- */
+/** Information about a Microsoft Teams user. */
 export interface ChannelAccount {
+  /** Unique identifier for the user. This id should be used when sending the user a message. */
   id: string;
+
+  /** The user's Azure AD object id in the current tenant. This value is immutable and cannot be reassigned or reused. */
   objectId: string;
-  name: string;
+
+  /** The user's first or "given" name. */
   givenName: string;
+
+  /** The user's last name, surname or family name. */
   surname: string;
+
+  /** The user's email address. */
   email: string;
+
+  /** The user name of the user principal. */
   userPrincipalName: string;
 }
 
-/**
- * @class
- * Initializes a new instance of the ConversationList class.
- * @constructor
- * List of channels under a team
- *
- * @member {array} [conversations]
- *
- */
-export interface ConversationList {
-  conversations?: ChannelInfo[];
-}
+/** Information about a channel in a team. */
+export interface ChannelInfo {
+  /** Channel id */
+  id: string;
 
-/**
- * @class
- * Initializes a new instance of the TeamInfo class.
- * @constructor
- * Describes a team
- *
- * @member {string} [name] Name of team.
- *
- * @member {string} [id] Unique identifier representing a team
- *
- * @member {string} [aadGroupId] AAD group ID
- *
- */
-export interface TeamInfo {
+  /** Name of the channel */
   name?: string;
-  id?: string;
-  aadGroupId?: string;
 }
 
-/**
- * @class
- * Initializes a new instance of the TenantInfo class.
- * @constructor
- * Describes a tenant
- *
- * @member {string} [id] Unique identifier representing a tenant
- *
- */
+/** Information about a team. */
+export interface TeamInfo {
+  /** Team id */
+  id: string;
+
+  /** Name of the team */
+  name?: string;
+}
+
+/** Information about an Office 365 tenant. */
 export interface TenantInfo {
-  id?: string;
+  /** Tenant id */
+  id: string;
 }
 
-/**
- * @class
- * Initializes a new instance of the TeamsChannelData class.
- * @constructor
- * List of channels under a team
- *
- * @member {object} [channel]
- *
- * @member {string} [channel.id] Unique identifier representing a channel
- *
- * @member {string} [channel.name] Name of the channel
- *
- * @member {string} [eventType] Type of event.
- *
- * @member {object} [team]
- *
- * @member {string} [team.id] Unique identifier representing a team
- *
- * @member {string} [team.name] Name of team.
- *
- * @member {object} [tenant]
- *
- * @member {string} [tenant.id] Unique identifier representing a tenant
- *
- */
-export interface TeamsChannelData {
-  channel?: ChannelInfo;
-  eventType?: string;
-  team?: TeamInfo;
-  tenant?: TenantInfo;
-}
 
 /**
- * @interface
- * Interface of O365 connector card
- *
- * @member {string} [title] Title of the card
- *
- * @member {string} [text] Text for the card
- *
- * @member {string} [summary] Summary for the card
- *
- * @member {string} [themeColor] Theme color for the card
- *
- * @member {array} [sections] Set of sections for the current card
- *
- * @member {array} [potentialAction] Set of actions for the current card
- *
+ * Represents an Office 365 connector card.
+ * See the [connector card reference](https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference) for more information.
  */
 export interface IO365ConnectorCard {
+  /** Title of the card. */
   title?: string;
+
+  /** Text of the card. */
   text?: string;
+
+  /** Summary for the card, typically a quick description of the card. */
   summary: string;
+
+  /** Custom brand color for the card. If not specified, the brand color defaults to the app's accent color. */
   themeColor?: string;
+
+  /** A collection of sections to include in the card. */
   sections?: IO365ConnectorCardSection[];
+
+  /** A collection of actions that can be invoked on this card. */
   potentialAction?: IO365ConnectorCardActionBase[];
 }
 
-/**
- * @enum
- * Activity Image types of O365 connector card
- *
- * @member {number} [Avatar] Default; activityImage will be cropped as a circle
- *
- * @member {number} [Article] activityImage will be displayed as a rectangle and retain its aspect ratio
- */
+/** Determines how the activity image is displayed */
 export enum O365ConnectorCardActivityImageTypes {
+  /** Image will be cropped as a circle (default) */
   Avatar,
+
+  /** Image will be displayed as a rectangle, retaining its aspect ratio */
   Article
 }
 
-/**
- * @interface
- * Interface of O365 connector card section
- *
- * @member {string} [title] Title of the section
- *
- * @member {string} [text] Text for the section
- *
- * @member {string} [activityTitle] Activity title
- *
- * @member {string} [activitySubtitle] Activity subtitle
- *
- * @member {string} [activityText] Activity text
- *
- * @member {string} [activityImage] Activity image
- *
- * @member {string} [activityImageType] Activity image type. Default value would be avatar if not specified. 
- *
- * @member {boolean} [markdown] Use markdown for all text contents. Default value is true.
- *
- * @member {array} [facts] Set of facts for the current section
- *
- * @member {array} [images] Set of images for the current section
- *
- * @member {array} [potentialAction] Set of actions for the current section
- *
- */
+/** Represents an Office 365 connector card section. */
 export interface IO365ConnectorCardSection {
+  /** Title of the card section. */
   title?: string;
+
+  /** Text of the card section. */
   text?: string;
-  activityTitle?: string;
-  activitySubtitle?: string;
-  activityText?: string;
+
+  /** Image displayed within the section. */
   activityImage?: string;
+
+  /** Determines how the activity image is displayed. */
   activityImageType?: string;
+
+  /** Title text to be displayed beside the activity image (two-column layout). */
+  activityTitle?: string;
+
+  /** Subtitle text to be displayed beside the activity image (two-column layout). */
+  activitySubtitle?: string;
+
+  /** Text to be displayed beside the activity image (two-column layout). */
+  activityText?: string;
+
+  /** Indicates if the card text contains markdown. If false, markdown transformations will be not applied. */
   markdown?: boolean;
+
+  /** A collection of facts to be displayed in the section. */
   facts: IO365ConnectorCardFact[];
+
+  /** A collection of images to be displayed in the section. */
   images: IO365ConnectorCardImage[];
+
+  /** A collection of actions that can be invoked on this section. */
   potentialAction?: IO365ConnectorCardActionBase[];
 }
 
+/** Implemented by classes that can be converted into an Office 365 connector card section. */
 export interface IIsO365ConnectorCardSection {
+  /** Returns the JSON object for the connector card section */
   toSection(): IO365ConnectorCardSection;
 }
 
-/**
- * @interface
- * Interface of O365 connector card fact
- *
- * @member {string} [name] Display name of the fact
- *
- * @member {string} [value] Display value for the fact
- *
- */
+/** Represents an Office 365 connector card fact */
 export interface IO365ConnectorCardFact {
+  /** Display name */
   name: string;
+  /** Display value */
   value: string;
 }
 
+/** Implemented by classes that can be converted into an Office 365 connector card fact. */
 export interface IIsO365ConnectorCardFact {
+  /** Returns the JSON object for the fact */
   toFact(): IO365ConnectorCardFact;
 }
 
-/**
- * @interface
- * Interface of O365 connector card image
- *
- * @member {string} [image] URL for the image
- *
- * @member {string} [title] Alternative text for the image
- *
- */
+/** Represents an Office 365 connector card image */
 export interface IO365ConnectorCardImage {
+  /** Image url */
   image: string;
+
+  /** Alternative text for the image */
   title?: string;
 }
 
+/** Implemented by classes that can be converted into an Office 365 connector card image. */
 export interface IIsO365ConnectorCardImage {
+  /** Returns the JSON object for the image */
   toImage(): IO365ConnectorCardImage;
 }
 
-/**
- * @interface
- * Base interface of O365 connector card action.
- *
- * @member {string} [type] Type of the action
- *
- * @member {string} [name] Name of the action that will be used as button title
- *
- * @member {string} [id] Action Id
- *
- */
+/** Represents an Office 365 connector card action */
 export interface IO365ConnectorCardActionBase {
+  /** Type of the action */
   readonly type: string;
+
+  /** Name of the action. This string is used as the title of the button. */
   name: string;
+
+  /** Action id */
   id?: string;
 }
 
+/** Implemented by classes that can be converted into an Office 365 connector card action. */
 export interface IIsO365ConnectorCardActionBase {
+  /** Returns the JSON object for the action */
   toAction(): IO365ConnectorCardActionBase;
 }
 
-/**
- * @interface
- * Interface of O365 connector card ViewAction action
- *
- * @member {array} [target] Target urls, only the first url effective for card button
- *
- */
+/** Represents a ViewAction action. */
 export interface IO365ConnectorCardViewAction extends IO365ConnectorCardActionBase {
+  /** Array of target urls. Only the first url is used, and will be launched when the button is clicked. */
   target: string[];
 }
 
-/**
- * @type
- * Type of literal strings used for OpenUri target (IO365ConnectorCardOpenUriTarget) operating systems (os).
- *
- */
-export type O365ConnectorCardOpenUriOS = 'default' | 'iOS' | 'android' | 'windows';
+/** Specifies the platform options for an OpenUri action */
+ export type O365ConnectorCardOpenUriOS = 'default' | 'iOS' | 'android' | 'windows';
 
-/**
- * @interface
- * Interface of O365 connector card OpenUri target
- *
- * @member {O365ConnectorCardOpenUriOS} [os] Target operating system
- *
- * @member {string} [uri] Target url
- *
- */
+/** Represents the target URI for an OpenUri action */
 export interface IO365ConnectorCardOpenUriTarget {
+  /** The operating system on which URI will be used, or 'default' */
   os: O365ConnectorCardOpenUriOS;
+
+  /** The URI that will be used on the specified platform */
   uri: string;
 }
 
-/**
- * @interface
- * Interface of O365 connector card OpenUri action
- *
- * @member {O365ConnectorCardOpenUriOS} [os] Target operating system
- *
- * @member {string} [uri] Target url
- *
- */
+/** Represents an OpenUri action. */
 export interface IO365ConnectorCardOpenUri extends IO365ConnectorCardActionBase {
+  /** A collection of target URIs for different platforms. */
   targets: IO365ConnectorCardOpenUriTarget[];
 }
 
-/**
- * @interface
- * Interface of O365 connector card HttpPOST action
- * 
- * @member {string} [body] Content to be posted back to bots via invoke.
- *
- */
+/** Represents an HttpPOST action. */
 export interface IO365ConnectorCardHttpPOST extends IO365ConnectorCardActionBase {
+  /** A template for the payload that will be posted back to the bot via an invoke message */
   body?: string;
 }
 
-/**
- * @interface
- * Interface of O365 connector card ActionCard action
- * 
- * @member {array} [inputs] Set of inputs contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase
- * 
- * @member {array} [actions] Set of actions contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase except IO365ConnectorCardActionCard, as nested ActionCard is forbidden.
- *
- */
+/** Represents an ActionCard action, which shows a subcard that can take user input. */
 export interface IO365ConnectorCardActionCard extends IO365ConnectorCardActionBase {
+  /** A collection of input fields that will be displayed on the action card. */
   inputs: IO365ConnectorCardInputBase[];
+
+  /** A collection of actions that can be invoked on the action card. The actions cannot include another IO365ConnectorCardActionCard action. */
   actions: IO365ConnectorCardActionBase[];
 }
 
-/**
- * @interface
- * Base interface of O365 connector card input for ActionCard action
- * 
- * @member {string} [type] Input type name
- * 
- * @member {string} [id] Input Id. It must be unique per entire O365 connector card.
- * 
- * @member {boolean} [isRequired] Define if this input is a required field. Default value is false.
- * 
- * @member {string} [title] Input title that will be shown as the placeholder
- * 
- * @member {string} [value] Default value for this input field
- */
+/** Represents an input field in an Office 365 connector card. */
 export interface IO365ConnectorCardInputBase {
+  /** Field id */
   id: string;
+
+  /** Determines if the field is required. Default value is false. */
   isRequired?: boolean;
+
+  /** Field title, typically displayed as placeholder text. */
   title: string;
+
+  /** Field default/initial value. */
   value: string;
 }
 
+/** Implemented by classes that can be converted into an Office 365 connector card input field. */
 export interface IIsO365ConnectorCardInputBase {
+  /** Returns the JSON for the input field */
   toInput(): IO365ConnectorCardInputBase;
 }
 
-/**
- * @interface
- * Interface of O365 connector card text input
- * 
- * @member {boolean} [isMultiline] Define if text input is allowed for multiple lines. Default value is false.
- * 
- * @member {number} [maxLength] Maximum length of text input. Default value is unlimited.
- *  
- */
-export interface IO365ConnectorCardTextInput extends IO365ConnectorCardInputBase{
+/** Represents a text input field in an Office 365 connector card. */
+export interface IO365ConnectorCardTextInput extends IO365ConnectorCardInputBase {
+  /** Determines if text input is allowed to contain newlines. Default value is false. */
   isMultiline?: boolean;
+
+  /** Maximum length of the text input. Default value is unlimited. */
   maxLength?: number;
 }
 
-/**
- * @interface
- * Interface of O365 connector card date input
- * 
- * @member {boolean} [includeTime] Include time input field. Default value  is false (date only).
- *  
- */
-export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase{
+/** Represents a date input field in an Office 365 connector card. */
+export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase {
+  /** Determines if time input should be included. Default value is false (date input only). */
   includeTime?: boolean;
 }
 
-/**
- * @interface
- * Interface of O365 connector card multiple choice input
- * 
- * @member {array} [choices] Set of choices whose each item can be in any subtype of IO365ConnectorCardMultichoiceInputChoice.
- * 
- * @member {O365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
- * 
- * @member {boolean} [isMultiSelect] Define if this input field allows multiple selections. Default value is false.
- *  
- */
-export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase{
+/** Represents a multiple-choice input field in an Office 365 connector card. */
+export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase {
+  /** A collection of choices to show the user */
   choices: IO365ConnectorCardMultichoiceInputChoice[];
+
+  /** Determines how the choices are rendered. Choices are "compact" (default) or "expanded". */
   style?: O365ConnectorCardMultichoiceInputStyle;
+
+  /** Determines if multiple selections are allowed. Default value is false. */
   isMultiSelect?: boolean; 
 }
 
 /**
- * @type
- * Type of literal strings used for multi-choice input (IO365ConnectorCardMultichoiceInput) rendering style.
- *
+ * Determines how a multiple-choice input field is rendered.
+ * "compact" shows only one choice at a time. "expanded" shows all choices at once, with radio buttons or checkboxes.
  */
 export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
 
-/**
- * @interface
- * Interface of O365 connector card multiple choice input item
- * 
- * @member {string} [display] The text rendered on ActionCard.
- * 
- * @member {string} [value] The value received as results.
- * 
- */
+/** Represents a choice in a multiple-choice input field. */
 export interface IO365ConnectorCardMultichoiceInputChoice {
+  /** The display text for the choice. */
   display: string;
+
+  /** The value to return when the choice is selected. For multiselect fields, this should not contain "," as that will be used as a separator. */
   value: string;
 }
 
+/** Implemented by classes that can be converted into a choice for a multiple-choice input field. */
 export interface IIsO365ConnectorCardMultichoiceInputChoice {
+  /** Returns the JSON for the choice */
   toChoice(): IO365ConnectorCardMultichoiceInputChoice;
 }
 
-/**
- * @interface
- * Interface of O365 connector card HttpPOST invoke query
- * 
- * @member {string} [body] The results of body string defined in IO365ConnectorCardHttpPOST with substituted input values
- * 
- * @member {string} [actionId] Action Id associated with the HttpPOST action button triggered, defined in IO365ConnectorCardActionBase.
- *  
- */
+/** Represents the value of the invoke messaage triggered by the Office 365 connector card HttpPOST action */
 export interface IO365ConnectorCardActionQuery {
+  /** The results of body string defined in IO365ConnectorCardHttpPOST with substituted input values. */
   body: string;
+
+  /** The id of the HttpPOST action button that was triggered. */
   actionId: string;
 }
 
@@ -811,266 +655,256 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
   toChoice(): IO365ConnectorCardMultichoiceInputChoice;
 }
 
-/**
- * @interface
- * Interface of signin auth state verification query
- * 
- * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
- *  
- */
+
+/** Represents the value of the invoke message sent at the end of the bot sign-in flow */ 
 export interface ISigninStateVerificationQuery {
+  /** The state string provided to `microsoftTeams.authentication.notifySuccess` at the end of the bot sign-in flow. */
   state: string;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionQueryOptions class.
- * @constructor
- * Compose extensions query options
- *
- * @member {number} [skip] Number of entities to skip
- *
- * @member {number} [count] Number of entities to fetch
- *
- */
+
+/** Represents compose extension query options */
 export interface ComposeExtensionQueryOptions {
+  /** The number of entities to skip */
   skip?: number;
+
+  /** The number of entities to return */
   count?: number;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionParameter class.
- * @constructor
- * Compose extension query parameters
- *
- * @member {string} [name] Name of the parameter
- *
- * @member {object} [value] Value of the parameter
- *
- */
+/** Represents a compose extension query parameter */
 export interface ComposeExtensionParameter {
-  name?: string;
-  value?: any;
+  /** Parameter name */
+  name: string;
+  /** Parameter value */
+  value: any;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionQuery class.
- * @constructor
- * Compose extension query
- *
- * @member {string} [commandId] Id of the command assigned by Bot
- *
- * @member {array} [parameters] Parameters for the query
- *
- * @member {object} [queryOptions]
- *
- * @member {number} [queryOptions.skip] Number of entities to skip
- *
- * @member {number} [queryOptions.count] Number of entities to fetch
- *
- * @member {string} [state] state parameter used by the bot to send back at the end of authentication/configuration flow
- *
- */
+/** Represents a compose extension query */
 export interface ComposeExtensionQuery {
-  commandId?: string;
+  /** The command id of the compose extension command, as defined in the application manifest. */
+  commandId: string;
+
+  /** The list of parameters for the compose extension query. */
   parameters?: ComposeExtensionParameter[];
+
+  /** The query options requested by the client. */
   queryOptions?: ComposeExtensionQueryOptions;
+
+  /** The state string provided to `microsoftTeams.authentication.notifySuccess` at the end of the authentication or configuration flow. */
   state?: string;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionAttachment class.
- * @constructor
- * Compose extension attachment.
- *
- * @member {object} [preview]
- *
- * @member {string} [preview.contentType] mimetype/Contenttype for the file
- *
- * @member {string} [preview.contentUrl] Content Url
- *
- * @member {object} [preview.content] Embedded content
- *
- * @member {string} [preview.name] (OPTIONAL) The name of the attachment
- *
- * @member {string} [preview.thumbnailUrl] (OPTIONAL) Thumbnail associated with
- * attachment
- *
- */
+/** Represents an entity returned by a compose extension. */
 export interface ComposeExtensionAttachment extends builder.IAttachment {
+  /** The representation of the entity that should be used in the results list. If omitted, the preview will be based on the content of the card. */
   preview?: builder.IAttachment;
 }
 
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionResult class.
- * @constructor
- * Compose extension result
- *
- * @member {string} [attachmentLayout] Hint for how to deal with multiple
- * attachments.
- *
- * @member {string} [type] The type of the result
- *
- * @member {array} [attachments] Attachments
- *
- * @member {array} [suggestedActions] suggestedActions
- *
- * @member {string} [text] text
- */
+/** The kind of compose extension result */
+export type ComposeExtensionResultType = 'result' | 'auth' | 'config' | 'message';
 
+/**
+ * Determines how the set of results is displayed.
+ * "list" shows a linear list of results. "grid" shows a grid of images.
+ */
+export type ComposeExtensionAttachmentLayout = 'list' | 'grid';
+
+/** Represents the result of compose extension query. */
 export interface ComposeExtensionResult {
-  attachmentLayout?: string;
-  type?: string;
+  /** The kind of result. */
+  type: ComposeExtensionResultType;
+
+  /** Determines the layout of the result list. Default is list layout. */
+  attachmentLayout?: ComposeExtensionAttachmentLayout;
+
+  /** The list of entities returned. */
   attachments?: ComposeExtensionAttachment[];
+
+  /** The action to suggest to the user. Used for "auth" and "config" results. */
   suggestedActions?: builder.ISuggestedActions;
+
+  /** The text to display to the user. Used for "message" result. */
   text?: string;
 }
 
-
-/**
- * @class
- * Initializes a new instance of the ComposeExtensionResponse class.
- * @constructor
- * Compose extension response
- *
- * @member {object} [composeExtension]
- *
- * @member {string} [composeExtension.attachmentLayout] Hint for how to deal
- * with multiple attachments.
- *
- * @member {string} [composeExtension.type] The type of the result
- *
- * @member {array} [composeExtension.attachments] Attachments
- *
- */
+/** Represents the response to a compose extension invoke message */
 export interface IComposeExtensionResponse {
+  /** The result of the query. */
   composeExtension?: ComposeExtensionResult;
 }
 
+/** Response builder class that simplifies constructing the response to a compose extension invoke message. */
 export class ComposeExtensionResponse {
 
-  constructor(type: string);
+  /** 
+   * Creates a new compose extension response. 
+   * @param type The kind of response to create. 
+   */
+  constructor(type: ComposeExtensionResultType);
 
+  /** Creates a new response representing the results of a query. */
   static result(attachmentLayout: string):  ComposeExtensionResponse;
 
+  /** Creates a new response representing a request to sign in. */
   static auth(): ComposeExtensionResponse;
 
+  /** Creates a new response representing a request to configure the extension. */
   static config(): ComposeExtensionResponse;
 
+  /** Creates a new response representing a message to show the user. */
   static message(): ComposeExtensionResponse;
 
+  /** Results to send to the user. */
   attachments(list: ComposeExtensionAttachment[]): ComposeExtensionResponse;
 
+  /** Suggested actions for "auth" and "config" responses. */
   actions(list: builder.CardAction[]): ComposeExtensionResponse;
 
+  /** Text to display for a "message" response. */
   text(text: string): ComposeExtensionResponse;
 
+  /** Returns the corresponding JSON. */
   toResponse(): IComposeExtensionResponse
 }
 
-export declare class TeamEventBase {
-  constructor(team: TeamInfo, tenant: TenantInfo);
+
+/** Types of team events for which a bot can receive notifications. */
+export enum TeamEventType {
+  /** A bot or team member was added to the team. */
+  MembersAdded = 0,
+
+  /** A bot or team member was removed from the team */
+  MembersRemoved = 1,
+
+  /** A channel was created in the team */
+  ChannelCreated = 2,
+
+  /** A channel in the team was deleted */
+  ChannelDeleted = 3,
+
+  /** A channel in the team was renamed */
+  ChannelRenamed = 4,
+
+  /** The team was renamed */
+  TeamRenamed = 5,
 }
 
-export declare class ChannelCreatedEvent {
-  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+/** Base interface for team event data  */
+export interface TeamEventBase {
+  /** Specifies the kind of team event that occurred */
+  eventType: TeamEventType;
+
+  /** Information about the team */
+  team: TeamInfo;
+
+  /** Information about the tenant */
+  tenant: TenantInfo;
 }
 
-export declare class ChannelDeletedEvent {
-  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+/** Event data for ChannelCreated events */
+export interface ChannelCreatedEvent extends TeamEventBase {
+  /** Information about the channel that was created */
+  channel: ChannelInfo;
 }
 
-export declare class ChannelRenamedEvent {
-  constructor(channel: ChannelInfo, team: TeamInfo, tenant: TenantInfo);
+/** Event data for ChannelDeleted events */
+export interface ChannelDeletedEvent extends TeamEventBase {
+  /** Information about the channel that was deleted */
+  channel: ChannelInfo;
 }
 
-export declare class MembersAddedEvent {
-  constructor(membersAdded: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
+/** Event data for ChannelRenamed events */
+export interface ChannelRenamedEvent extends TeamEventBase {
+  /** Information about the channel that was renamed */
+  channel: ChannelInfo;
 }
 
-export declare class MembersRemovedEvent {
-  constructor(membersRemoved: Array<builder.IIdentity>, team: TeamInfo, tenant: TenantInfo);
+/** Event data for MembersAdded events */
+export interface MembersAddedEvent extends TeamEventBase {
+  /** List of members added to the team */
+  membersAdded: Array<builder.IIdentity>;
 }
 
-export declare class TeamRenamedEvent {
-  constructor(team: TeamInfo, tenant: TenantInfo);
+/** Event data for MembersRemoved events */
+export interface MembersRemovedEvent extends TeamEventBase {
+  /** List of members removed from the team */
+  membersRemoved: Array<builder.IIdentity>;
 }
 
-export declare class ChannelInfo {
-  constructor(name: string, id: string);
+/** Event data for TeamRenamed events */
+export interface TeamRenamedEvent extends TeamEventBase {
 }
 
-export declare class TeamInfo {
-  constructor(name: string, id: string);
-  constructor(name: string, id: string, aadGroupId: string);
-}
 
-export declare class TenantInfo {
-  constructor(id: string);
+/** Represents an invoke event received by a bot */
+export interface IInvokeEvent extends builder.IEvent {
+  /** Invoke event name */
+  name: string;
+
+  /** Invoke event value */
+  value: any;
 }
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
-export interface IInvokeEvent extends builder.IEvent {
-  name: string;
-  value: any;
-}
-
+/** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
+
   public static queryInvokeName: string;
   public static querySettingUrlInvokeName: string;
   public static settingInvokeName: string;
 
+  /** 
+   * Creates a new instance of the TeamsChatConnector.
+   * @param settings (Optional) config params that let you specify the bots App ID & Password you were assigned in the Bot Frameworks developer portal. 
+   */
   constructor(settings?: builder.IChatConnectorSettings);
 
   /**
-  *  Return a list of conversations in a team
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} teamId - The team id, you can look it up in session object.
-  *  @param {function} callback - This callback returns err or result.
+  *  Return the list of channels in a team.
+  *  @param {string} serviceUrl - The team's service url, which should be taken from a previous message received from that team. If the wrong service url is used, the team will not be found and the method wil fail.
+  *  @param {string} teamId - The team id.
+  *  @param {function} callback - Function to invoke with the list of channels in the team.
   */
-  public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
+  public fetchChannelList(serviceUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void;
 
   /**
-  *  Return info of a team given team id
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} teamId - The team id, you can look it up in session object.
-  *  @param {function} callback - This callback returns err or result.
+  *  Return information about a given team.
+  *  @param {string} serviceUrl - The team's service url, which should be taken from a previous message received from that team. If the wrong service url is used, the team will not be found and the method wil fail.
+  *  @param {string} teamId - The team id.
+  *  @param {function} callback - Function to invoke with information about the team.
   */
-  public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void;
+  public fetchTeamInfo(serviceUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void;
 
   /**
-  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serverUrl, conversationId, callback).
-  *  Return a list of members in a conversation or channel
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serviceUrl, conversationId, callback).
+  *  Return a list of members in a conversation or channel.
+  *  @param {string} serviceUrl - The team's service url, which should be taken from a previous message received from that team. If the wrong service url is used, the team will not be found and the method wil fail.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
   *  @param {string} tenantId - The tenantId, you can look it up in session object.
   *  @param {function} callback - This callback returns err or result.
   */
-  public fetchMemberList(serverUrl: string, conversationId: string, tenantId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
+  public fetchMemberList(serviceUrl: string, conversationId: string, tenantId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
   /**
-  *  Return a list of members in a team or channel
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
-  *  @param {function} callback - This callback returns err or result.
+  *  Return a list of members in team or chat.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {function} callback - Function to invoke with the list of members.
   */
-  public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
+  public fetchMembers(serviceUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
   /**
-  *  Return a newly started reply chain address in channel
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  Start a reply chain in a channel.
+  *  @param {string} serviceUrl - The team's service url, which should be taken from a previous message received from that team. If the wrong service url is used, the team will not be found and the method wil fail.
+  *  @param {string} channelId - The id of the channel to post to.
   *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
-  *  @param {function} callback - This callback returns err or result.
+  *  @param {function} callback - Function to invoke with the address of the new message. The address is populated correctly with the activity id and the reply chain conversation id.
   */
-  public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void;
+  public startReplyChain(serviceUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback: (err: Error, address: builder.IChatConnectorAddress) => void) : void;
 
   /**
   *  Set the list of allowed tenants. Messages from tenants not on the list will be dropped silently.
@@ -1084,89 +918,112 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public resetAllowedTenants() : void;
 
   /**
-  *  Set a handler for o365 connector card action execution
+  *  Set a handler for Office 365 connector card actions.
+  *  @param handler The function to execute when an Office 365 connector card action invoke activity is received.
   */
   public onO365ConnectorCardAction(handler: O365ConnectorCardActionHandlerType): void;
 
   /**
-  *  Set a handler to verify the final state sent by client that is originally received from signin web flow when it's finished
+  *  Set a handler to verify the final state sent by client that is originally received from signin web flow when it's finished.
+  *  @param handler The function to execute when a signin state verification invoke activity is received.
   */
   public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void;
   
   /**
-  *  Set a handler by commandId of a compose extension query
+  *  Set a handler for compose extension queries.
+  *  @param commandId The command id.
+  *  @param handler The function to execute when a compose extension query with the given command id is received.
   */
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void;
 
   /**
-  *  Set a handler for compose extension invoke request that queries setting url
+  *  Set a handler for compose extension invoke request that asks for a settings url.
+  *  @param handler The handler to execute when a compose extension query settings url invoke activity is received.
   */
   public onQuerySettingsUrl(handler: ComposeExtensionHandlerType): void;
 
   /**
   *  Set a handler for compose extension invoke request made after setting flow is successfully finished
+  *  @param handler The function to execute when a compose extension settings update invoke activity is received.
   */
   public onSettingsUpdate(handler: ComposeExtensionHandlerType): void;
 
   /**
   *  Set a handler for compose extension invoke request made when a search result item is selected
+  *  @param handler The function to execute when a compose extension select item invoke activity is received.
   */
   public onSelectItem(handler: ComposeExtensionHandlerType): void;
 }
 
+/**
+ * Determines where to add the mention text to the message. 
+ * @deprecated Construct a MentionEntity instance, and insert its `text` property into the message.
+ */
 export enum MentionTextLocation {
+  /** Adds the mention text to the beginning of the message. */
   PrependText,
+
+  /** Adds the mention text to the end of the message. */
   AppendText
 }
 
 export class TeamsMessage extends builder.Message {
 
+  /** 
+   * Creates a new O365 connector card. 
+   * @param session (Optional) will be used to localize any text. 
+   */
   constructor(session?: builder.Session);
 
   /**
-  *  Return alert flag to mark this message as Alert/Notification in sourceEvent  
+  *  Return alert flag to mark this message as Alert/Notification in sourceEvent.
   */
   public static alertFlag: any;
 
   /**
-  *  Deprecated, please use UserMention and ChannelMention
   *  Enable bot to send a message to mention user
   *  @param {builder.IIdentity} mentionedUser - The user to mention
   *  @param {MentionTextLocation} textLocation - This defines append or prepend the mention text
   *  @param {string} mentionText - text to mention
+  *  @deprecated Construct a MentionEntity instance, and insert its `text` property to the message.
   */
   public addMentionToText(mentionedUser: builder.IIdentity, textLocation?: MentionTextLocation, mentionText?: string): TeamsMessage;
 
   /**
-  *  Return conversation update related event
+  *  Returns specific event data for a team conversation update event.
+  *  The activity must have been received from a team; otherwise the method will throw an error.
   *  @param {IConversationUpdate} message - user message like adding member to channel, rename etc
   */
   public static getConversationUpdateData(message: builder.IConversationUpdate): TeamEventBase;
 
   /**
-  *  Get message related team info
+  *  Gets a ChannelInfo object that represents the General channel of the team that corresponds to a message.
+  *  The message must have been received from a team; otherwise the method will throw an error.
   *  @param {IEvent} message - The message sent to bot.
   */
   public static getGeneralChannel(message: builder.IEvent): ChannelInfo;
 
   /**
-  *  Route message to general channel
+  *  Sets the address information in the message so that it goes to the team's General channel.
+  *  The incoming message in the session must come from a team; otherwise the method will throw an error.
   */
   public routeReplyToGeneralChannel(): TeamsMessage;
 
   /**
-  *  Get message related tenant id
+  *  Gets the tenant id of the Office 365 tenant in which this message was sent. 
   *  @param {IEvent} message - The message sent to bot.
   */
   public static getTenantId(message: builder.IEvent): string;
 
   /**
-  *  Return message without mentions
-  *  @param {IMessage} message - The message with mentions
+  *  Returns the text of the message, with all mentions (bot, user, team and channel) removed. The original message is not modified.
+  *  @param {IMessage} message - The original message.
   */
   public static getTextWithoutMentions(message: builder.IMessage): string;
 }
 
+
+/** Middleware that removes all mentions of the receiving bot. */
 export class StripBotAtMentions implements builder.IMiddlewareMap
 {
     /** Called in series once an incoming message has been bound to a session. Executed after [receive](#receive) middleware.  */
@@ -1174,77 +1031,42 @@ export class StripBotAtMentions implements builder.IMiddlewareMap
 }
 
 
-/**
- * @class
- * At mention entity in message.
- *
- * @member {string} [type] at mention type, its value is always mention.
- *
- * @member {object} [mentioned] mentioned object with id, type and text value.
- *
- * @member {string} [text] text value to display in the message
- *
- */
+/** Represents a mention in a message */
 export class MentionEntity {
-  type: string;
+  /** The entity type (always "mention") */
+  readonly type: string;
+
+  /** The object (user, team, or channel) to be mentioned. */
   mentioned: any;
+
+  /** The text to show in the message. */
   text: string;
 }
 
-/**
- * @class
- * At mention user entity in message.
- *
- * @member {string} [type] at mention type, its value is always mention.
- *
- * @member {object} [mentioned] mentioned object with id, type and text value.
- *
- * @member {string} [text] text value to display in the message
- *
- */
+/** Represents a mention of a user. */
 export class UserMention extends MentionEntity {
     /**
-    *  Initialize a new instance of at mention user entity
-    *  @param {IIdentity} user - User object to at mention. User must have id and name values.
-    *  @param {string} text - At mention string to display.
+    *  Initialize a new instance of UserMention.
+    *  @param {IIdentity} user - User object to mention. The user.id property is required.
+    *  @param {string} text - The text to use in the message. Required if user.name is empty.
     */
     constructor(user: builder.IIdentity, text?: string);
 }
 
-/**
- * @class
- * At mention channel entity in message. 
- *
- * @member {string} [type] at mention type, its value is always mention.
- *
- * @member {object} [mentioned] mentioned object with id, type and text value.
- *
- * @member {string} [text] text value to display in the message
- *
- */
+/** Represents a mention of a channel. */
 export class ChannelMention extends MentionEntity {
     /**
-    *  Initialize a new instance of at mention channel entity
-    *  @param {ChannelInfo} channel - The channel to at mention. Both channel.id and channel.name are required. If you don't know the name of the channel, you can get it from the Fetch Channel List API, or use a generic name like 'channel'
+    *  Initialize a new instance of ChannelMention.
+    *  @param {ChannelInfo} channel - Channel to mention. Both channel.id and channel.name are required. You can get the name from the fetchChannelList API, or use a generic name like 'channel'.
     */
     constructor(channel: ChannelInfo);
 }
 
-/**
- * @class
- * At mention team entity in message. 
- *
- * @member {string} [type] at mention type, its value is always mention.
- *
- * @member {object} [mentioned] mentioned object with id, type and text value.
- *
- * @member {string} [text] text value to display in the message
- *
- */
+/** Represents a mention of a team. */
 export class TeamMention extends MentionEntity {
     /**
-    *  Initialize a new instance of at mention team entity
-    *  @param {TeamInfo} team - The team to at mention. Team must have id and name values
+    *  Initialize a new instance of TeamMention.
+    *  @param {TeamInfo} team - Team to mention. Both team.id and team.name are required. You can get the name from the fetchTeamInfo API, or use a generic name like 'team'.
     */
     constructor(team: TeamInfo);
 }
