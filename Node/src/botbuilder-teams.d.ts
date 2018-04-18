@@ -34,6 +34,7 @@
 
 import * as builder from 'botbuilder';
 
+
 /** Information about a Microsoft Teams user. */
 export interface ChannelAccount {
   /** Unique identifier for the user. This id should be used when sending the user a message. */
@@ -77,6 +78,31 @@ export interface TeamInfo {
 export interface TenantInfo {
   /** Tenant id */
   id: string;
+}
+
+/** Message notification settings. */
+export interface NotificationSettings {
+  /** Indicates that the message should be included in the user's activity feed. Default is false. */
+  alert: boolean;
+}
+
+
+/** Represents the set of channel data properties relevant to Teams */
+export interface TeamsChannelData {
+  /** Information about the current Office 365 tenant. */
+  tenant?: TenantInfo;
+
+  /** Information about the current team. Included only for messages sent in a team, or events that relate to a team. */
+  team?: TeamInfo;
+
+  /** Information about the current channel. Included only for messages in a channel, or events that relate to a channel. */
+  channel?: ChannelInfo;
+
+  /** The kind of team event notification. Included for conversationUpdate activities relating to a team or channel. */
+  eventType?: string;
+
+  /** Notification settings for an outgoing message. */
+  notification?: NotificationSettings;
 }
 
 
