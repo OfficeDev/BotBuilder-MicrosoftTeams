@@ -66,7 +66,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
   private o365CardActionHandler: O365ConnectorCardActionHandlerType;
   private signinStateVerificationHandler: SigninStateVerificationHandlerType;
-  private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = {};
+  private queryHandlers: { [id: string]: ComposeExtensionHandlerType } = null;
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
   private selectItemInvokeHandler: ComposeExtensionHandlerType;
@@ -275,6 +275,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
  
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
+    if (!this.queryHandlers) {
+      this.queryHandlers = {};
+    }
     this.queryHandlers[commandId] = handler;
   }
 
@@ -306,68 +309,69 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   private dispatchEventOrQuery(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
-    var realEvents: builder.IEvent[] = [];
+    var realEvents: builder.IEvent[] = [];    // Events to be dispatched by ChatConnector
+
     for (var event of events) {
       if (event.type === 'invoke') {
         let invoke = <IInvokeEvent>event;
-        let compExtHandler: ComposeExtensionHandlerType;
-        let o365Handler: O365ConnectorCardActionHandlerType;
-        let signinStateHandler: SigninStateVerificationHandlerType;
+        let invokeHandler: (event: builder.IEvent, value: any, callback: (err: Error, body: any, status?: number) => void) => void;
+
         switch (invoke.name) {
           case TeamsChatConnector.queryInvokeName:
-            compExtHandler = this.dispatchQuery.bind(this);
+            if (this.queryHandlers) {
+              invokeHandler = this.dispatchQuery.bind(this);
+            }
             break;
+
           case TeamsChatConnector.querySettingUrlInvokeName:
-            compExtHandler = this.querySettingsUrlHandler.bind(this);
+            if (this.querySettingsUrlHandler) {
+              invokeHandler = this.querySettingsUrlHandler.bind(this);
+            }
             break;
+
           case TeamsChatConnector.settingInvokeName:
-            compExtHandler = this.settingsUpdateHandler.bind(this);
+            if (this.settingsUpdateHandler) {
+              invokeHandler = this.settingsUpdateHandler.bind(this);
+            }
             break;
+
           case TeamsChatConnector.selectItemInvokeName:
-            compExtHandler = this.selectItemInvokeHandler.bind(this);
+            if (this.selectItemInvokeHandler) {
+              invokeHandler = this.selectItemInvokeHandler.bind(this);
+            }
             break;
+
           case TeamsChatConnector.o365CardActionInvokeName:
-            o365Handler = this.o365CardActionHandler.bind(this);
+            if (this.o365CardActionHandler) {
+              invokeHandler = this.o365CardActionHandler.bind(this);
+            }
             break;
+
           case TeamsChatConnector.signinStateVerificationInvokeName:
-            signinStateHandler = this.signinStateVerificationHandler.bind(this);
+            if (this.signinStateVerificationHandler) {
+              invokeHandler = this.signinStateVerificationHandler.bind(this);
+            }
             break;
+
           default:
+            // Generic invoke activity, defer to default handling of invoke activities
             realEvents.push(event);
             break;
         }
 
-        if (compExtHandler) {
+        if (invokeHandler) {
           try {
-            let query = <ComposeExtensionQuery>(invoke.value);
-            compExtHandler(invoke, query, callback);
+            invokeHandler(invoke, invoke.value, callback);
           }
           catch (e) {
             return callback(e, null, 500);
           }
+        } else {
+          // No handler registered, defer to default handling of invoke activities
+          realEvents.push(event);
         }
-
-        if (o365Handler) {
-          try {
-            let query = <IO365ConnectorCardActionQuery>(invoke.value);
-            o365Handler(invoke, query, callback);
-          }
-          catch (e) {
-            return callback(e, null, 500);
-          }
-        }
-
-        if (signinStateHandler) {
-          try {
-            let query = <ISigninStateVerificationQuery>(invoke.value);
-            signinStateHandler(invoke, query, callback);
-          }
-          catch (e) {
-            return callback(e, null, 500);
-          }
-        }        
-      }
-      else {
+      } else {
+        // Use default handling for all other activities
         realEvents.push(event);
       }
     }
