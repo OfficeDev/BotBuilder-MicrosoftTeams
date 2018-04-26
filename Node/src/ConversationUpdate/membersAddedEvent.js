@@ -34,7 +34,8 @@
 'use strict';
 
 const models = require('../models');
-const TeamEventBase = require('./teamEventBase');
+const TeamEventBase = require('./teamEventBase').TeamEventBase;
+const TeamEventType = require('./teamEventBase').TeamEventType;
 
 /**
  * @class
@@ -53,7 +54,7 @@ const TeamEventBase = require('./teamEventBase');
 class MembersAddedEvent extends TeamEventBase {
   constructor(membersAdded, team, tenant) {
     super(
-      TeamEventBase.TeamEventType.MembersAdded, 
+      MembersAddedEvent.eventType, 
       team, 
       tenant
     );
@@ -89,6 +90,6 @@ class MembersAddedEvent extends TeamEventBase {
   }
 }
 
-MembersAddedEvent.eventType = TeamEventBase.TeamEventType.MembersAdded;
+MembersAddedEvent.eventType = TeamEventType.MembersAdded;
 
 module.exports = MembersAddedEvent;

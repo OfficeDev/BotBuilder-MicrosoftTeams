@@ -80,7 +80,7 @@ class TeamEventBase {
   }
 }
 
-TeamEventBase.TeamEventType = {
+const TeamEventType = {
   MembersAdded :    0,
   MembersRemoved :  1,
   ChannelCreated :  2,
@@ -89,4 +89,5 @@ TeamEventBase.TeamEventType = {
   TeamRenamed:      5
 }
 
-module.exports = TeamEventBase;
+module.exports.TeamEventBase = TeamEventBase;
+module.exports.TeamEventType = TeamEventType;

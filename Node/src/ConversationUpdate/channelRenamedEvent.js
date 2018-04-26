@@ -34,7 +34,8 @@
 'use strict';
 
 const models = require('../models');
-const TeamEventBase = require('./teamEventBase');
+const TeamEventBase = require('./teamEventBase').TeamEventBase;
+const TeamEventType = require('./teamEventBase').TeamEventType;
 
 /**
  * @class
@@ -53,7 +54,7 @@ const TeamEventBase = require('./teamEventBase');
 class ChannelRenamedEvent extends TeamEventBase {
   constructor(channel, team, tenant) {
     super(
-      TeamEventBase.TeamEventType.ChannelRenamed, 
+      ChannelRenamedEvent.eventType, 
       team, 
       tenant
     );
@@ -82,6 +83,6 @@ class ChannelRenamedEvent extends TeamEventBase {
   }
 }
 
-ChannelRenamedEvent.eventType = TeamEventBase.TeamEventType.ChannelRenamed;
+ChannelRenamedEvent.eventType = TeamEventType.ChannelRenamed;
 
 module.exports = ChannelRenamedEvent;
