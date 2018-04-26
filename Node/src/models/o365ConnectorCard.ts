@@ -291,7 +291,6 @@ export abstract class O365ConnectorCardActionBase implements teams.IIsO365Connec
     protected data = <teams.IO365ConnectorCardActionBase>{}
     
     constructor(protected session?: builder.Session) {
-        this.data.type = this.type;
     }
 
     public name(text: string|string[], ...args: any[]): this {
@@ -315,6 +314,7 @@ export abstract class O365ConnectorCardActionBase implements teams.IIsO365Connec
     protected abstract get type(): string;
 
     public toAction(): teams.IO365ConnectorCardActionBase {
+        this.data.type = this.type;
         return this.data;
     }
 }
@@ -469,7 +469,6 @@ export abstract class O365ConnectorCardInputBase implements teams.IIsO365Connect
     protected data = <teams.IO365ConnectorCardInputBase>{};
 
     constructor(protected session?: builder.Session) {
-        this.data.type = this.type;
     }
 
     public id(inputId: string): this {
@@ -507,6 +506,7 @@ export abstract class O365ConnectorCardInputBase implements teams.IIsO365Connect
     protected abstract get type(): string;
 
     public toInput(): teams.IO365ConnectorCardInputBase {
+        this.data.type = this.type;
         return this.data;
     }
 }
