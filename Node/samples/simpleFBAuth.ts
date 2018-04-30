@@ -40,7 +40,7 @@ export class SimpleFBAuth
   }
 
   private constructor(server: any) {
-    server.use(restify.queryParser());    
+    server.use(restify.plugins.queryParser());    
     server.get(SimpleFBAuth.AuthStartPath + '/:userId', (req, res, next) => this.authStart(req, res, next));
     server.get(SimpleFBAuth.AuthCallbackPath, (req, res, next) => this.authCallback(req, res, next));
     server.get(SimpleFBAuth.AuthStartOAuthPath, (req, res, next) => this.authStartOAuth(req, res, next));
