@@ -34,6 +34,27 @@
 import * as builder from 'botbuilder';
 import { ChannelInfo, TeamInfo, TenantInfo } from '../models';
 
+/** Types of team events for which a bot can receive notifications. */
+export enum TeamEventType {
+	/** A bot or team member was added to the team. */
+	MembersAdded = 0,
+  
+	/** A bot or team member was removed from the team */
+	MembersRemoved = 1,
+  
+	/** A channel was created in the team */
+	ChannelCreated = 2,
+  
+	/** A channel in the team was deleted */
+	ChannelDeleted = 3,
+  
+	/** A channel in the team was renamed */
+	ChannelRenamed = 4,
+  
+	/** The team was renamed */
+	TeamRenamed = 5,
+}
+
 export declare class TeamEventBase {
 	constructor(team: TeamInfo, tenant: TenantInfo);
 }

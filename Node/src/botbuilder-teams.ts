@@ -57,7 +57,7 @@ export { ComposeExtensionQuery } from './models';
 export { ComposeExtensionQueryOptions } from './models';
 export { ComposeExtensionResponse } from './models';
 export { ComposeExtensionResult } from './models';
-export { TeamEventBase } from './ConversationUpdate';
+export { TeamEventBase, TeamEventType } from './ConversationUpdate';
 export { MembersAddedEvent } from './ConversationUpdate';
 export { MembersRemovedEvent } from './ConversationUpdate';
 export { ChannelCreatedEvent } from './ConversationUpdate';
