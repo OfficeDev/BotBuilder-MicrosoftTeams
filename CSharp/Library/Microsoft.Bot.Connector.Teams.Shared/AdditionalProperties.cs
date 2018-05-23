@@ -145,18 +145,6 @@ namespace Microsoft.Bot.Connector.Teams.Models
     }
 
     /// <summary>
-    /// Content type for <see cref="FileConsentCard"/>
-    /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
-    public partial class FileConsentCard
-    {
-        /// <summary>
-        /// Content type to be used in the type property.
-        /// </summary>
-        public const string ContentType = "application/vnd.microsoft.teams.card.file.consent";
-    }
-
-    /// <summary>
     /// Content type for <see cref="FileDownloadInfo"/>
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
@@ -169,15 +157,44 @@ namespace Microsoft.Bot.Connector.Teams.Models
     }
 
     /// <summary>
-    /// Content type for <see cref="FileConsentCard"/>
+    /// File consent card.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
-    public partial class FileInfoCard
+    public partial class FileConsentCard
     {
         /// <summary>
         /// Content type to be used in the type property.
         /// </summary>
-        public const string ContentType = "application/vnd.microsoft.teams.card.file.info";
+        public const string ContentType = "application/vnd.microsoft.teams.card.file.consent";
+
+        /// <summary>
+        /// Gets or sets the file name.
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public string Name
+        {
+            get; set;
+        }
+    }
+
+    /// <summary>
+    /// File consent card response invoke activity payload.
+    /// </summary>
+    public partial class FileConsentCardResponse
+    {
+        /// <summary>
+        /// Value of the <see cref="IInvokeActivity.Name"/> property of the invoke activity.
+        /// </summary>
+        public const string InvokeName = "fileConsent/invoke";
+
+        /// <summary>
+        /// Value of the <see cref="Action"/> property when the user accepts the file consent request.
+        /// </summary>
+        public const string AcceptAction = "accept";
+
+        /// <summary>
+        /// Value of the <see cref="Action"/> property when the user declines the file consent request.
+        /// </summary>
+        public const string DeclineAction = "decline";
     }
 
     /////// <summary>

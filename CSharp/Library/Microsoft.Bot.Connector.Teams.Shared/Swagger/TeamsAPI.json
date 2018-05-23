@@ -847,10 +847,6 @@
         "fileType": {
           "description": "Type of file.",
           "type": "string"
-        },
-        "etag": {
-          "description": "ETag for the file.",
-          "type": "object"
         }
       }
     },
@@ -866,10 +862,54 @@
         "fileType": {
           "description": "Type of file.",
           "type": "string"
+        }
+      }
+    },
+
+    "FileUploadInfo": {
+      "description": "Upload information for the file.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "File name.",
+          "type": "string"
         },
-        "etag": {
-          "description": "ETag for the file.",
+        "uploadUrl": {
+          "description": "URL to an upload session for the file contents.",
+          "type": "string"
+        },
+        "contentUrl": {
+          "description": "URL to the file.",
+          "type": "string"
+        },
+        "uniqueId": {
+          "description": "Identifier that uniquely identifies the file.",
+          "type": "string"
+        },
+        "fileType": {
+          "description": "File type.",
+          "type": "string"
+        }
+      }
+    },
+
+    "FileConsentCardResponse": {
+      "description": "File consent card response invoke activity payload.",
+      "type": "object",
+      "properties": {
+        "action": {
+          "description": "User action on the file consent card.",
+          "type": "string",
+          "enum": [ "accept", "decline" ]
+        },
+        "context": {
+          "description": "Context sent with the file consent card.",
           "type": "object"
+        },
+        "uploadInfo": {
+          "description": "Context sent back to the Bot if user declined. This is free flow schema and is sent back in Value field of Activity.",
+          "type": "object",
+          "$ref": "#/definitions/FileUploadInfo"
         }
       }
     }

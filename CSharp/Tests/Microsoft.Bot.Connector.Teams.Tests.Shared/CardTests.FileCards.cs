@@ -36,9 +36,7 @@
 namespace Microsoft.Bot.Connector.Teams.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using Microsoft.Bot.Connector.Teams.Models;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
@@ -59,12 +57,37 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             {
                 FileType = "txt",
                 UniqueId = Guid.NewGuid().ToString(),
-                Etag = Guid.NewGuid().ToString()
+                Name = "filename.txt",
+                ContentUrl = "https://content.url",
             };
 
             Attachment attachment = fileInfoCard.ToAttachment();
             Assert.AreEqual(FileInfoCard.ContentType, attachment.ContentType);
+            Assert.AreEqual("filename.txt", attachment.Name);
+            Assert.AreEqual("https://content.url", attachment.ContentUrl);
             this.TestCard(attachment);
+        }
+
+        /// <summary>
+        /// Test creating a file info card from a file upload info object.
+        /// </summary>
+        [TestMethod]
+        public void CardTests_FileInfoCard_CreateFromFileUploadInfo()
+        {
+            var fileUploadInfo = new FileUploadInfo
+            {
+                FileType = "txt",
+                UniqueId = Guid.NewGuid().ToString(),
+                Name = "filename.txt",
+                ContentUrl = "https://content.url",
+                UploadUrl = "https://upload.url",
+            };
+
+            var fileInfoCard = FileInfoCard.FromFileUploadInfo(fileUploadInfo);
+            Assert.AreEqual(fileUploadInfo.Name, fileInfoCard.Name);
+            Assert.AreEqual(fileUploadInfo.ContentUrl, fileInfoCard.ContentUrl);
+            Assert.AreEqual(fileUploadInfo.UniqueId, fileInfoCard.UniqueId);
+            Assert.AreEqual(fileUploadInfo.FileType, fileInfoCard.FileType);
         }
 
         /// <summary>
@@ -76,11 +99,13 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             FileConsentCard fileConsentCard = new FileConsentCard
             {
                 Description = "File consent",
-                SizeInBytes = 1024
+                SizeInBytes = 1024,
+                Name = "filename.txt",
             };
 
             Attachment attachment = fileConsentCard.ToAttachment();
             Assert.AreEqual(FileConsentCard.ContentType, attachment.ContentType);
+            Assert.AreEqual("filename.txt", attachment.Name);
             this.TestCard(attachment);
         }
 
@@ -94,8 +119,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             {
                 DownloadUrl = "https://bing.com",
                 UniqueId = "b83b9f77-7003-4d63-985c-9611c98303f3",
-                FileType = "txt",
-                Etag = "078251f7-12bb-4132-93e4-2f2bb05fee8c"
+                FileType = "txt"
             };
 
             string contents = JsonConvert.SerializeObject(new Attachment
@@ -109,6 +133,29 @@ namespace Microsoft.Bot.Connector.Teams.Tests
             Assert.IsNotNull(attachment.Content);
             Assert.IsTrue(JObject.DeepEquals(JObject.FromObject(fileDownloadInfo), JObject.FromObject(attachment.Content)));
             Assert.AreEqual(FileDownloadInfo.ContentType, attachment.ContentType);
+        }
+
+        /// <summary>
+        /// File consent card response.
+        /// </summary>
+        [TestMethod]
+        public void CardTests_FileConsentCardResponse()
+        {
+            var activity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleFileConsentCardResponseInvoke.json"));
+
+            Assert.IsNotNull(activity);
+            Assert.AreEqual(FileConsentCardResponse.InvokeName, activity.Name);
+
+            var response = ((JObject)activity.Value).ToObject<FileConsentCardResponse>();
+            Assert.IsNotNull(response.Context);
+
+            // These are from SampleFileConsentCardResponseInvoke.json
+            Assert.AreEqual(FileConsentCardResponse.AcceptAction, response.Action);
+            Assert.AreEqual("https://contoso.sharepoint.com/personal/johnadams_contoso_com/Documents/Applications/file_example.txt", response.UploadInfo.ContentUrl);
+            Assert.AreEqual("file_example.txt", response.UploadInfo.Name);
+            Assert.AreEqual("https://upload.link", response.UploadInfo.UploadUrl);
+            Assert.AreEqual("1150D938-8870-4044-9F2C-5BBDEBA70C8C", response.UploadInfo.UniqueId);
+            Assert.AreEqual("txt", response.UploadInfo.FileType);
         }
     }
 }
