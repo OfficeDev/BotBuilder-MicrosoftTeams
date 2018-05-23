@@ -63,13 +63,13 @@ export class FileConsentCard implements builder.IIsAttachment {
     }
 
     /** Context to return if the user accepts the proposed file upload. */
-    public acceptContext(context: any): FileConsentCard {
+    public acceptContext(context: object): FileConsentCard {
         this.data.content.acceptContext = context;
         return this;
     }
 
     /** Context to return if the user declines the proposed file upload. */
-    public declineContext(context: any): FileConsentCard {
+    public declineContext(context: object): FileConsentCard {
         this.data.content.declineContext = context;
         return this;
     }
@@ -78,9 +78,9 @@ export class FileConsentCard implements builder.IIsAttachment {
      * Context to return whether the user accepts or declines the proposed file upload. 
      * Shorthand for calls to `acceptContext(context)` and `declineContext(context)` with the same value.
      */
-    public context(context: any): FileConsentCard {
-        this.data.content.acceptContext = context;
-        this.data.content.declineContext = context;
+    public context(context: object): FileConsentCard {
+        this.acceptContext(context);
+        this.declineContext(context);
         return this;
     }
 
