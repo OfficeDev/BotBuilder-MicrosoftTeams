@@ -40,6 +40,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     /// <summary>
     /// Content type for <see cref="FileListItem"/>
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
     public partial class FileListItem
     {
         /// <summary>
@@ -159,6 +160,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     /// <summary>
     /// File consent card.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
     public partial class FileConsentCard
     {
         /// <summary>
@@ -179,6 +181,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     /// <summary>
     /// File consent card response invoke activity payload.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Using one file for all additional properties.")]
     public partial class FileConsentCardResponse
     {
         /// <summary>
