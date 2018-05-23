@@ -875,6 +875,7 @@ export interface IInvokeEvent extends builder.IEvent {
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -979,6 +980,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when a compose extension select item invoke activity is received.
   */
   public onSelectItem(handler: ComposeExtensionHandlerType): void;
+
+  /**
+  *  Set a handler that is called when the response to a file consent card is received .
+  *  @param handler The function to execute when a file consent card invoke activity is received.
+  */
+  public onFileConsentCardResponse(handler: FileConsentCardResponseHandlerType): void;
 }
 
 /**
@@ -1095,4 +1102,117 @@ export class TeamMention extends MentionEntity {
     *  @param {TeamInfo} team - Team to mention. Both team.id and team.name are required. You can get the name from the fetchTeamInfo API, or use a generic name like 'team'.
     */
     constructor(team: TeamInfo);
+}
+
+
+/**
+ * File consent card builder class.
+ */
+export class FileConsentCard implements builder.IIsAttachment {
+
+  /** Creates a new file consent card builder. */
+  constructor(private session?: builder.Session);
+
+  /** Name of the file. */
+  public name(name: string): FileConsentCard;
+
+  /** Description of the file. */
+  public description(description: string, ...args: any[]): FileConsentCard;
+
+  /** Approximate size of the file in bytes. */
+  public sizeInBytes(sizeInBytes: number): FileConsentCard;
+
+  /** Context to return if the user accepts the proposed file upload. */
+  public acceptContext(context: any): FileConsentCard;
+
+  /** Context to return if the user declines the proposed file upload. */
+  public declineContext(context: any): FileConsentCard;
+
+  /** 
+   * Context to return whether the user accepts or declines the proposed file upload. 
+   * Shorthand for calls to `acceptContext(context)` and `declineContext(context)` with the same value.
+   */
+  public context(context: any): FileConsentCard;
+}
+
+/** Represents the value of the invoke activity sent when the user acts on a file consent card. */
+export interface IFileConsentCardResponse {
+
+  /** The action the user took. */
+  action: FileConsentCardAction;
+
+  /** The context associated with the action. */
+  context?: any;
+
+  /** If the user accepted the file, contains information about the file to be uploaded. */
+  uploadInfo?: IFileUploadInfo;
+}
+
+/** Actions the user can take on the file consent card. */
+export enum FileConsentCardAction {
+
+  /** File was accepted. */
+  accept = "accept",
+
+  /** File was declined. */
+  decline = "decline",
+}
+
+/** Represents a file download info attachment. */
+export interface IFileDownloadInfo extends builder.IAttachment {
+
+  /** The additional content of the attachment. */
+  content: IFileDownloadInfoContent;
+}
+
+/** Additional content of a file download info attachment. */
+export interface IFileDownloadInfoContent {
+
+  /** Type of the file. */
+  fileType: string;
+
+  /** Short-lived download url for the file. */
+  downloadUrl: string;    
+}
+
+/**
+* Helpers for working with file download info attachments.
+*/
+export class FileDownloadInfo {
+
+  /** Content type of a file download info attachment. */
+  public static contentType = "application/vnd.microsoft.teams.file.download.info";
+
+  /**
+   * Returns the attachments in the list that are of type file download info.
+   * @param attachments the attachments in the message
+   */
+  public static filter(attachments: builder.IAttachment[]|undefined): IFileDownloadInfo[]|undefined;
+}
+
+/**
+ * File info card builder class.
+ */
+export class FileInfoCard implements builder.IIsAttachment {
+
+  /** Creates a new file info card builder. */
+  constructor(private session?: builder.Session);
+
+  /** Name of the file. */
+  public name(name: string): FileInfoCard;
+
+  /** URL to the file. */
+  public contentUrl(url: string): FileInfoCard;
+
+  /** Unique ID of the file. */
+  public uniqueId(uniqueId: string): FileInfoCard;
+
+  /** Type of the file. */
+  public fileType(fileType: string): FileInfoCard;
+
+  /**
+   * Creates a file info card from the data in a `IFileUploadInfo` object.
+   * @param uploadInfo The object containing the information that should be used to populate the card.
+   */
+  public static fromFileUploadInfo(uploadInfo: IFileUploadInfo): FileInfoCard;
 }

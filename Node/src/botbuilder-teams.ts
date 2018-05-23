@@ -64,3 +64,7 @@ export { ChannelCreatedEvent } from './ConversationUpdate';
 export { ChannelDeletedEvent } from './ConversationUpdate';
 export { ChannelRenamedEvent } from './ConversationUpdate';
 export { TeamRenamedEvent } from './ConversationUpdate';
+export * from './models/FileConsentCard';
+export * from './models/FileConsentCardResponse';
+export * from './models/FileDownloadInfo';
+export * from './models/FileInfoCard';
