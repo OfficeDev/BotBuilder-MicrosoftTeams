@@ -69,7 +69,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "ViewAction";
+        public new const string Type = "ViewAction";
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "OpenUri";
+        public new const string Type = "OpenUri";
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "HttpPOST";
+        public new const string Type = "HttpPOST";
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "ActionCard";
+        public new const string Type = "ActionCard";
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "TextInput";
+        public new const string Type = "TextInput";
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "DateInput";
+        public new const string Type = "DateInput";
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Content type to be used in the @type property.
         /// </summary>
-        public const string Type = "MultichoiceInput";
+        public new const string Type = "MultichoiceInput";
     }
 
     /// <summary>

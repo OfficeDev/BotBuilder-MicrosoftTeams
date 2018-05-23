@@ -101,6 +101,8 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 Description = "File consent",
                 SizeInBytes = 1024,
                 Name = "filename.txt",
+                AcceptContext = new object(),
+                DeclineContext = new object(),
             };
 
             Attachment attachment = fileConsentCard.ToAttachment();

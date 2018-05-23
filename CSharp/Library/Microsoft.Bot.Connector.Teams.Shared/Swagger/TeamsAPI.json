@@ -127,10 +127,11 @@
     },
 
     "TeamsChannelData": {
-      "description": "List of channels under a team",
+      "description": "Channel data specific to messages received in Microsoft Teams",
       "type": "object",
       "properties": {
         "channel": {
+          "description": "Information about the channel in which the message was sent",
           "type": "object",
           "$ref": "#/definitions/ChannelInfo"
         },
@@ -139,14 +140,17 @@
           "description": "Type of event."
         },
         "team": {
+          "description": "Information about the team in which the message was sent",
           "type": "object",
           "$ref": "#/definitions/TeamInfo"
         },
         "notification": {
+          "description": "Notification settings for the message",
           "type": "object",
           "$ref": "#/definitions/NotificationInfo"
         },
         "tenant": {
+          "description": "Information about the tenant in which the message was sent",
           "type": "object",
           "$ref": "#/definitions/TenantInfo"
         }
@@ -652,6 +656,7 @@
           "items": { "$ref": "#/definitions/ComposeExtensionParameter" }
         },
         "queryOptions": {
+          "description": "Options for the query",
           "$ref": "#/definitions/ComposeExtensionQueryOptions"
         },
         "state": {
@@ -718,7 +723,7 @@
       "type": "object",
       "properties": {
         "attachmentLayout": {
-          "description": "Hint for how to deal with multiple attachments.",
+          "description": "Hint for how to display multiple attachments.",
           "type": "string"
         },
         "type": {
@@ -733,6 +738,7 @@
           }
         },
         "suggestedActions": {
+          "description": "(Only when type of auth or config) Suggested actions",
           "$ref": "#/definitions/ComposeExtensionSuggestedAction"
         },
         "text": {
@@ -752,6 +758,7 @@
           "type": "object",
           "properties": {
             "preview": {
+              "description": "Specifies how the result should be displayed in the preview window",
               "$ref": "#/definitions/Attachment"
             }
           }
@@ -908,7 +915,6 @@
         },
         "uploadInfo": {
           "description": "Context sent back to the Bot if user declined. This is free flow schema and is sent back in Value field of Activity.",
-          "type": "object",
           "$ref": "#/definitions/FileUploadInfo"
         }
       }

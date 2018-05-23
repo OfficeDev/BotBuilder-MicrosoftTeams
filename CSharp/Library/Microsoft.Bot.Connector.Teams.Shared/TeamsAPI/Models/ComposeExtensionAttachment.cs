@@ -25,6 +25,8 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <param name="name">(OPTIONAL) The name of the attachment</param>
         /// <param name="thumbnailUrl">(OPTIONAL) Thumbnail associated with
         /// attachment</param>
+        /// <param name="preview">Specifies how the result should be displayed
+        /// in the preview window</param>
         public ComposeExtensionAttachment(string contentType = default(string), string contentUrl = default(string), object content = default(object), string name = default(string), string thumbnailUrl = default(string), Attachment preview = default(Attachment))
             : base(contentType, contentUrl, content, name, thumbnailUrl)
         {
@@ -32,6 +34,8 @@ namespace Microsoft.Bot.Connector.Teams.Models
         }
 
         /// <summary>
+        /// Gets or sets specifies how the result should be displayed in the
+        /// preview window
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "preview")]
         public Attachment Preview { get; set; }
