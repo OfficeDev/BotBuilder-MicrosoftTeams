@@ -21,6 +21,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         /// <param name="commandId">Id of the command assigned by Bot</param>
         /// <param name="parameters">Parameters for the query</param>
+        /// <param name="queryOptions">Options for the query</param>
         /// <param name="state">State parameter passed back to the bot after
         /// authentication/configuration flow</param>
         public ComposeExtensionQuery(string commandId = default(string), System.Collections.Generic.IList<ComposeExtensionParameter> parameters = default(System.Collections.Generic.IList<ComposeExtensionParameter>), ComposeExtensionQueryOptions queryOptions = default(ComposeExtensionQueryOptions), string state = default(string))
@@ -44,6 +45,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public System.Collections.Generic.IList<ComposeExtensionParameter> Parameters { get; set; }
 
         /// <summary>
+        /// Gets or sets options for the query
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "queryOptions")]
         public ComposeExtensionQueryOptions QueryOptions { get; set; }

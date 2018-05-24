@@ -19,11 +19,13 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Initializes a new instance of the ComposeExtensionResult class.
         /// </summary>
-        /// <param name="attachmentLayout">Hint for how to deal with multiple
+        /// <param name="attachmentLayout">Hint for how to display multiple
         /// attachments.</param>
         /// <param name="type">The type of the result</param>
         /// <param name="attachments">(Only when type is result)
         /// Attachments</param>
+        /// <param name="suggestedActions">(Only when type of auth or config)
+        /// Suggested actions</param>
         /// <param name="text">(Only when type is message) Text</param>
         public ComposeExtensionResult(string attachmentLayout = default(string), string type = default(string), System.Collections.Generic.IList<ComposeExtensionAttachment> attachments = default(System.Collections.Generic.IList<ComposeExtensionAttachment>), ComposeExtensionSuggestedAction suggestedActions = default(ComposeExtensionSuggestedAction), string text = default(string))
         {
@@ -35,7 +37,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         }
 
         /// <summary>
-        /// Gets or sets hint for how to deal with multiple attachments.
+        /// Gets or sets hint for how to display multiple attachments.
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "attachmentLayout")]
         public string AttachmentLayout { get; set; }
@@ -53,6 +55,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         public System.Collections.Generic.IList<ComposeExtensionAttachment> Attachments { get; set; }
 
         /// <summary>
+        /// Gets or sets (Only when type of auth or config) Suggested actions
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "suggestedActions")]
         public ComposeExtensionSuggestedAction SuggestedActions { get; set; }

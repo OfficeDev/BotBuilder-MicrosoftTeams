@@ -21,12 +21,10 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         /// <param name="uniqueId">Unique Id for the file.</param>
         /// <param name="fileType">Type of file.</param>
-        /// <param name="etag">ETag for the file.</param>
-        public FileInfoCard(string uniqueId = default(string), string fileType = default(string), object etag = default(object))
+        public FileInfoCard(string uniqueId = default(string), string fileType = default(string))
         {
             UniqueId = uniqueId;
             FileType = fileType;
-            Etag = etag;
         }
 
         /// <summary>
@@ -40,12 +38,6 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "fileType")]
         public string FileType { get; set; }
-
-        /// <summary>
-        /// Gets or sets eTag for the file.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "etag")]
-        public object Etag { get; set; }
 
     }
 }

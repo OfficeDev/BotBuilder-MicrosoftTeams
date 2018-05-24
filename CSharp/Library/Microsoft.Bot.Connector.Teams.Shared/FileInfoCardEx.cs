@@ -36,52 +36,46 @@
 namespace Microsoft.Bot.Connector.Teams.Models
 {
     /// <summary>
-    ///  Card extension methods.
+    /// File info card.
     /// </summary>
-    public static partial class CardExtensions
+    public partial class FileInfoCard
     {
         /// <summary>
-        /// Creates a new attachment from <see cref="O365ConnectorCard"/>.
+        /// Content type to be used in the type property.
         /// </summary>
-        /// <param name="card"> The instance of <see cref="O365ConnectorCard"/>.</param>
-        /// <returns> The generated attachment.</returns>
-        public static Attachment ToAttachment(this O365ConnectorCard card)
+        public const string ContentType = "application/vnd.microsoft.teams.card.file.info";
+
+        /// <summary>
+        /// Gets or sets the file name.
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public string Name
         {
-            return new Attachment
-            {
-                Content = card,
-                ContentType = O365ConnectorCard.ContentType
-            };
+            get; set;
         }
 
         /// <summary>
-        /// Creates a new attachment from <see cref="FileInfoCard"/>.
+        /// Gets or sets the URL to the file.
         /// </summary>
-        /// <param name="card"> The instance of <see cref="FileInfoCard"/>.</param>
-        /// <returns> The generated attachment.</returns>
-        public static Attachment ToAttachment(this FileInfoCard card)
+        [Newtonsoft.Json.JsonIgnore]
+        public string ContentUrl
         {
-            return new Attachment
-            {
-                Content = card,
-                ContentType = FileInfoCard.ContentType,
-                Name = card.Name,
-                ContentUrl = card.ContentUrl,
-            };
+            get; set;
         }
 
         /// <summary>
-        /// Creates a new attachment from <see cref="FileConsentCard"/>.
+        /// Creates a new <see cref="FileInfoCard"/> instance and initializes it from a <see cref="FileUploadInfo"/> object.
         /// </summary>
-        /// <param name="card"> The instance of <see cref="FileConsentCard"/>.</param>
-        /// <returns> The generated attachment.</returns>
-        public static Attachment ToAttachment(this FileConsentCard card)
+        /// <param name="fileUploadInfo">File upload info</param>
+        /// <returns>A new instance of the <see cref="FileInfoCard"/> class</returns>
+        public static FileInfoCard FromFileUploadInfo(FileUploadInfo fileUploadInfo)
         {
-            return new Attachment
+            return new FileInfoCard
             {
-                Content = card,
-                ContentType = FileConsentCard.ContentType,
-                Name = card.Name,
+                Name = fileUploadInfo.Name,
+                ContentUrl = fileUploadInfo.ContentUrl,
+                FileType = fileUploadInfo.FileType,
+                UniqueId = fileUploadInfo.UniqueId,
             };
         }
     }

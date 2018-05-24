@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\MembersAddedEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\MembersRemovedEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\TeamRenamedEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileInfoCardEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsAPI\**\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsConnectorClient.cs" />
