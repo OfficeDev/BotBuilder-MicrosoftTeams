@@ -307,4 +307,49 @@ describe('TeamsChatConnector', function () {
     });
   });
 
+  describe('#onFileConsent()', function () {
+    it('should receive file consent events', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onFileConsentCardResponse((event, response, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.fileConsentInvokeName,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onFileConsentCardResponse handler was not called');
+        done();
+      })
+    });
+
+    it('should call invoke handler if no onFileConsentCardResponse handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.fileConsentInvokeName,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });
+  });
 });

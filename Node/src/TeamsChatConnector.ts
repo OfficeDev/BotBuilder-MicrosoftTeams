@@ -37,12 +37,14 @@ import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
 import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, ISigninStateVerificationQuery, TeamInfo } from './models';
+import { IFileConsentCardResponse } from './models/FileConsentCardResponse';
 
 var WebResource = msRest.WebResource;
 
 export type ComposeExtensionHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -55,12 +57,13 @@ export interface ReplyResult {
 }
 
 export class TeamsChatConnector extends builder.ChatConnector {
-  private static o365CardActionInvokeName:string = 'actionableMessage/executeAction';
-  private static signinStateVerificationInvokeName:string = 'signin/verifyState';
-  private static queryInvokeName:string = 'composeExtension/query';
-  private static querySettingUrlInvokeName:string = 'composeExtension/querySettingUrl';
-  private static selectItemInvokeName:string = 'composeExtension/selectItem';
-  private static settingInvokeName:string = 'composeExtension/setting';
+  private static o365CardActionInvokeName = 'actionableMessage/executeAction';
+  private static signinStateVerificationInvokeName = 'signin/verifyState';
+  private static queryInvokeName = 'composeExtension/query';
+  private static querySettingUrlInvokeName = 'composeExtension/querySettingUrl';
+  private static selectItemInvokeName = 'composeExtension/selectItem';
+  private static settingInvokeName = 'composeExtension/setting';
+  private static fileConsentInvokeName = 'fileConsent/invoke';
 
   private allowedTenants: string[];
 
@@ -70,6 +73,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private querySettingsUrlHandler: ComposeExtensionHandlerType;
   private settingsUpdateHandler: ComposeExtensionHandlerType;
   private selectItemInvokeHandler: ComposeExtensionHandlerType;
+  private fileConsentCardResponseHandler: FileConsentCardResponseHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -293,6 +297,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.selectItemInvokeHandler = handler;
   }
 
+  public onFileConsentCardResponse(handler: FileConsentCardResponseHandlerType) {
+    this.fileConsentCardResponseHandler = handler;
+  }
+
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
@@ -350,6 +358,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
           case TeamsChatConnector.signinStateVerificationInvokeName:
             if (this.signinStateVerificationHandler) {
               invokeHandler = this.signinStateVerificationHandler.bind(this);
+            }
+            break;
+
+          case TeamsChatConnector.fileConsentInvokeName:
+            if (this.fileConsentCardResponseHandler) {
+              invokeHandler = this.fileConsentCardResponseHandler.bind(this);
             }
             break;
 
