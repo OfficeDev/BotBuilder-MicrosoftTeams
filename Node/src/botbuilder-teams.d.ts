@@ -907,16 +907,6 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public fetchTeamInfo(serviceUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void;
 
   /**
-  *  @deprecated Since version 0.1.2 Will be deleted in version 0.1.5. Use fetchMembers(serviceUrl, conversationId, callback).
-  *  Return a list of members in a conversation or channel.
-  *  @param {string} serviceUrl - The team's service url, which should be taken from a previous message received from that team. If the wrong service url is used, the team will not be found and the method wil fail.
-  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
-  *  @param {string} tenantId - The tenantId, you can look it up in session object.
-  *  @param {function} callback - This callback returns err or result.
-  */
-  public fetchMemberList(serviceUrl: string, conversationId: string, tenantId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
-
-  /**
   *  Return a list of members in team or chat.
   *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
   *  @param {string} conversationId - The team id or chat conversation id.
