@@ -1098,32 +1098,38 @@ export class TeamMention extends MentionEntity {
 /**
  * File consent card builder class.
  */
-export class FileConsentCard implements builder.IIsAttachment {
+export declare class FileConsentCard implements builder.IIsAttachment {
 
   /** Creates a new file consent card builder. */
-  constructor(private session?: builder.Session);
+  constructor(session?: builder.Session);
 
   /** Name of the file. */
-  public name(name: string): FileConsentCard;
+  name(name: string): FileConsentCard;
 
   /** Description of the file. */
-  public description(description: string, ...args: any[]): FileConsentCard;
+  description(description: string, ...args: any[]): FileConsentCard;
 
   /** Approximate size of the file in bytes. */
-  public sizeInBytes(sizeInBytes: number): FileConsentCard;
+  sizeInBytes(sizeInBytes: number): FileConsentCard;
 
   /** Context to return if the user accepts the proposed file upload. */
-  public acceptContext(context: any): FileConsentCard;
+  acceptContext(context: any): FileConsentCard;
 
   /** Context to return if the user declines the proposed file upload. */
-  public declineContext(context: any): FileConsentCard;
+  declineContext(context: any): FileConsentCard;
 
   /** 
    * Context to return whether the user accepts or declines the proposed file upload. 
    * Shorthand for calls to `acceptContext(context)` and `declineContext(context)` with the same value.
    */
-  public context(context: any): FileConsentCard;
+  context(context: any): FileConsentCard;
+
+  /** Returns the JSON for the card */
+  toAttachment(): builder.IAttachment;
 }
+
+/** Name of the file consent invoke activity */
+export const fileConsentInvokeName = "fileConsent/invoke";
 
 /** Represents the value of the invoke activity sent when the user acts on a file consent card. */
 export interface IFileConsentCardResponse {
@@ -1148,6 +1154,25 @@ export enum FileConsentCardAction {
   decline = "decline",
 }
 
+/** Information about the file to be uploaded. */
+export interface IFileUploadInfo {
+
+  /** Name of the file. */
+  name: string;
+
+  /** URL to an upload session that the bot can use to set the file contents. */
+  uploadUrl: string;
+
+  /** URL to file. */
+  contentUrl: string;
+
+  /** ID that uniquely identifies the file. */
+  uniqueId: string;
+
+  /** Type of the file. */
+  fileType: string;
+}
+
 /** Represents a file download info attachment. */
 export interface IFileDownloadInfo extends builder.IAttachment {
 
@@ -1168,41 +1193,44 @@ export interface IFileDownloadInfoContent {
 /**
 * Helpers for working with file download info attachments.
 */
-export class FileDownloadInfo {
+export declare class FileDownloadInfo {
 
   /** Content type of a file download info attachment. */
-  public static contentType = "application/vnd.microsoft.teams.file.download.info";
+  static contentType;
 
   /**
    * Returns the attachments in the list that are of type file download info.
    * @param attachments the attachments in the message
    */
-  public static filter(attachments: builder.IAttachment[]|undefined): IFileDownloadInfo[]|undefined;
+  static filter(attachments: builder.IAttachment[]|undefined): IFileDownloadInfo[]|undefined;
 }
 
 /**
  * File info card builder class.
  */
-export class FileInfoCard implements builder.IIsAttachment {
+export declare class FileInfoCard implements builder.IIsAttachment {
 
   /** Creates a new file info card builder. */
-  constructor(private session?: builder.Session);
+  constructor(session?: builder.Session);
 
   /** Name of the file. */
-  public name(name: string): FileInfoCard;
+  name(name: string): FileInfoCard;
 
   /** URL to the file. */
-  public contentUrl(url: string): FileInfoCard;
+  contentUrl(url: string): FileInfoCard;
 
   /** Unique ID of the file. */
-  public uniqueId(uniqueId: string): FileInfoCard;
+  uniqueId(uniqueId: string): FileInfoCard;
 
   /** Type of the file. */
-  public fileType(fileType: string): FileInfoCard;
+  fileType(fileType: string): FileInfoCard;
 
   /**
    * Creates a file info card from the data in a `IFileUploadInfo` object.
    * @param uploadInfo The object containing the information that should be used to populate the card.
    */
-  public static fromFileUploadInfo(uploadInfo: IFileUploadInfo): FileInfoCard;
+  static fromFileUploadInfo(uploadInfo: IFileUploadInfo): FileInfoCard;
+
+  /** Returns the JSON for the card */
+  toAttachment(): builder.IAttachment;
 }
