@@ -147,9 +147,44 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
+  *  Return members in a team or channel with pagination
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {function} callback - This callback returns err or result.
+  *  @param {function} pageSize - How many members to fetch per page
+  *  @param {function} continuationToken - continuationToken if this is a subsequent call to fetch more members
+  */
+  public fetchPagedMembers(
+    serverUrl: string,
+    conversationId: string,
+    callback: (err: Error, result: ChannelAccount[]) => void,
+    pageSize?: number,
+    continuationToken?: string): void {
+    let options = {
+      pageSize: pageSize,
+      continuationToken: continuationToken,
+      customHeaders: {},
+      jar: false
+    };
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            "Authorization": "Bearer " + token
+          };
+          remoteQuery.fetchPagedMemberList(conversationId, options, callback);
+        } else {
+          return callback(new Error("Failed to authorize request"), null);
+        }
+    });
+  }
+
+
+  /**
   *  Return a newly started reply chain address in channel
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} channelId - The channel id, will post in the channel.  
+  *  @param {string} channelId - The channel id, will post in the channel.
   *  @param {builder.IMessage|builder.IIsMessage} message - The message to post in the channel.
   *  @param {function} callback - This callback returns err or result.
   */
@@ -186,7 +221,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 
             if (result && result.hasOwnProperty("id") && result.hasOwnProperty("activityId"))
             {
-              var messageAddress = <builder.IChatConnectorAddress>iMessage.address;              
+              var messageAddress = <builder.IChatConnectorAddress>iMessage.address;
               var address: builder.IChatConnectorAddress = <builder.IChatConnectorAddress>{
                 ... messageAddress,
                 channelId : 'msteams',
@@ -198,22 +233,22 @@ export class TeamsChatConnector extends builder.ChatConnector {
                   delete address.user;
               }
 
-              return callback(null, address);          
+              return callback(null, address);
             }
             else
             {
               let error = new Error("Failed to start reply chain: no conversation ID and activity ID returned.");
-              return callback(error, null);            
+              return callback(error, null);
             }
-          } 
+          }
 
-          remoteQuery.beginReplyChainInChannel(channelId, iMessage, options, innerCallback);         
-        } 
+          remoteQuery.beginReplyChainInChannel(channelId, iMessage, options, innerCallback);
+        }
         else {
           if (callback)
           {
             return callback(new Error('Failed to authorize request'), null);
-          }          
+          }
         }
     });
   }
@@ -252,7 +287,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void {
     this.signinStateVerificationHandler = handler;
   }
- 
+
   public onQuery(commandId: string, handler: ComposeExtensionHandlerType): void {
     if (!this.queryHandlers) {
       this.queryHandlers = {};
