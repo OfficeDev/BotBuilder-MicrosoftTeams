@@ -346,7 +346,7 @@ Teams.prototype.fetchMemberList = function(conversationId, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Teams.prototype.fetchPagedMemberList = function(conversationId, options, callback) {
+Teams.prototype.fetchMemberListWithPaging = function(conversationId, options, callback) {
   /* jshint validthis: true */
  let client = this.client;
  if(!callback && typeof options === 'function') {
