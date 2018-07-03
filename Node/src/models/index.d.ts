@@ -83,6 +83,21 @@ export interface ChannelAccount {
 
 /**
  * @class
+ * Initializes a new instance of the TeamsChannelAccountsResult class.
+ * @constructor
+ * The response from fetching conversation members
+ * @member {string} [continuationToken] the continuationToken that determines if caller can making another call to fetch more members
+ *
+ * @member {ChannelAccount[]} [members] An array of members
+ *
+ */
+export interface TeamsChannelAccountsResult {
+  continuationToken: string;
+  members: ChannelAccount[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the ConversationList class.
  * @constructor
  * List of channels under a team
@@ -347,7 +362,7 @@ export interface IO365ConnectorCardOpenUri extends IO365ConnectorCardActionBase 
 /**
  * @interface
  * Interface of O365 connector card HttpPOST action
- * 
+ *
  * @member {string} [body] Content to be posted back to bots via invoke.
  *
  */
@@ -358,9 +373,9 @@ export interface IO365ConnectorCardHttpPOST extends IO365ConnectorCardActionBase
 /**
  * @interface
  * Interface of O365 connector card ActionCard action
- * 
+ *
  * @member {array} [inputs] Set of inputs contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase
- * 
+ *
  * @member {array} [actions] Set of actions contained in this ActionCard whose each item can be in any subtype of IO365ConnectorCardInputBase except IO365ConnectorCardActionCard, as nested ActionCard is forbidden.
  *
  */
@@ -372,15 +387,15 @@ export interface IO365ConnectorCardActionCard extends IO365ConnectorCardActionBa
 /**
  * @interface
  * Base interface of O365 connector card input for ActionCard action
- * 
+ *
  * @member {string} [type] Input type name
- * 
+ *
  * @member {string} [id] Input Id. It must be unique per entire O365 connector card.
- * 
+ *
  * @member {boolean} [isRequired] Define if this input is a required field. Default value is false.
- * 
+ *
  * @member {string} [title] Input title that will be shown as the placeholder
- * 
+ *
  * @member {string} [value] Default value for this input field
  */
 export interface IO365ConnectorCardInputBase {
@@ -398,11 +413,11 @@ export interface IIsO365ConnectorCardInputBase {
 /**
  * @interface
  * Interface of O365 connector card text input
- * 
+ *
  * @member {boolean} [isMultiline] Define if text input is allowed for multiple lines. Default value is false.
- * 
+ *
  * @member {number} [maxLength] Maximum length of text input. Default value is unlimited.
- *  
+ *
  */
 export interface IO365ConnectorCardTextInput extends IO365ConnectorCardInputBase{
   isMultiline?: boolean;
@@ -412,9 +427,9 @@ export interface IO365ConnectorCardTextInput extends IO365ConnectorCardInputBase
 /**
  * @interface
  * Interface of O365 connector card date input
- * 
+ *
  * @member {boolean} [includeTime] Include time input field. Default value  is false (date only).
- *  
+ *
  */
 export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase{
   includeTime?: boolean;
@@ -423,18 +438,18 @@ export interface IO365ConnectorCardDateInput extends IO365ConnectorCardInputBase
 /**
  * @interface
  * Interface of O365 connector card multiple choice input
- * 
+ *
  * @member {array} [choices] Set of choices whose each item can be in any subtype of IO365ConnectorCardMultichoiceInputChoice.
- * 
+ *
  * @member {O365ConnectorCardMultichoiceInputStyle} [style] Choice item rendering style. Could be 'compact' (default) or 'expanded'.
- * 
+ *
  * @member {boolean} [isMultiSelect] Define if this input field allows multiple selections. Default value is false.
- *  
+ *
  */
 export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardInputBase{
   choices: IO365ConnectorCardMultichoiceInputChoice[];
   style?: O365ConnectorCardMultichoiceInputStyle;
-  isMultiSelect?: boolean; 
+  isMultiSelect?: boolean;
 }
 
 /**
@@ -447,11 +462,11 @@ export type O365ConnectorCardMultichoiceInputStyle = 'compact' | 'expanded';
 /**
  * @interface
  * Interface of O365 connector card multiple choice input item
- * 
+ *
  * @member {string} [display] The text rendered on ActionCard.
- * 
+ *
  * @member {string} [value] The value received as results.
- * 
+ *
  */
 export interface IO365ConnectorCardMultichoiceInputChoice {
   display: string;
@@ -465,11 +480,11 @@ export interface IIsO365ConnectorCardMultichoiceInputChoice {
 /**
  * @interface
  * Interface of O365 connector card HttpPOST invoke query
- * 
+ *
  * @member {string} [body] The results of body string defined in IO365ConnectorCardHttpPOST with substituted input values
- * 
+ *
  * @member {string} [actionId] Action Id associated with the HttpPOST action button triggered, defined in IO365ConnectorCardActionBase.
- *  
+ *
  */
 export interface IO365ConnectorCardActionQuery {
   body: string;
@@ -479,9 +494,9 @@ export interface IO365ConnectorCardActionQuery {
 /**
  * @interface
  * Interface of signin auth state verification query
- * 
+ *
  * @member {string} [state] The state string originally received when the signin web flow is finished with a state posted back to client via tab SDK microsoftTeams.authentication.notifySuccess(state)
- *  
+ *
  */
 export interface ISigninStateVerificationQuery {
   state: string;
