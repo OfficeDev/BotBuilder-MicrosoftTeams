@@ -56,6 +56,14 @@ export interface ChannelAccount {
   userPrincipalName: string;
 }
 
+export interface TeamsChannelAccountsResult {
+  /** If exists, the caller can continue to call the API with continuationToken to fetch more members */
+  continuationToken: string;
+
+  /** A array of team or chat members */
+  members: ChannelAccount[];
+}
+
 /** Information about a channel in a team. */
 export interface ChannelInfo {
   /** Channel id */
@@ -312,7 +320,7 @@ export interface IO365ConnectorCardMultichoiceInput extends IO365ConnectorCardIn
   style?: O365ConnectorCardMultichoiceInputStyle;
 
   /** Determines if multiple selections are allowed. Default value is false. */
-  isMultiSelect?: boolean; 
+  isMultiSelect?: boolean;
 }
 
 /**
@@ -348,9 +356,9 @@ export interface IO365ConnectorCardActionQuery {
 /** Card builder class that simplifies building O365 connector cards. */
 export declare class O365ConnectorCard implements builder.IIsAttachment {
 
-  /** 
-   * Creates a new O365 connector card. 
-   * @param session (Optional) will be used to localize any text. 
+  /**
+   * Creates a new O365 connector card.
+   * @param session (Optional) will be used to localize any text.
    */
   constructor(session?: builder.Session);
 
@@ -368,7 +376,7 @@ export declare class O365ConnectorCard implements builder.IIsAttachment {
 
   /** Set of sections for the current card. */
   sections(list: IO365ConnectorCardSection[]|IIsO365ConnectorCardSection[]): O365ConnectorCard;
-  
+
   /** Set of actions for the current card. */
   potentialAction(list: IO365ConnectorCardActionBase[]|IIsO365ConnectorCardActionBase[]): O365ConnectorCard;
 
@@ -379,9 +387,9 @@ export declare class O365ConnectorCard implements builder.IIsAttachment {
 /** Card builder class that simplifies building O365 connector card sections. */
 export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSection {
 
-  /** 
-   * Creates a new O365 connector card section. 
-   * @param session (Optional) will be used to localize any text. 
+  /**
+   * Creates a new O365 connector card section.
+   * @param session (Optional) will be used to localize any text.
    */
   constructor(session?: builder.Session);
 
@@ -417,7 +425,7 @@ export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSec
 
   /** Set of actions for the current section. */
   potentialAction(list: IO365ConnectorCardActionBase[]|IIsO365ConnectorCardActionBase[]): O365ConnectorCardSection;
-  
+
   /** Returns the JSON for the current section */
   toSection(): IO365ConnectorCardSection;
 }
@@ -425,9 +433,9 @@ export declare class O365ConnectorCardSection implements IIsO365ConnectorCardSec
 /** Card builder class that simplifies building O365 connector card section facts. */
 export declare class O365ConnectorCardFact implements IIsO365ConnectorCardFact {
 
-  /** 
-   * Creates a new O365 connector card section fact. 
-   * @param session (Optional) will be used to localize any text. 
+  /**
+   * Creates a new O365 connector card section fact.
+   * @param session (Optional) will be used to localize any text.
    */
   constructor(session?: builder.Session);
 
@@ -444,10 +452,10 @@ export declare class O365ConnectorCardFact implements IIsO365ConnectorCardFact {
 /** Card builder class that simplifies building O365 connector card section images. */
 export declare class O365ConnectorCardImage implements IIsO365ConnectorCardImage {
 
-  /** 
-   * Creates a new O365 connector card section image. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card section image.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** URL for the image. */
@@ -463,10 +471,10 @@ export declare class O365ConnectorCardImage implements IIsO365ConnectorCardImage
 /** Card builder class that simplifies building O365 connector ViewAction action. */
 export declare class O365ConnectorCardViewAction implements IIsO365ConnectorCardActionBase {
 
-  /** 
-   * Creates a new O365 connector card ViewAction action object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card ViewAction action object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** Name of the action that will be used as button title. */
@@ -485,13 +493,13 @@ export declare class O365ConnectorCardViewAction implements IIsO365ConnectorCard
 /** Card builder class that simplifies building O365 connector OpenUri action. */
 export declare class O365ConnectorCardOpenUri implements IIsO365ConnectorCardActionBase {
 
-  /** 
-   * Creates a new O365 connector card OpenUri action object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card OpenUri action object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
-  /** Name of the action that will be used as button title. */  
+  /** Name of the action that will be used as button title. */
   name(text: string|string[], ...args: any[]): O365ConnectorCardOpenUri;
 
   /** Action Id. */
@@ -511,7 +519,7 @@ export declare class O365ConnectorCardOpenUri implements IIsO365ConnectorCardAct
 
   /** Target URL for Windows phone. */
   windowsPhone(targetUrl: string): O365ConnectorCardOpenUri;
-  
+
   /** Returns the JSON for the current action. */
   toAction(): IO365ConnectorCardOpenUri;
 }
@@ -519,13 +527,13 @@ export declare class O365ConnectorCardOpenUri implements IIsO365ConnectorCardAct
 /** Card builder class that simplifies building O365 connector HttpPOST action. */
 export declare class O365ConnectorCardHttpPOST implements IIsO365ConnectorCardActionBase {
 
-  /** 
-   * Creates a new O365 connector card HttpPOST action object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card HttpPOST action object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
-  /** Name of the action that will be used as button title. */  
+  /** Name of the action that will be used as button title. */
   name(text: string|string[], ...args: any[]): O365ConnectorCardHttpPOST;
 
   /** Action Id. */
@@ -533,7 +541,7 @@ export declare class O365ConnectorCardHttpPOST implements IIsO365ConnectorCardAc
 
   /** Content to be posted back to bots via invoke. */
   body(text: string): O365ConnectorCardHttpPOST;
-  
+
   /** Returns the JSON for the current action. */
   toAction(): IO365ConnectorCardHttpPOST;
 }
@@ -541,13 +549,13 @@ export declare class O365ConnectorCardHttpPOST implements IIsO365ConnectorCardAc
 /** Card builder class that simplifies building O365 connector ActionCard action. */
 export declare class O365ConnectorCardActionCard implements IIsO365ConnectorCardActionBase {
 
-  /** 
-   * Creates a new O365 connector card ActionCard action object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card ActionCard action object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
-  /** Name of the action that will be used as button title. */  
+  /** Name of the action that will be used as button title. */
   name(text: string|string[], ...args: any[]): O365ConnectorCardActionCard;
 
   /** Action Id. */
@@ -558,7 +566,7 @@ export declare class O365ConnectorCardActionCard implements IIsO365ConnectorCard
 
   /** Set of inputs contained in this ActionCard. */
   inputs(list: IO365ConnectorCardInputBase[]|IIsO365ConnectorCardInputBase[]): O365ConnectorCardActionCard;
-  
+
   /** Returns the JSON for the current action. */
   toAction(): IO365ConnectorCardActionCard;
 }
@@ -566,10 +574,10 @@ export declare class O365ConnectorCardActionCard implements IIsO365ConnectorCard
 /** Card builder class that simplifies building O365 connector text inputs. */
 export declare class O365ConnectorCardTextInput implements IIsO365ConnectorCardInputBase {
 
-  /** 
-   * Creates a new O365 connector card TextInput object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card TextInput object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** Input Id. It must be unique per entire O365 connector card. */
@@ -597,10 +605,10 @@ export declare class O365ConnectorCardTextInput implements IIsO365ConnectorCardI
 /** Card builder class that simplifies building O365 connector date inputs. */
 export declare class O365ConnectorCardDateInput implements IIsO365ConnectorCardInputBase {
 
-  /** 
-   * Creates a new O365 connector card DateInput object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card DateInput object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** Input Id. It must be unique per entire O365 connector card. */
@@ -625,10 +633,10 @@ export declare class O365ConnectorCardDateInput implements IIsO365ConnectorCardI
 /** Card builder class that simplifies building O365 connector multiple-choice inputs. */
 export declare class O365ConnectorCardMultichoiceInput implements IIsO365ConnectorCardInputBase {
 
-  /** 
-   * Creates a new O365 connector card MultichoiceInput object. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card MultichoiceInput object.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** Input Id. It must be unique per entire O365 connector card. */
@@ -665,10 +673,10 @@ export declare class O365ConnectorCardMultichoiceInput implements IIsO365Connect
 /** Card builder class that simplifies building O365 connector MultichoiceInput choice items. */
 export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365ConnectorCardMultichoiceInputChoice {
 
-  /** 
-   * Creates a new O365 connector card MultichoiceInput choice item. 
-   * @param session (Optional) will be used to localize any text. 
-   */  
+  /**
+   * Creates a new O365 connector card MultichoiceInput choice item.
+   * @param session (Optional) will be used to localize any text.
+   */
   constructor(session?: builder.Session);
 
   /** The text rendered on ActionCard. */
@@ -682,7 +690,7 @@ export declare class O365ConnectorCardMultichoiceInputChoice implements IIsO365C
 }
 
 
-/** Represents the value of the invoke message sent at the end of the bot sign-in flow */ 
+/** Represents the value of the invoke message sent at the end of the bot sign-in flow */
 export interface ISigninStateVerificationQuery {
   /** The state string provided to `microsoftTeams.authentication.notifySuccess` at the end of the bot sign-in flow. */
   state: string;
@@ -763,9 +771,9 @@ export interface IComposeExtensionResponse {
 /** Response builder class that simplifies constructing the response to a compose extension invoke message. */
 export class ComposeExtensionResponse {
 
-  /** 
-   * Creates a new compose extension response. 
-   * @param type The kind of response to create. 
+  /**
+   * Creates a new compose extension response.
+   * @param type The kind of response to create.
    */
   constructor(type: ComposeExtensionResultType);
 
@@ -884,9 +892,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public static querySettingUrlInvokeName: string;
   public static settingInvokeName: string;
 
-  /** 
+  /**
    * Creates a new instance of the TeamsChatConnector.
-   * @param settings (Optional) config params that let you specify the bots App ID & Password you were assigned in the Bot Frameworks developer portal. 
+   * @param settings (Optional) config params that let you specify the bots App ID & Password you were assigned in the Bot Frameworks developer portal.
    */
   constructor(settings?: builder.IChatConnectorSettings);
 
@@ -913,6 +921,43 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - Function to invoke with the list of members.
   */
   public fetchMembers(serviceUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void;
+
+  /**
+  *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {function} callback - Function to invoke with the list of members.
+  */
+ public fetchMembersWithPaging(serviceUrl: string, conversationId: string, callback: (err: Error, result: TeamsChannelAccountsResult) => void) : void;
+
+   /**
+  *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {number} pageSize - Specify the size of paging to fetch members.
+  *  @param {function} callback - Function to invoke with the list of members.
+  */
+ public fetchMembersWithPaging(serviceUrl: string, conversationId: string, pageSize: number, callback: (err: Error, result: TeamsChannelAccountsResult) => void) : void;
+
+  /**
+  *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {string} continuationToken - Pass this continuationToken to fetch more members, this is used in subsuquent calls of the API.
+  *  @param {function} callback - Function to invoke with the list of members.
+  */
+ public fetchMembersWithPaging(serviceUrl: string, conversationId: string, continuationToken: string, callback: (err: Error, result: TeamsChannelAccountsResult) => void) : void;
+
+  /**
+  *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {number} pageSize - Specify the size of paging to fetch members.
+  *  @param {string} continuationToken - Pass this continuationToken to fetch more members, this is used in subsuquent calls of the API.
+  *  @param {function} callback - Function to invoke with the list of members.
+  */
+ public fetchMembersWithPaging(serviceUrl: string, conversationId: string, pageSize: number, continuationToken: string, callback: (err: Error, result: TeamsChannelAccountsResult) => void) : void;
+
 
   /**
   *  Start a reply chain in a channel.
@@ -945,7 +990,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when a signin state verification invoke activity is received.
   */
   public onSigninStateVerification(handler: SigninStateVerificationHandlerType): void;
-  
+
   /**
   *  Set a handler for compose extension queries.
   *  @param commandId The command id.
@@ -979,7 +1024,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
 }
 
 /**
- * Determines where to add the mention text to the message. 
+ * Determines where to add the mention text to the message.
  * @deprecated Construct a MentionEntity instance, and insert its `text` property into the message.
  */
 export enum MentionTextLocation {
@@ -992,9 +1037,9 @@ export enum MentionTextLocation {
 
 export class TeamsMessage extends builder.Message {
 
-  /** 
-   * Creates a new O365 connector card. 
-   * @param session (Optional) will be used to localize any text. 
+  /**
+   * Creates a new O365 connector card.
+   * @param session (Optional) will be used to localize any text.
    */
   constructor(session?: builder.Session);
 
@@ -1033,7 +1078,7 @@ export class TeamsMessage extends builder.Message {
   public routeReplyToGeneralChannel(): TeamsMessage;
 
   /**
-  *  Gets the tenant id of the Office 365 tenant in which this message was sent. 
+  *  Gets the tenant id of the Office 365 tenant in which this message was sent.
   *  @param {IEvent} message - The message sent to bot.
   */
   public static getTenantId(message: builder.IEvent): string;
@@ -1118,8 +1163,8 @@ export declare class FileConsentCard implements builder.IIsAttachment {
   /** Context to return if the user declines the proposed file upload. */
   declineContext(context: any): FileConsentCard;
 
-  /** 
-   * Context to return whether the user accepts or declines the proposed file upload. 
+  /**
+   * Context to return whether the user accepts or declines the proposed file upload.
    * Shorthand for calls to `acceptContext(context)` and `declineContext(context)` with the same value.
    */
   context(context: any): FileConsentCard;
@@ -1187,7 +1232,7 @@ export interface IFileDownloadInfoContent {
   fileType: string;
 
   /** Short-lived download url for the file. */
-  downloadUrl: string;    
+  downloadUrl: string;
 }
 
 /**
