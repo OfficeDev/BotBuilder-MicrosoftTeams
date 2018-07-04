@@ -127,6 +127,10 @@ namespace Microsoft.Bot.Connector.Teams
                                 return false;
                             }
                         }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
                 catch (Exception)

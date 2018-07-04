@@ -133,6 +133,28 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         }
 
         /// <summary>
+        /// Tenant filtering test with malformatted tenant Id.
+        /// </summary>
+        /// <returns>Task tracking operation.</returns>
+        [TestMethod]
+        public async Task NetFramework_TenantFiltering_MalformattedTenantId()
+        {
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityAtMention.json"));
+            var channelData = JsonConvert.DeserializeObject<TeamsChannelData>(sampleActivity.ChannelData.ToString());
+            channelData.Tenant.Id = "malformatted tenant id";
+            sampleActivity.ChannelData = JObject.FromObject(channelData);
+            HttpActionContext actionContext = new HttpActionContext();
+            actionContext.ActionArguments.Add("Activity", sampleActivity);
+
+            TenantFilterAttribute attribute = new TenantFilterAttribute();
+
+            await attribute.OnActionExecutingAsync(actionContext, new System.Threading.CancellationToken());
+
+            Assert.IsNotNull(actionContext.Response);
+            Assert.AreEqual(actionContext.Response.StatusCode, System.Net.HttpStatusCode.Forbidden);
+        }
+
+        /// <summary>
         /// Tenant filtering test with allowed tenant Id.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
