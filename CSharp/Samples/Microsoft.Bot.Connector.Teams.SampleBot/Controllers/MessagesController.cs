@@ -36,22 +36,11 @@
 namespace Microsoft.Bot.Connector.Teams.SampleBot.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Configuration;
-    using System.Diagnostics;
-    using System.Linq;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
-    using Autofac;
-    using Builder.Dialogs;
-    using Builder.Dialogs.Internals;
     using Microsoft.Bot.Connector.Teams.SampleBot.Shared;
-    using Models;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using Polly;
 
     /// <summary>

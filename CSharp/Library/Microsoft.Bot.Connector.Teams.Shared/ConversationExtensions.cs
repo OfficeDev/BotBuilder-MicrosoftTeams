@@ -38,10 +38,8 @@ namespace Microsoft.Bot.Connector.Teams
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector.Teams.Models;
-    using Microsoft.Rest;
     using Newtonsoft.Json.Linq;
 
     /// <summary>

@@ -36,7 +36,6 @@
 namespace Microsoft.Bot.Connector.Teams
 {
     using System;
-    using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
     using System.Net;
@@ -45,8 +44,6 @@ namespace Microsoft.Bot.Connector.Teams
     using System.Threading.Tasks;
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
-    using Models;
-    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Filters request based on Tenant Id.
