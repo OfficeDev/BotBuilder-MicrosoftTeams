@@ -43,7 +43,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "objectId")]
         public string ObjectId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets given name part of the user name.
         /// </summary>
