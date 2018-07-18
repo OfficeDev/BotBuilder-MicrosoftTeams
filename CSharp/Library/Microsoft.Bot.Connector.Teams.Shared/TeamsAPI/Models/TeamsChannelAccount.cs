@@ -67,12 +67,6 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "userPrincipalName")]
         public string UserPrincipalName { get; set; }
-        
-        /// <summary>
-        /// Sets the ObjectId property with the value of aadObjectId.
-        /// This is how the AAD object Id is passed from a bot framework message.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "aadObjectId")]
-        private string AADObjectId { set { ObjectId = value; } }
+
     }
 }

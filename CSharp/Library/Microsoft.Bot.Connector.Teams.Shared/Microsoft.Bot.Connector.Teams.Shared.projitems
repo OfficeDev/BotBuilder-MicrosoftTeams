@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FileInfoCardEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsAPI\**\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TeamsChannelAccountEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsConnectorClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TenantFiltering.cs" />
   </ItemGroup>
