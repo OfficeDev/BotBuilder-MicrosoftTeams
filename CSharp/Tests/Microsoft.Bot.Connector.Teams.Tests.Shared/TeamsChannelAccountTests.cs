@@ -42,13 +42,15 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
     using Newtonsoft.Json;
     using System.Linq;
 
+    /// <summary>
+    /// TeamsChannelAccount tests
+    /// </summary>
     [TestClass]
     public class TeamsChannelAccountTests
     {
         /// <summary>
-        /// Get teams conversation members async test.
+        /// Parse out the AAD Object Id from a conversationUpdate event.
         /// </summary>
-        /// <returns>Task tracking operation.</returns>
         [TestMethod]
         public void AsTeamsChannelAccount_ParsesAADIdCorrectlyFromConversationUpdate()
         {
@@ -62,9 +64,8 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
         }
 
         /// <summary>
-        /// Get teams conversation members async test.
+        /// Parse out the AAD Object Id from a message event.
         /// </summary>
-        /// <returns>Task tracking operation.</returns>
         [TestMethod]
         public void AsTeamsChannelAccount_ParsesAADIdCorrectlyFromMessage()
         {
@@ -78,9 +79,8 @@ namespace Microsoft.Bot.Connector.Teams.Tests.Shared
         }
 
         /// <summary>
-        /// Get teams conversation members async test.
+        /// Parse out the AAD Object Id from a roster response.
         /// </summary>
-        /// <returns>Task tracking operation.</returns>
         [TestMethod]
         public void AsTeamsChannelAccount_ParsesAADIdCorrectlyFromRoster()
         {
