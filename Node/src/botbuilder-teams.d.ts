@@ -78,6 +78,9 @@ export interface TeamInfo {
   /** Team id */
   id: string;
 
+  /** AAD group id of the team */
+  aadGroupId?: string;
+
   /** Name of the team */
   name?: string;
 }
