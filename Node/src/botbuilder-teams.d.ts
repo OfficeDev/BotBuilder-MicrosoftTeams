@@ -1241,7 +1241,7 @@ export interface IFileDownloadInfoContent {
 export declare class FileDownloadInfo {
 
   /** Content type of a file download info attachment. */
-  static contentType;
+  static contentType: string;
 
   /**
    * Returns the attachments in the list that are of type file download info.
