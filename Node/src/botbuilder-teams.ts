@@ -68,3 +68,6 @@ export * from './models/FileConsentCard';
 export * from './models/FileConsentCardResponse';
 export * from './models/FileDownloadInfo';
 export * from './models/FileInfoCard';
+export * from './models/AdaptiveCard';
+export * from './models/TaskModuleAction';
+export * from './models/TaskModuleResponse';

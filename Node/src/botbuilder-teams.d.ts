@@ -33,6 +33,7 @@
 
 
 import * as builder from 'botbuilder';
+import * as ac from "adaptivecards";
 
 
 /** Information about a Microsoft Teams user. */
@@ -884,6 +885,8 @@ export type ComposeExtensionHandlerType = (event: builder.IEvent, query: Compose
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
+export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: any, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
+export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleRequestOfSubmit, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1021,6 +1024,18 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when a file consent card invoke activity is received.
   */
   public onFileConsentCardResponse(handler: FileConsentCardResponseHandlerType): void;
+
+  /**
+  *  Set a handler that is called when an invoke request to fetch task module is received .
+  *  @param handler The function to execute when an invoke request to fetch task module is received.
+  */
+  public onTaskModuleFetch(handler: TaskModuleFetchHandlerType): void;
+
+  /**
+  *  Set a handler that is called when an invoke request to submit task module results is received .
+  *  @param handler The function to execute when an invoke request to submit task module results is received.
+  */
+  public onTaskModuleSubmit(handler: TaskModuleSubmitHandlerType): void;
 }
 
 /**
@@ -1278,4 +1293,328 @@ export declare class FileInfoCard implements builder.IIsAttachment {
 
   /** Returns the JSON for the card */
   toAttachment(): builder.IAttachment;
+}
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'version' property */
+export type IAdaptiveCardVersion = ac.IAdaptiveCard['version'];
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'backgroundImage' property */
+export type IAdaptiveCardBackgroundImage = ac.IAdaptiveCard['backgroundImage'];
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'body' property */
+export type IAdaptiveCardBody = ac.IAdaptiveCard['body'];
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'action' property of actions array */
+export type IAdaptiveCardAction = ac.IAdaptiveCard['actions'][0];
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'speak' property */
+export type IAdaptiveCardSpeak = ac.IAdaptiveCard['speak'];
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'fallbackText' property */
+export type IAdaptiveCardFallbackText = string;
+
+/** type alias of adaptive card root level fields defined in adaptive card SDK - 'lang' property */
+export type IAdaptiveCardLang = string;
+
+/** Implemented by classes that can be converted into an adaptive card. */
+export interface IIsAdaptiveCard {
+
+  /** Returns the JSON object for the adaptive card payload */
+  toAdaptiveCard(): ac.IAdaptiveCard;
+}
+
+/** Implemented by classes that can be converted into an adaptive card action. */
+export interface IIsAdaptiveCardBotBuilderAction {
+
+  /** Returns the JSON object for the adaptive card action */
+  toAdaptiveCardAction(): IAdaptiveCardAction;
+}
+
+/**
+ * Adapter class for adaptive card action wrapping bot-builder actions
+ */
+export declare class AdaptiveCardBotBuilderAction implements IIsAdaptiveCardBotBuilderAction, builder.IIsCardAction {
+
+  /** Creates a new adaptive card wrapped action, from a session or wrapping an existing bot-builder action. */
+  constructor (sessionOrWrapAction?: builder.Session | builder.CardAction);
+
+  /** Type of card action. */
+  type(t: string): AdaptiveCardBotBuilderAction;
+
+  /** Title of the action. For buttons this will be the label of the button.  For tap actions this may be used for accesibility purposes or shown on hover. */
+  title(text: builder.TextType, ...args: any[]): AdaptiveCardBotBuilderAction;
+
+  /** The actions value. */
+  value(v: string): AdaptiveCardBotBuilderAction;
+
+  /** (Optional) Text for this action. */
+  text(text: builder.TextType, ...args: any[]): AdaptiveCardBotBuilderAction;
+
+  /** (Optional) text to display in the chat feed if the button is clicked. */
+  displayText(text: builder.TextType, ...args: any[]): AdaptiveCardBotBuilderAction;
+  
+  /** Returns the JSON object for the bot-builder card action. */
+  toAction(): builder.ICardAction;
+
+  /** Returns the JSON object for the adaptive card action. */
+  toAdaptiveCardAction(): IAdaptiveCardAction;
+}
+
+/**
+ * Adaptive card builder class.
+ */
+export declare class AdaptiveCard implements builder.IIsAttachment, IIsAdaptiveCard {
+
+    /** Content type of an adaptive card attachment. */
+    static readonly contentType: string;
+    
+    /** Creates a new adaptive card builder. */
+    constructor(session?: builder.Session);
+
+    /** Adaptive card root level type. Must be always 'AdaptiveCard' */
+    readonly type: 'AdaptiveCard';
+
+    /** Schema version that this card requires. If a client is lower than this version the fallbackText will be rendered. */
+    version(ver: IAdaptiveCardVersion): AdaptiveCard;
+
+    /** (Optional) An image to use as the background of the card */
+    backgroundImage(url: IAdaptiveCardBackgroundImage): AdaptiveCard;
+
+    /** (Optional) The Card Elements to show in the primary card region */
+    body(cardElements: IAdaptiveCardBody): AdaptiveCard;
+
+    /** (Optional) Specifies what should be spoken for this entire Item. This is simple text or SSML fragment. */
+    speak(text: IAdaptiveCardSpeak): AdaptiveCard;
+
+    /** (Optional) Text shown when the client doesn’t support the version specified. This can be in markdown format. */
+    fallbackText(text: IAdaptiveCardFallbackText): AdaptiveCard;
+
+    /** (Optional) The 2-letter ISO-639-1 language used in the card. Used to localize any date/time functions. */
+    lang(lang: IAdaptiveCardLang): AdaptiveCard;
+
+    /** (Optional) The Actions to show in the card’s action bar. */
+    actions(list: (builder.CardAction | builder.IIsCardAction | IAdaptiveCardAction | IIsAdaptiveCardBotBuilderAction)[]): AdaptiveCard;
+
+    /** Returns the JSON object for the adaptive card content payload. */
+    toAdaptiveCard(): ac.IAdaptiveCard;
+
+    /** Returns the JSON object for the attachment. */
+    toAttachment(): builder.IAttachment;
+}
+
+/**
+ * Task module card action builder class.
+ */
+export declare class TaskModuleCardAction implements IIsAdaptiveCardBotBuilderAction, builder.IIsCardAction {
+  
+  /** Creates a new task module card action builder. */
+  constructor(session?: builder.Session);
+
+  /** Action text title. */
+  title(text: builder.TextType, ...args: any[]): TaskModuleCardAction;
+
+  /** Hidden value passing back to bot via invoke. Can be arbitrary object. */
+  value(v: {[key: string]: any}): TaskModuleCardAction;
+
+  /** Returns the JSON object for bot-builder action */
+  toAction(): builder.ICardAction;
+
+  /** Returns the JSON object for adaptive card action. */
+  toAdaptiveCardAction(): IAdaptiveCardAction;
+}
+
+/** Invoke activity name of task module fetch  */
+export const taskModuleInvokeNameOfFetch = "task/fetch";
+
+/** Invoke activity n ame of task module submit */
+export const taskModuleInvokeNameOfSubmit = "task/submit";
+
+/** Represents the value of the invoke activity of task module submit. */
+export interface ITaskModuleRequestOfSubmit {
+
+  /** (Optional) User inputs (with any hidden data) in arbitrary object format */
+  data?: {[key: string]: any};
+
+  /** (Optional) Current front-end context */
+  context?: {
+    theme: string;
+  };
+}
+
+/** Root (top-level) type of task module response. */
+export interface ITaskModuleResponse {
+
+  /** Top-level property of task module response */
+  task: ITaskModuleResponseTaskObject;
+}
+
+/** Root (top-level) type of response of task module fetch. */
+export interface ITaskModuleResponseOfFetch extends ITaskModuleResponse {
+
+  /** Top-level property of task module response. For task module fetch, it must be in type of 'continue' response. */
+  task: ITaskModuleContinueResponse;
+}
+
+/** Root (top-level) type of response of task module submit, which is the type alias of task module response (supporting all possibilities). */
+export type ITaskModuleResponseOfSubmit = ITaskModuleResponse;
+
+/** Type of task object. */
+export interface ITaskModuleResponseTaskObject {
+
+  /** Type names of response task object. */
+  type: 'message' | 'cardResult' | 'continue';
+}
+
+/** 'message' response subtype of task object. */
+export interface ITaskModuleMessageResponse extends ITaskModuleResponseTaskObject {
+
+  /** Type name. Must be 'message' */
+  type: 'message';
+
+  /** The text message to display. */
+  value: string;
+}
+
+/** 'cardResult' response subtype of task object. */
+export interface ITaskModuleCardResultResponse extends ITaskModuleResponseTaskObject {
+
+  /** Type name. Must be 'cardResult' */
+  type: 'cardResult';
+
+  /** Card attachment to return. The length must be equal 1 (only single card supported). */
+  attachments?: [builder.IAttachment];
+}
+
+/** 'continue' response subtype of task object. */
+export interface ITaskModuleContinueResponse extends ITaskModuleResponseTaskObject {
+
+  /** Type name. Must be 'continue' */
+  type: 'continue';
+
+  /** Task info object to represent the additional task to be proceeded with. */
+  value: ITaskModuleTaskInfo;
+}
+
+/** Task module dimensional layout pre-defined size names. */
+export type ITaskModuleLayout = 'small' | 'medium' | 'large';
+
+/** Task info object type */
+export interface ITaskModuleTaskInfo {
+
+  /** Proceed with more webview URL */
+  url?: string;
+
+  /** Proceed with more card content */
+  card?: builder.IAttachment;
+
+  /** Dialog dimension - height */
+  height?: number | ITaskModuleLayout;
+
+  /** Dialog dimension - width */
+  width?: number | ITaskModuleLayout;
+
+  /** Fallback URL */
+  fallbackUrl?: string;
+
+  /** Dialog title */
+  title?: string;
+}
+
+/** Implemented by classes that can be converted into response object for task fetch. */
+export interface IIsTaskModuleResponseOfFetch {
+
+  /** Returns the JSON object for response object of task fetch */
+  toResponseOfFetch(): ITaskModuleResponseOfFetch;
+}
+
+/** Implemented by classes that can be converted into response object for task submit. */
+export interface IIsTaskModuleResponseOfSubmit {
+
+  /** Returns the JSON object for response object of task submit */
+  toResponseOfSubmit(): ITaskModuleResponseOfSubmit;
+}
+
+/** Builder factory of response object for task module submit. */
+declare class TaskModuleResponseOfSubmit {
+
+  /** Create builder for response object of 'continue' type. */
+  continue(): TaskModuleContinueResponse;
+
+  /** Create builder for response object of 'message' type. */
+  message(): TaskModuleMessageResponse;
+
+  /** Create builder for response object of 'cardResult' type. */
+  cardResult(): TaskModuleCardResultResponse;
+}
+
+/**
+ * Abstract builder class of task module response object.
+ */
+declare abstract class TaskModuleResponse<T extends ITaskModuleResponseTaskObject> implements IIsTaskModuleResponseOfSubmit {
+  
+  /** Create response for task fetch. */
+  static createResponseOfFetch(): TaskModuleContinueResponse;
+  
+  /** Create response for task submit. */
+  static createResponseOfSubmit(): TaskModuleResponseOfSubmit;
+  
+  /** Returns the JSON object for response object of task submit */
+  toResponseOfSubmit(): ITaskModuleResponseOfSubmit;
+  
+  /** Template method for derived classes to generate task object JSON in subtype of ITaskModuleResponseTaskObject */
+  protected abstract getTaskObject(): T;
+}
+
+/**
+ * Builder class of task module response object for 'continue' type.
+ */
+declare class TaskModuleContinueResponse extends TaskModuleResponse<ITaskModuleContinueResponse> implements IIsTaskModuleResponseOfFetch {
+  
+  /** Assign more webview URL to proceed with */
+  url(url: string): TaskModuleContinueResponse;
+  
+  /** Assign more card content to proceed with */
+  card(card: AdaptiveCard | ac.IAdaptiveCard | builder.IAttachment): TaskModuleContinueResponse;
+  
+  /** Assign dialog height */
+  height(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
+  
+  /** Assign dialog width */
+  width(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
+  
+  /** Assign fallback URL */
+  fallbackUrl(url: string): TaskModuleContinueResponse;
+  
+  /** Assign dialog title */
+  title(title: string): TaskModuleContinueResponse;
+  
+  /** Returns the JSON object for response object of task fetch */
+  toResponseOfFetch(): ITaskModuleResponseOfFetch
+  
+  /** (Override) Template method to generate task object JSON for 'continue' type */
+  protected getTaskObject(): ITaskModuleContinueResponse;
+}
+
+/**
+ * Builder class of task module response object for 'message' type.
+ */
+declare class TaskModuleMessageResponse extends TaskModuleResponse<ITaskModuleMessageResponse> {
+  
+  /** Assign text message to display. */
+  text(text: string): TaskModuleMessageResponse;
+  
+  /** (Override) Template method to generate task object JSON for 'message' type */
+  protected getTaskObject(): ITaskModuleMessageResponse;
+}
+
+/**
+ * Builder class of task module response object for 'cardResult' type.
+ */
+declare class TaskModuleCardResultResponse extends TaskModuleResponse<ITaskModuleCardResultResponse> {
+  
+  /** Assign card to return as the result. */
+  card(card: AdaptiveCard | ac.IAdaptiveCard | builder.IAttachment): TaskModuleCardResultResponse;
+  
+  /** (Override) Template method to generate task object JSON for 'cardResult' type */
+  protected getTaskObject(): ITaskModuleCardResultResponse;
 }

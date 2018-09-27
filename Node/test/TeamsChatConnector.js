@@ -352,4 +352,96 @@ describe('TeamsChatConnector', function () {
       })
     });
   });
+
+  describe('#onTaskModuleFetch()', function () {
+    it('should receive task module fetch events', (done) => {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onTaskModuleFetch((event, request, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.taskModuleInvokeNameOfFetch,
+          value: { }  
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onTaskModuleFetch handler was not called');
+        done();
+      })
+    });
+
+    it('should call invoke handler if no onTaskModuleFetch handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.taskModuleInvokeNameOfFetch,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });    
+  });
+
+  describe('#onTaskModuleSubmit()', function () {
+    it('should receive task module submit events', (done) => {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onTaskModuleSubmit((event, request, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.taskModuleInvokeNameOfSubmit,
+          value: { }  
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onTaskModuleSubmit handler was not called');
+        done();
+      })
+    });
+
+    it('should call invoke handler if no onTaskModuleSubmit handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.taskModuleInvokeNameOfSubmit,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });
+  });
 });
