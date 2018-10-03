@@ -1337,10 +1337,10 @@ export declare class ListCardItem implements IIsListCardItem {
  */
 export enum ListCardItemType {
   /** Generic result item */
-  ResultItem = "resultItem",
+  resultItem = 'resultItem',
 
   /** List separator */
-  Separator = "separator",
+  separator = 'separator',
 }
 
 /**

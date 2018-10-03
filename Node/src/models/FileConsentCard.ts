@@ -22,7 +22,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as builder from "botbuilder";
-import { fmtText } from './o365ConnectorCard';
+import { fmtText } from "./o365ConnectorCard";
 
 /**
  * File consent card builder class.
