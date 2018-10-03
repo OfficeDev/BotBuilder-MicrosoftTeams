@@ -1152,7 +1152,7 @@ export declare class FileConsentCard implements builder.IIsAttachment {
   name(name: string): FileConsentCard;
 
   /** Description of the file. */
-  description(description: string, ...args: any[]): FileConsentCard;
+  description(description: string|string[], ...args: any[]): FileConsentCard;
 
   /** Approximate size of the file in bytes. */
   sizeInBytes(sizeInBytes: number): FileConsentCard;
@@ -1278,4 +1278,99 @@ export declare class FileInfoCard implements builder.IIsAttachment {
 
   /** Returns the JSON for the card */
   toAttachment(): builder.IAttachment;
+}
+
+/**
+ * List card builder class.
+ */
+export declare class ListCard implements builder.IIsAttachment {
+  /** Creates a new list card builder. */
+  constructor(session?: builder.Session);
+
+  /** Card title. */
+  title(title: string|string[], ...args: any[]): this;
+
+  /** Card items. */
+  items(list: (IListCardItem|IIsListCardItem)[]): this;
+
+  /** Card buttons. */
+  buttons(list: (builder.ICardAction|builder.IIsCardAction)[]): this;
+
+  /** 
+   * Adds an item to the list. 
+   * @param item The list item to add.
+   */
+  addItem(item: IListCardItem|IIsListCardItem): this;
+
+  /** Returns the JSON object for the attachment. */
+  toAttachment(): builder.IAttachment;
+}
+
+/**
+* List card item builder class.
+*/
+export declare class ListCardItem implements IIsListCardItem {
+  /** Creates a new list card item builder. */
+  constructor(session?: builder.Session);
+  
+  /** The type of the list item. Defaults to resultItem. */
+  type(type: ListCardItemType): this;
+
+  /** List item title. Applies to items of type: resultItem. */
+  title(text: string|string[], ...args: any[]): this;
+
+  /** List item subtitle. Applies to items of type: resultItem. */
+  subtitle(text: string|string[], ...args: any[]): this;
+
+  /** List item icon url. Applies to items of type: resultItem. */
+  icon(url: string): this;
+
+  /** Action to execute when the item is tapped. Applies to items of type: resultItem.*/
+  tap(action: builder.ICardAction|builder.IIsCardAction): this;
+
+  /** Returns the JSON for the item */
+  toItem(): IListCardItem;
+}
+
+/**
+ * List card item types.
+ */
+export enum ListCardItemType {
+  /** Generic result item */
+  ResultItem = "resultItem",
+
+  /** List separator */
+  Separator = "separator",
+}
+
+/**
+ * Interface for a list card item.
+ */
+export interface IListCardItem {
+    
+  /** Type of the list item */
+  type: ListCardItemType;
+
+  /** List item id */
+  id?: string;
+
+  /** List item title */
+  title?: string;
+
+  /** List item subtitle */
+  subtitle?: string;
+
+  /** List item icon url */
+  icon?: string;
+
+  /** List item tap action */
+  tap?: builder.ICardAction;
+}
+
+/**
+* Interface for a type convertible to a list card item.
+*/
+export interface IIsListCardItem {
+  /** Returns the JSON for the item */
+  toItem(): IListCardItem;
 }

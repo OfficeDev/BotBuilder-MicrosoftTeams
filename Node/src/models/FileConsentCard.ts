@@ -22,6 +22,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as builder from "botbuilder";
+import { fmtText } from './o365ConnectorCard';
 
 /**
  * File consent card builder class.
@@ -45,11 +46,12 @@ export class FileConsentCard implements builder.IIsAttachment {
     }
 
     /** Description of the file. */
-    public description(description: string, ...args: any[]): FileConsentCard {
-        if (this.session) {
-            description = this.session.gettext(description, args);
+    public description(description: string|string[], ...args: any[]): FileConsentCard {
+        if (description) {
+            this.data.content.description = fmtText(this.session, description, args);
+        } else {
+            delete this.data.content.description;
         }
-        this.data.content.description = description;
         return this;
     }
 
