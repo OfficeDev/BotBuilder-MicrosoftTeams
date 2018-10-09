@@ -1167,7 +1167,7 @@ export declare class FileConsentCard implements builder.IIsAttachment {
   name(name: string): FileConsentCard;
 
   /** Description of the file. */
-  description(description: string, ...args: any[]): FileConsentCard;
+  description(description: string|string[], ...args: any[]): FileConsentCard;
 
   /** Approximate size of the file in bytes. */
   sizeInBytes(sizeInBytes: number): FileConsentCard;
@@ -1352,7 +1352,7 @@ export declare class AdaptiveCardBotBuilderAction implements IIsAdaptiveCardBotB
 
   /** (Optional) text to display in the chat feed if the button is clicked. */
   displayText(text: builder.TextType, ...args: any[]): AdaptiveCardBotBuilderAction;
-  
+
   /** Returns the JSON object for the bot-builder card action. */
   toAction(): builder.ICardAction;
 
@@ -1367,7 +1367,7 @@ export declare class AdaptiveCard implements builder.IIsAttachment, IIsAdaptiveC
 
     /** Content type of an adaptive card attachment. */
     static readonly contentType: string;
-    
+
     /** Creates a new adaptive card builder. */
     constructor(session?: builder.Session);
 
@@ -1406,7 +1406,7 @@ export declare class AdaptiveCard implements builder.IIsAttachment, IIsAdaptiveC
  * Task module card action builder class.
  */
 export declare class TaskModuleCardAction implements IIsAdaptiveCardBotBuilderAction, builder.IIsCardAction {
-  
+
   /** Creates a new task module card action builder. */
   constructor(session?: builder.Session);
 
@@ -1551,16 +1551,16 @@ declare class TaskModuleResponseOfSubmit {
  * Abstract builder class of task module response object.
  */
 declare abstract class TaskModuleResponse<T extends ITaskModuleResponseTaskObject> implements IIsTaskModuleResponseOfSubmit {
-  
+
   /** Create response for task fetch. */
   static createResponseOfFetch(): TaskModuleContinueResponse;
-  
+
   /** Create response for task submit. */
   static createResponseOfSubmit(): TaskModuleResponseOfSubmit;
-  
+
   /** Returns the JSON object for response object of task submit */
   toResponseOfSubmit(): ITaskModuleResponseOfSubmit;
-  
+
   /** Template method for derived classes to generate task object JSON in subtype of ITaskModuleResponseTaskObject */
   protected abstract getTaskObject(): T;
 }
@@ -1569,28 +1569,28 @@ declare abstract class TaskModuleResponse<T extends ITaskModuleResponseTaskObjec
  * Builder class of task module response object for 'continue' type.
  */
 declare class TaskModuleContinueResponse extends TaskModuleResponse<ITaskModuleContinueResponse> implements IIsTaskModuleResponseOfFetch {
-  
+
   /** Assign more webview URL to proceed with */
   url(url: string): TaskModuleContinueResponse;
-  
+
   /** Assign more card content to proceed with */
   card(card: AdaptiveCard | ac.IAdaptiveCard | builder.IAttachment): TaskModuleContinueResponse;
-  
+
   /** Assign dialog height */
   height(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
-  
+
   /** Assign dialog width */
   width(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
-  
+
   /** Assign fallback URL */
   fallbackUrl(url: string): TaskModuleContinueResponse;
-  
+
   /** Assign dialog title */
   title(title: string): TaskModuleContinueResponse;
-  
+
   /** Returns the JSON object for response object of task fetch */
   toResponseOfFetch(): ITaskModuleResponseOfFetch
-  
+
   /** (Override) Template method to generate task object JSON for 'continue' type */
   protected getTaskObject(): ITaskModuleContinueResponse;
 }
@@ -1599,10 +1599,10 @@ declare class TaskModuleContinueResponse extends TaskModuleResponse<ITaskModuleC
  * Builder class of task module response object for 'message' type.
  */
 declare class TaskModuleMessageResponse extends TaskModuleResponse<ITaskModuleMessageResponse> {
-  
+
   /** Assign text message to display. */
   text(text: string): TaskModuleMessageResponse;
-  
+
   /** (Override) Template method to generate task object JSON for 'message' type */
   protected getTaskObject(): ITaskModuleMessageResponse;
 }
@@ -1611,10 +1611,104 @@ declare class TaskModuleMessageResponse extends TaskModuleResponse<ITaskModuleMe
  * Builder class of task module response object for 'cardResult' type.
  */
 declare class TaskModuleCardResultResponse extends TaskModuleResponse<ITaskModuleCardResultResponse> {
-  
+
   /** Assign card to return as the result. */
   card(card: AdaptiveCard | ac.IAdaptiveCard | builder.IAttachment): TaskModuleCardResultResponse;
-  
+
   /** (Override) Template method to generate task object JSON for 'cardResult' type */
   protected getTaskObject(): ITaskModuleCardResultResponse;
+}
+/**
+ * List card builder class.
+ */
+export declare class ListCard implements builder.IIsAttachment {
+  /** Creates a new list card builder. */
+  constructor(session?: builder.Session);
+
+  /** Card title. */
+  title(title: string|string[], ...args: any[]): this;
+
+  /** Card items. */
+  items(list: (IListCardItem|IIsListCardItem)[]): this;
+
+  /** Card buttons. */
+  buttons(list: (builder.ICardAction|builder.IIsCardAction)[]): this;
+
+  /**
+   * Adds an item to the list.
+   * @param item The list item to add.
+   */
+  addItem(item: IListCardItem|IIsListCardItem): this;
+
+  /** Returns the JSON object for the attachment. */
+  toAttachment(): builder.IAttachment;
+}
+
+/**
+* List card item builder class.
+*/
+export declare class ListCardItem implements IIsListCardItem {
+  /** Creates a new list card item builder. */
+  constructor(session?: builder.Session);
+
+  /** The type of the list item. Defaults to resultItem. */
+  type(type: ListCardItemType): this;
+
+  /** List item title. Applies to items of type: resultItem. */
+  title(text: string|string[], ...args: any[]): this;
+
+  /** List item subtitle. Applies to items of type: resultItem. */
+  subtitle(text: string|string[], ...args: any[]): this;
+
+  /** List item icon url. Applies to items of type: resultItem. */
+  icon(url: string): this;
+
+  /** Action to execute when the item is tapped. Applies to items of type: resultItem.*/
+  tap(action: builder.ICardAction|builder.IIsCardAction): this;
+
+  /** Returns the JSON for the item */
+  toItem(): IListCardItem;
+}
+
+/**
+ * List card item types.
+ */
+export enum ListCardItemType {
+  /** Generic result item */
+  resultItem = 'resultItem',
+
+  /** List separator */
+  separator = 'separator',
+}
+
+/**
+ * Interface for a list card item.
+ */
+export interface IListCardItem {
+
+  /** Type of the list item */
+  type: ListCardItemType;
+
+  /** List item id */
+  id?: string;
+
+  /** List item title */
+  title?: string;
+
+  /** List item subtitle */
+  subtitle?: string;
+
+  /** List item icon url */
+  icon?: string;
+
+  /** List item tap action */
+  tap?: builder.ICardAction;
+}
+
+/**
+* Interface for a type convertible to a list card item.
+*/
+export interface IIsListCardItem {
+  /** Returns the JSON for the item */
+  toItem(): IListCardItem;
 }
