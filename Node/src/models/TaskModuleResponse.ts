@@ -44,13 +44,13 @@ export interface ITaskModuleContinueResponse extends ITaskModuleResponseTaskObje
   value: ITaskModuleTaskInfo;
 }
 
-export type ITaskModuleLayout = 'small' | 'medium' | 'large';
+export type TaskModuleDimension = 'small' | 'medium' | 'large';
 
 export interface ITaskModuleTaskInfo {
   url?: string;
   card?: builder.IAttachment;
-  height?: number | ITaskModuleLayout;
-  width?: number | ITaskModuleLayout;
+  height?: number | TaskModuleDimension;
+  width?: number | TaskModuleDimension;
   fallbackUrl?: string;
   title?: string;
 }
@@ -119,12 +119,12 @@ export class TaskModuleContinueResponse extends TaskModuleResponse<ITaskModuleCo
     return this;
   }
 
-  public height(val: number | ITaskModuleLayout): this {
+  public height(val: number | TaskModuleDimension): this {
     this.data.height = val;
     return this;
   }
 
-  public width(val: number | ITaskModuleLayout): this {
+  public width(val: number | TaskModuleDimension): this {
     this.data.width = val;
     return this;
   }

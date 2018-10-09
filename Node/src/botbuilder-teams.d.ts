@@ -1341,7 +1341,7 @@ export declare class AdaptiveCardBotBuilderAction implements IIsAdaptiveCardBotB
   /** Type of card action. */
   type(t: string): AdaptiveCardBotBuilderAction;
 
-  /** Title of the action. For buttons this will be the label of the button.  For tap actions this may be used for accesibility purposes or shown on hover. */
+  /** Title of the action. For buttons this will be the label of the button.  For tap actions this may be used for accessibility purposes or shown on hover. */
   title(text: builder.TextType, ...args: any[]): AdaptiveCardBotBuilderAction;
 
   /** The actions value. */
@@ -1496,7 +1496,7 @@ export interface ITaskModuleContinueResponse extends ITaskModuleResponseTaskObje
 }
 
 /** Task module dimensional layout pre-defined size names. */
-export type ITaskModuleLayout = 'small' | 'medium' | 'large';
+export type TaskModuleDimension = 'small' | 'medium' | 'large';
 
 /** Task info object type */
 export interface ITaskModuleTaskInfo {
@@ -1508,10 +1508,10 @@ export interface ITaskModuleTaskInfo {
   card?: builder.IAttachment;
 
   /** Dialog dimension - height */
-  height?: number | ITaskModuleLayout;
+  height?: number | TaskModuleDimension;
 
   /** Dialog dimension - width */
-  width?: number | ITaskModuleLayout;
+  width?: number | TaskModuleDimension;
 
   /** Fallback URL */
   fallbackUrl?: string;
@@ -1577,10 +1577,10 @@ declare class TaskModuleContinueResponse extends TaskModuleResponse<ITaskModuleC
   card(card: AdaptiveCard | ac.IAdaptiveCard | builder.IAttachment): TaskModuleContinueResponse;
 
   /** Assign dialog height */
-  height(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
+  height(val: number | TaskModuleDimension): TaskModuleContinueResponse;
 
   /** Assign dialog width */
-  width(val: number | ITaskModuleLayout): TaskModuleContinueResponse;
+  width(val: number | TaskModuleDimension): TaskModuleContinueResponse;
 
   /** Assign fallback URL */
   fallbackUrl(url: string): TaskModuleContinueResponse;
