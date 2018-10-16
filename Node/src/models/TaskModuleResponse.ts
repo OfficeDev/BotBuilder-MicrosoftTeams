@@ -6,7 +6,7 @@ export const taskModuleInvokeNameOfFetch = "task/fetch";
 
 export const taskModuleInvokeNameOfSubmit = "task/submit";
 
-export interface ITaskModuleRequestOfSubmit {
+export interface ITaskModuleInvokeRequest {
   data?: {[key: string]: any};
   context?: {
     theme: string;

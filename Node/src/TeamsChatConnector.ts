@@ -46,8 +46,8 @@ export type ComposeExtensionHandlerType = (event: builder.IEvent, query: Compose
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
-export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: any, callback: (err: Error, result: task.ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
-export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: task.ITaskModuleRequestOfSubmit, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
+export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
+export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;

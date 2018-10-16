@@ -885,8 +885,8 @@ export type ComposeExtensionHandlerType = (event: builder.IEvent, query: Compose
 export type O365ConnectorCardActionHandlerType = (event: builder.IEvent, query: IO365ConnectorCardActionQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: ISigninStateVerificationQuery, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
-export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: any, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
-export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleRequestOfSubmit, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
+export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
+export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1429,8 +1429,8 @@ export const taskModuleInvokeNameOfFetch = "task/fetch";
 /** Invoke activity n ame of task module submit */
 export const taskModuleInvokeNameOfSubmit = "task/submit";
 
-/** Represents the value of the invoke activity of task module submit. */
-export interface ITaskModuleRequestOfSubmit {
+/** Represents the value of the invoke activity of task module fetch and submit. */
+export interface ITaskModuleInvokeRequest {
 
   /** (Optional) User inputs (with any hidden data) in arbitrary object format */
   data?: {[key: string]: any};
