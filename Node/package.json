@@ -11,6 +11,7 @@
   "main": "./lib/botbuilder-teams.js",
   "typings": "./lib/botbuilder-teams.d.ts",
   "dependencies": {
+    "adaptivecards": "^1.0.0",
     "botbuilder": "^3.11.0",
     "crypto": "^1.0.1",
     "ms-rest": "^1.15.7",
