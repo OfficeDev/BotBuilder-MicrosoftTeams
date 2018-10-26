@@ -887,6 +887,8 @@ export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: 
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
+export type ComposeExtensionFetchForActionCommandHandlerType = (event: builder.IEvent, request: ComposeExtensionQuery, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
+export type ComposeExtensionSubmitForActionCommandHandlerType = (event: builder.IEvent, request: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1036,6 +1038,18 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when an invoke request to submit task module results is received.
   */
   public onTaskModuleSubmit(handler: TaskModuleSubmitHandlerType): void;
+
+  /**
+  *  Set a handler that is called when an invoke request to fetch task module from compose extension create command is received .
+  *  @param handler The function to execute when an invoke request to fetch task module from compose extension create command is received.
+  */
+ public onComposeExtensionFetch(handler: ComposeExtensionFetchForActionCommandHandlerType): void;
+
+ /**
+ *  Set a handler that is called when an invoke request to submit action is received .
+ *  @param handler The function to execute when an invoke request to submit action results is received.
+ */
+ public onComposeExtensionSubmit(handler: ComposeExtensionSubmitForActionCommandHandlerType): void;  
 }
 
 /**

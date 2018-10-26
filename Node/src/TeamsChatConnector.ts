@@ -36,7 +36,7 @@ import * as builder from 'botbuilder';
 import * as msRest from 'ms-rest';
 import RemoteQuery = require('./RemoteQuery/teams');
 import RestClient = require('./RemoteQuery/RestClient');
-import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, ISigninStateVerificationQuery, TeamInfo, TeamsChannelAccountsResult } from './models';
+import { ChannelAccount, ChannelInfo, ComposeExtensionQuery, IComposeExtensionResponse, ComposeExtensionParameter, ComposeExtensionResponse, IO365ConnectorCardActionQuery, ISigninStateVerificationQuery, TeamInfo, TeamsChannelAccountsResult, IComposeExtensionActionCommandRequest } from './models';
 import { IFileConsentCardResponse } from './models/FileConsentCardResponse';
 import * as task from './models/TaskModuleResponse';
 
@@ -48,6 +48,9 @@ export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: 
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
+export type ComposeExtensionFetchForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
+export type ComposeExtensionSubmitForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
+
 
 export interface IInvokeEvent extends builder.IEvent {
   name: string;
@@ -69,6 +72,9 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private static fileConsentInvokeName = 'fileConsent/invoke';
   private static taskModuleInvokeNameOfFetch = task.taskModuleInvokeNameOfFetch;
   private static taskModuleInvokeNameOfSubmit = task.taskModuleInvokeNameOfSubmit;
+  private static composeExtensionInvokeNameofFetch = 'composeExtension/fetchTask';
+  private static composeExtensionInvokeNameofSubmit = 'composeExtension/submitAction';  
+
 
   private allowedTenants: string[];
 
@@ -81,6 +87,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private fileConsentCardResponseHandler: FileConsentCardResponseHandlerType;
   private taskModuleFetchHandler: TaskModuleFetchHandlerType;
   private taskModuleSubmitHandler: TaskModuleSubmitHandlerType;
+  private composeExtensionFetchForActionCommandHandler: ComposeExtensionFetchForActionCommandHandlerType;
+  private composeExtensionSubmitForActionCommandHandler: ComposeExtensionSubmitForActionCommandHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -358,6 +366,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.taskModuleSubmitHandler = handler;
   }
 
+  public onComposeExtensionFetch(handler: ComposeExtensionFetchForActionCommandHandlerType): void {
+    this.composeExtensionFetchForActionCommandHandler = handler;
+  }
+
+  public onComposeExtensionSubmit(handler: ComposeExtensionSubmitForActionCommandHandlerType): void {
+    this.composeExtensionSubmitForActionCommandHandler = handler;
+  }
+
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
@@ -433,6 +449,18 @@ export class TeamsChatConnector extends builder.ChatConnector {
           case TeamsChatConnector.taskModuleInvokeNameOfSubmit:
             if (this.taskModuleSubmitHandler) {
               invokeHandler = this.taskModuleSubmitHandler.bind(this);
+            }
+            break;
+
+          case TeamsChatConnector.composeExtensionInvokeNameofFetch:
+            if (this.composeExtensionFetchForActionCommandHandler) {
+              invokeHandler = this.composeExtensionFetchForActionCommandHandler.bind(this);
+            }
+            break;  
+
+          case TeamsChatConnector.composeExtensionInvokeNameofSubmit:
+            if (this.composeExtensionSubmitForActionCommandHandler) {
+              invokeHandler = this.composeExtensionSubmitForActionCommandHandler.bind(this);
             }
             break;
 
