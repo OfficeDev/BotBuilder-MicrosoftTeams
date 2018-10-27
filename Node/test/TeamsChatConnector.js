@@ -450,7 +450,7 @@ describe('TeamsChatConnector', function () {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
-      connector.onComposeExtensionFetch((event, request, cb) => {
+      connector.onComposeExtensionFetchTask((event, request, cb) => {
         wasHandlerCalled = true;
         cb(null, {}, 200);
       });
@@ -496,7 +496,7 @@ describe('TeamsChatConnector', function () {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
-      connector.onComposeExtensionSubmit((event, request, cb) => {
+      connector.onComposeExtensionSubmitAction((event, request, cb) => {
         wasHandlerCalled = true;
         cb(null, {}, 200);
       });
