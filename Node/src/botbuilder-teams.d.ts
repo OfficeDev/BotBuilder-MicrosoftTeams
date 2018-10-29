@@ -893,8 +893,8 @@ export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: 
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
-export type ComposeExtensionFetchForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
-export type ComposeExtensionSubmitForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type ComposeExtensionFetchTaskHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type ComposeExtensionSubmitActionHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit | IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1049,13 +1049,13 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Set a handler that is called when an invoke request from command actions to fetch task is received .
   *  @param handler The function to execute when an invoke request from command actions to fetch task  is received.
   */
-  public onComposeExtensionFetchTask(handler: ComposeExtensionFetchForActionCommandHandlerType): void;
+  public onComposeExtensionFetchTask(handler: ComposeExtensionFetchTaskHandlerType): void;
 
   /**
   *  Set a handler that is called when an invoke request from command actions to submit action is received .
   *  @param handler The function to execute when an invoke request from command actions to submit action is received.
   */
-  public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitForActionCommandHandlerType): void;  
+  public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitActionHandlerType): void;  
 }
 
 /**

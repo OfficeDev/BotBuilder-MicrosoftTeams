@@ -48,8 +48,8 @@ export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: 
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
-export type ComposeExtensionFetchForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
-export type ComposeExtensionSubmitForActionCommandHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type ComposeExtensionFetchTaskHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type ComposeExtensionSubmitActionHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit | IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 
 export interface IInvokeEvent extends builder.IEvent {
@@ -87,8 +87,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private fileConsentCardResponseHandler: FileConsentCardResponseHandlerType;
   private taskModuleFetchHandler: TaskModuleFetchHandlerType;
   private taskModuleSubmitHandler: TaskModuleSubmitHandlerType;
-  private composeExtensionFetchForActionCommandHandler: ComposeExtensionFetchForActionCommandHandlerType;
-  private composeExtensionSubmitForActionCommandHandler: ComposeExtensionSubmitForActionCommandHandlerType;
+  private composeExtensionFetchTaskHandler: ComposeExtensionFetchTaskHandlerType;
+  private composeExtensionSubmitActionHandler: ComposeExtensionSubmitActionHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -366,12 +366,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.taskModuleSubmitHandler = handler;
   }
 
-  public onComposeExtensionFetchTask(handler: ComposeExtensionFetchForActionCommandHandlerType): void {
-    this.composeExtensionFetchForActionCommandHandler = handler;
+  public onComposeExtensionFetchTask(handler:ComposeExtensionFetchTaskHandlerType): void {
+    this.composeExtensionFetchTaskHandler = handler;
   }
 
-  public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitForActionCommandHandlerType): void {
-    this.composeExtensionSubmitForActionCommandHandler = handler;
+  public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitActionHandlerType): void {
+    this.composeExtensionSubmitActionHandler = handler;
   }
 
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
@@ -453,14 +453,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
             break;
 
           case TeamsChatConnector.composeExtensionInvokeNameofFetch:
-            if (this.composeExtensionFetchForActionCommandHandler) {
-              invokeHandler = this.composeExtensionFetchForActionCommandHandler.bind(this);
+            if (this.composeExtensionFetchTaskHandler) {
+              invokeHandler = this.composeExtensionFetchTaskHandler.bind(this);
             }
             break;  
 
           case TeamsChatConnector.composeExtensionInvokeNameofSubmit:
-            if (this.composeExtensionSubmitForActionCommandHandler) {
-              invokeHandler = this.composeExtensionSubmitForActionCommandHandler.bind(this);
+            if (this.composeExtensionSubmitActionHandler) {
+              invokeHandler = this.composeExtensionSubmitActionHandler.bind(this);
             }
             break;
 
