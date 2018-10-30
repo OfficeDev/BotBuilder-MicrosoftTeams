@@ -445,7 +445,7 @@ describe('TeamsChatConnector', function () {
     });
   });
 
-  describe('#onComposeExtensionFetch()', function () {
+  describe('#onComposeExtensionFetchTask()', function () {
     it('should receive compose extension fetch task module events', (done) => {
       let connector = new lib.TeamsChatConnector({});
   
@@ -491,7 +491,7 @@ describe('TeamsChatConnector', function () {
     });    
   });
   
-  describe('#onComposeExtensionSubmit()', function () {
+  describe('#onComposeExtensionSubmitAction()', function () {
     it('should receive compose extension submit action events', (done) => {
       let connector = new lib.TeamsChatConnector({});
   
