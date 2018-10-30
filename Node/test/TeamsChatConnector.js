@@ -463,12 +463,12 @@ describe('TeamsChatConnector', function () {
         }
       ], (err, body, status) => {
         assert.ok(!err, 'An error occurred: ' + err);
-        assert.ok(wasHandlerCalled, 'The registered onTaskModuleFetch handler was not called');
+        assert.ok(wasHandlerCalled, 'The registered onComposeExtensionFetchTask handler was not called');
         done();
       })
     });
   
-    it('should call invoke handler if no onComposeExtensionFetch handler was registered', function (done) {
+    it('should call invoke handler if no onComposeExtensionFetchTask handler was registered', function (done) {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
@@ -509,12 +509,12 @@ describe('TeamsChatConnector', function () {
         }
       ], (err, body, status) => {
         assert.ok(!err, 'An error occurred: ' + err);
-        assert.ok(wasHandlerCalled, 'The registered onTaskModuleFetch handler was not called');
+        assert.ok(wasHandlerCalled, 'The registered onComposeExtensionSubmitAction handler was not called');
         done();
       })
     });
   
-    it('should call invoke handler if no onComposeExtensionSubmit handler was registered', function (done) {
+    it('should call invoke handler if no onComposeExtensionSubmitAction handler was registered', function (done) {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
