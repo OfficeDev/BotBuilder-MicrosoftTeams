@@ -458,7 +458,7 @@ describe('TeamsChatConnector', function () {
       connector.onDispatchEvents([
         {
           type: 'invoke',
-          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetch,
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetchTask,
           value: { }  
         }
       ], (err, body, status) => {
@@ -480,7 +480,7 @@ describe('TeamsChatConnector', function () {
       connector.onDispatchEvents([
         {
           type: 'invoke',
-          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetch,
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetchTask,
           value: { }
         }
       ], (err, body, status) => {
@@ -504,7 +504,7 @@ describe('TeamsChatConnector', function () {
       connector.onDispatchEvents([
         {
           type: 'invoke',
-          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmit,
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmitAction,
           value: { }  
         }
       ], (err, body, status) => {
@@ -526,7 +526,7 @@ describe('TeamsChatConnector', function () {
       connector.onDispatchEvents([
         {
           type: 'invoke',
-          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmit,
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmitAction,
           value: { }
         }
       ], (err, body, status) => {

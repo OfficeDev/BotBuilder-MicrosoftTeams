@@ -769,7 +769,7 @@ export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
 
-/** Represents the request to a compose extension action command invoke message */
+/** Represents the value of the invoke activity of compose extension action command request */
 export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
   /** The id of the command. */
   commandId?: string;
@@ -1046,14 +1046,14 @@ export class TeamsChatConnector extends builder.ChatConnector {
   public onTaskModuleSubmit(handler: TaskModuleSubmitHandlerType): void;
 
   /**
-  *  Set a handler that is called when an invoke request from command actions to fetch task is received .
-  *  @param handler The function to execute when an invoke request from command actions to fetch task  is received.
+  *  Set a handler for compose extension invoke request made when an fetch task command is selected.
+  *  @param handler The function to execute when an invoke request to fetch task module is received.
   */
   public onComposeExtensionFetchTask(handler: ComposeExtensionFetchTaskHandlerType): void;
 
   /**
-  *  Set a handler that is called when an invoke request from command actions to submit action is received .
-  *  @param handler The function to execute when an invoke request from command actions to submit action is received.
+  *  Set a handler for compose extension invoke request made when a submit action command is selected.
+  *  @param handler The function to execute when an invoke to submit action is received.
   */
   public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitActionHandlerType): void;  
 }

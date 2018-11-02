@@ -72,8 +72,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private static fileConsentInvokeName = 'fileConsent/invoke';
   private static taskModuleInvokeNameOfFetch = task.taskModuleInvokeNameOfFetch;
   private static taskModuleInvokeNameOfSubmit = task.taskModuleInvokeNameOfSubmit;
-  private static composeExtensionInvokeNameofFetch = 'composeExtension/fetchTask';
-  private static composeExtensionInvokeNameofSubmit = 'composeExtension/submitAction';  
+  private static composeExtensionInvokeNameofFetchTask = 'composeExtension/fetchTask';
+  private static composeExtensionInvokeNameofSubmitAction = 'composeExtension/submitAction';  
 
 
   private allowedTenants: string[];
@@ -452,13 +452,13 @@ export class TeamsChatConnector extends builder.ChatConnector {
             }
             break;
 
-          case TeamsChatConnector.composeExtensionInvokeNameofFetch:
+          case TeamsChatConnector.composeExtensionInvokeNameofFetchTask:
             if (this.composeExtensionFetchTaskHandler) {
               invokeHandler = this.composeExtensionFetchTaskHandler.bind(this);
             }
             break;  
 
-          case TeamsChatConnector.composeExtensionInvokeNameofSubmit:
+          case TeamsChatConnector.composeExtensionInvokeNameofSubmitAction:
             if (this.composeExtensionSubmitActionHandler) {
               invokeHandler = this.composeExtensionSubmitActionHandler.bind(this);
             }
