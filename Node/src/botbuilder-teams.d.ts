@@ -769,6 +769,12 @@ export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
 
+/** Represents the value of the invoke activity of compose extension action command request */
+export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
+  /** The id of the command. */
+  commandId?: string;
+}
+
 /** Response builder class that simplifies constructing the response to a compose extension invoke message. */
 export class ComposeExtensionResponse {
 
@@ -887,6 +893,8 @@ export type SigninStateVerificationHandlerType = (event: builder.IEvent, query: 
 export type FileConsentCardResponseHandlerType = (event: builder.IEvent, response: IFileConsentCardResponse, callback: (err: Error, result: any, statusCode?: number) => void) => void;
 export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch, statusCode?: number) => void) => void;
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
+export type ComposeExtensionFetchTaskHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type ComposeExtensionSubmitActionHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit | IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1036,6 +1044,18 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when an invoke request to submit task module results is received.
   */
   public onTaskModuleSubmit(handler: TaskModuleSubmitHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request made when an fetch task command is selected.
+  *  @param handler The function to execute when an invoke request to fetch task module is received.
+  */
+  public onComposeExtensionFetchTask(handler: ComposeExtensionFetchTaskHandlerType): void;
+
+  /**
+  *  Set a handler for compose extension invoke request made when a submit action command is selected.
+  *  @param handler The function to execute when an invoke to submit action is received.
+  */
+  public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitActionHandlerType): void;  
 }
 
 /**

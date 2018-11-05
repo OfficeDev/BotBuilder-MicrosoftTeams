@@ -444,4 +444,97 @@ describe('TeamsChatConnector', function () {
       })
     });
   });
+
+  describe('#onComposeExtensionFetchTask()', function () {
+    it('should receive compose extension fetch task module events', (done) => {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onComposeExtensionFetchTask((event, request, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetchTask,
+          value: { }  
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onComposeExtensionFetchTask handler was not called');
+        done();
+      })
+    });
+  
+    it('should call invoke handler if no onComposeExtensionFetchTask handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofFetchTask,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });    
+  });
+  
+  describe('#onComposeExtensionSubmitAction()', function () {
+    it('should receive compose extension submit action events', (done) => {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onComposeExtensionSubmitAction((event, request, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmitAction,
+          value: { }  
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onComposeExtensionSubmitAction handler was not called');
+        done();
+      })
+    });
+  
+    it('should call invoke handler if no onComposeExtensionSubmitAction handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.composeExtensionInvokeNameofSubmitAction,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });    
+  });  
 });
+

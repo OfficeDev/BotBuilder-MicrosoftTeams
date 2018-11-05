@@ -33,6 +33,7 @@
 
 
 import * as builder from 'botbuilder';
+import { ITaskModuleInvokeRequest } from './TaskModuleResponse';
 
 /**
  * @class
@@ -629,6 +630,9 @@ export interface ComposeExtensionResult {
  */
 export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
+}
+export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
+  commandId?: string;
 }
 
 export class ComposeExtensionResponse {
