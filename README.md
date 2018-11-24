@@ -5,6 +5,8 @@
 
 The Microsoft Bot Builder SDK Teams Extensions allow you to build bots for Microsoft Teams quickly and easily. **[Review the documentation](https://msdn.microsoft.com/en-us/microsoft-teams/bots)** to get started!
 
+> Note that the Bot Builder Extensions does **NOT** yet work with Bot Framework SDK 4.x. It currently only works with Bot Framework SDK 3.x.
+
 # This SDK allows you to easily...
 
 * Fetch a list of channels in a team
