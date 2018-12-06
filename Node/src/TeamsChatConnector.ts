@@ -50,6 +50,7 @@ export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: task.I
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: task.ITaskModuleInvokeRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
 export type ComposeExtensionFetchTaskHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type ComposeExtensionSubmitActionHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: task.ITaskModuleResponseOfSubmit | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type AppBasedLinkHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 
 export interface IInvokeEvent extends builder.IEvent {
@@ -73,7 +74,8 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private static taskModuleInvokeNameOfFetch = task.taskModuleInvokeNameOfFetch;
   private static taskModuleInvokeNameOfSubmit = task.taskModuleInvokeNameOfSubmit;
   private static composeExtensionInvokeNameofFetchTask = 'composeExtension/fetchTask';
-  private static composeExtensionInvokeNameofSubmitAction = 'composeExtension/submitAction';  
+  private static composeExtensionInvokeNameofSubmitAction = 'composeExtension/submitAction';
+  private static appBasedLinkInvokeName = 'composeExtension/queryLink';  
 
 
   private allowedTenants: string[];
@@ -89,6 +91,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   private taskModuleSubmitHandler: TaskModuleSubmitHandlerType;
   private composeExtensionFetchTaskHandler: ComposeExtensionFetchTaskHandlerType;
   private composeExtensionSubmitActionHandler: ComposeExtensionSubmitActionHandlerType;
+  private appBasedLinkHandler: AppBasedLinkHandlerType;
 
   constructor(settings: builder.IChatConnectorSettings = {}) {
     super(settings)
@@ -374,6 +377,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.composeExtensionSubmitActionHandler = handler;
   }
 
+  public onAppBasedLink(handler: AppBasedLinkHandlerType): void {
+    this.appBasedLinkHandler = handler;
+  }
+
   protected onDispatchEvents(events: builder.IEvent[], callback: (err: Error, body: any, status?: number) => void): void {
     if (this.allowedTenants) {
       var filteredEvents: builder.IEvent[] = [];
@@ -463,6 +470,11 @@ export class TeamsChatConnector extends builder.ChatConnector {
               invokeHandler = this.composeExtensionSubmitActionHandler.bind(this);
             }
             break;
+
+          case TeamsChatConnector.appBasedLinkInvokeName:
+            if (this.appBasedLinkHandler) {
+              invokeHandler = this.appBasedLinkHandler.bind(this);
+            }
 
           default:
             // Generic invoke activity, defer to default handling of invoke activities
