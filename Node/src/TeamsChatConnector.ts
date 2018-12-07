@@ -475,6 +475,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
             if (this.appBasedLinkHandler) {
               invokeHandler = this.appBasedLinkHandler.bind(this);
             }
+            break;
 
           default:
             // Generic invoke activity, defer to default handling of invoke activities
