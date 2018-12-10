@@ -921,7 +921,7 @@
     },
 
     "TaskModuleInfo": {
-      "description": "Describes a team",
+      "description": "Metadata for a Task Module.",
       "type": "object",
       "properties": {
         "title": {
@@ -957,7 +957,7 @@
     },
 
     "TaskModule": {
-      "description": "Model class for Task Module Task",
+      "description": "Container class for Task Module Information",
       "type": "object",
       "properties": {
         "value": {
@@ -974,7 +974,7 @@
     },
 
     "TaskModuleEnvelope": {
-      "description": "Envelope for Task Module data",
+      "description": "Envelope for Task Module.",
       "type": "object",
       "properties": {
         "task": {

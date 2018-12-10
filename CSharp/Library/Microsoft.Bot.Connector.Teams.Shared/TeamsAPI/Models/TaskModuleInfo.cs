@@ -7,7 +7,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     using System.Linq;
 
     /// <summary>
-    /// Describes a team
+    /// Metadata for a Task Module.
     /// </summary>
     public partial class TaskModuleInfo
     {

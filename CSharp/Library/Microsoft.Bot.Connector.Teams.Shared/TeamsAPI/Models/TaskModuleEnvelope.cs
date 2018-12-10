@@ -7,7 +7,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     using System.Linq;
 
     /// <summary>
-    /// Envelope for Task Module data
+    /// Envelope for Task Module.
     /// </summary>
     public partial class TaskModuleEnvelope
     {

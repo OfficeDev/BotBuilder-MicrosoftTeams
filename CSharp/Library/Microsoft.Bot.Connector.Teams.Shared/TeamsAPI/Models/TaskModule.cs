@@ -7,7 +7,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
     using System.Linq;
 
     /// <summary>
-    /// Model class for Task Module Task
+    /// Container class for Task Module Information
     /// </summary>
     public partial class TaskModule
     {
