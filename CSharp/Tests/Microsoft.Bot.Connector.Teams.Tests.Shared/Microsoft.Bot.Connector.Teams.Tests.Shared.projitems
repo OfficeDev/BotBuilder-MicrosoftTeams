@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdateTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryHelperTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SigninAuthTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TaskModuleTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsAPITests.FetchChannelList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsAPITests.FetchTeamDetails.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsChannelAccountTests.cs" />
@@ -80,6 +81,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleResponseGetTeamsConversationMembers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleCustomForm.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
