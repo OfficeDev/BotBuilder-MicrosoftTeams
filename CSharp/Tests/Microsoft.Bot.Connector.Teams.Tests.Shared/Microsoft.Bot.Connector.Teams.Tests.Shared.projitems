@@ -83,7 +83,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleResponseGetTeamsConversationMembers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleCustomForm.json">
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleAdaptiveCard.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleAdaptiveCardPayload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleCustomFormPayload.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleMessagePayload.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

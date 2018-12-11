@@ -5,8 +5,8 @@
       "title": "Custom Form",
       "height": 510,
       "width": 430,
-      "fallbackUrl": "https://contoso.com/teamsapp/customform",
-      "url": "https://contoso.com/teamsapp/customform"
+      "url": "https://contoso.com/teamsapp/customform",
+      "fallbackUrl": "https://contoso.com/teamsapp/customform"
     }
   }
 }

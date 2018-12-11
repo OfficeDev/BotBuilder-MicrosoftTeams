@@ -19,23 +19,23 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// <summary>
         /// Initializes a new instance of the TaskModule class.
         /// </summary>
-        /// <param name="value">The JSON for the Adaptive card to appear in
-        /// the task module.</param>
+        /// <param name="value">This could either be simple text message or
+        /// TaskModuleInfo object based on type.</param>
         /// <param name="type">Choice of action options when responding to the
         /// task/submit message. Possible values include: 'message',
         /// 'continue'</param>
-        public TaskModule(TaskModuleInfo value = default(TaskModuleInfo), string type = default(string))
+        public TaskModule(object value = default(object), string type = default(string))
         {
             Value = value;
             Type = type;
         }
 
         /// <summary>
-        /// Gets or sets the JSON for the Adaptive card to appear in the task
-        /// module.
+        /// Gets or sets this could either be simple text message or
+        /// TaskModuleInfo object based on type.
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "value")]
-        public TaskModuleInfo Value { get; set; }
+        public object Value { get; set; }
 
         /// <summary>
         /// Gets or sets choice of action options when responding to the

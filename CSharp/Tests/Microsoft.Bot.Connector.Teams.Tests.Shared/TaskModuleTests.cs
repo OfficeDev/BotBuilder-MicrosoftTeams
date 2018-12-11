@@ -41,18 +41,19 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using System;
     using System.IO;
 
     [TestClass]
     public class TaskModuleTests
     {
         /// <summary>
-        /// Test ToAttachment() extension method where adaptive card is created from JSON.
+        /// Test serialization of Task Module with custom form url .
         /// </summary>
         [TestMethod]
-        public void CardTests_AdaptiveCard_JsonToAttachment()
+        public void TaskModuleTests_CustomForm()
         {
-            TaskModuleEnvelope taskModuleEnvelope = new TaskModuleEnvelope
+            TaskModuleEnvelope currentTaskModuleEnvelope = new TaskModuleEnvelope
             {
                 Task = new TaskModule
                 {
@@ -62,14 +63,80 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                         Title = "Custom Form",
                         Height = 510,
                         Width = 430,
-                        FallbackUrl = "https://contoso.com/teamsapp/customform",
-                        Url = "https://contoso.com/teamsapp/customform"
+                        Url = "https://contoso.com/teamsapp/customform",
+                        FallbackUrl = "https://contoso.com/teamsapp/customform"
                     }
 
                 }
             };
-            var taskModuleFromFile = JsonConvert.DeserializeObject<TaskModuleEnvelope>(File.ReadAllText(@"Jsons\SampleTaskModuleCustomForm.json"));
-            Assert.IsTrue(JObject.DeepEquals(JObject.FromObject(taskModuleFromFile), JObject.FromObject(taskModuleEnvelope)));
+
+            var expectedTaskModuleEnvelope = JsonConvert.DeserializeObject<TaskModuleEnvelope>(File.ReadAllText(@"Jsons\SampleTaskModuleCustomFormPayload.json"));
+            Assert.IsTrue(expectedTaskModuleEnvelope != null);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task != null);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task.Type == currentTaskModuleEnvelope.Task.Type);
+            var expected = JsonConvert.DeserializeObject<TaskModuleInfo>(expectedTaskModuleEnvelope.Task.Value.ToString());
+            Assert.IsTrue(JObject.DeepEquals(JObject.FromObject(expected), JObject.FromObject(currentTaskModuleEnvelope.Task.Value)));
+        }
+
+        /// <summary>
+        /// Test serialization of Task Module with Adaptive Card.
+        /// </summary>
+        [TestMethod]
+        public void TaskModuleTests_AdaptiveCard()
+        {
+            AdaptiveCards.AdaptiveCard currentAdaptiveCard = new AdaptiveCards.AdaptiveCard();
+            currentAdaptiveCard.Body.Add(new AdaptiveCards.AdaptiveTextBlock("some text on card"));
+
+            var action = new AdaptiveCards.AdaptiveOpenUrlAction();
+            action.Url = new Uri("https://microsoft.com");
+            currentAdaptiveCard.Actions.Add(action);
+
+            TaskModuleEnvelope currentTaskModuleEnvelope = new TaskModuleEnvelope
+            {
+                Task = new TaskModule
+                {
+                    Type = "continue",
+                    Value = new TaskModuleInfo()
+                    {
+                        Title = "Adaptive Card: Inputs",
+                        Card = currentAdaptiveCard.ToAttachment(),
+                        Height = "small",
+                        Width = "small",
+                    }
+                }
+            };
+
+            var expectedTaskModuleEnvelope = JsonConvert.DeserializeObject<TaskModuleEnvelope>(File.ReadAllText(@"Jsons\SampleTaskModuleAdaptiveCardPayload.json"));
+            Assert.IsTrue(expectedTaskModuleEnvelope != null);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task != null);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task.Type == currentTaskModuleEnvelope.Task.Type);
+            var expected = JsonConvert.DeserializeObject<TaskModuleInfo>(expectedTaskModuleEnvelope.Task.Value.ToString());
+            var current = currentTaskModuleEnvelope.Task.Value as TaskModuleInfo;
+            Assert.AreEqual(expected.Width, current.Width);
+            Assert.AreEqual(expected.Title, current.Title);
+            Assert.AreEqual(expected.Card.ContentType, current.Card.ContentType);
+        }
+
+        /// <summary>
+        /// Test serialization of Task Module with message payload.
+        /// </summary>
+        [TestMethod]
+        public void TaskModuleTests_Message()
+        {
+            TaskModuleEnvelope currentTaskModuleEnvelope = new TaskModuleEnvelope
+            {
+                Task = new TaskModule
+                {
+                    Type = "message",
+                    Value = "This is a test message"
+                }
+            };
+
+            var expectedTaskModuleEnvelope = JsonConvert.DeserializeObject<TaskModuleEnvelope>(File.ReadAllText(@"Jsons\SampleTaskModuleMessagePayload.json"));
+            Assert.IsTrue(expectedTaskModuleEnvelope != null);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task.Type == currentTaskModuleEnvelope.Task.Type);
+            Assert.IsTrue(expectedTaskModuleEnvelope.Task.Value.ToString() == currentTaskModuleEnvelope.Task.Value.ToString());
+
         }
     }
 }

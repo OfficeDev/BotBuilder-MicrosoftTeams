@@ -962,8 +962,7 @@
       "properties": {
         "value": {
           "type": "object",
-          "description": "The JSON for the Adaptive card to appear in the task module.",
-          "$ref": "#/definitions/TaskModuleInfo"
+          "description": "This could either be simple text message or TaskModuleInfo object based on type."
         },
         "type": {
           "description": "Choice of action options when responding to the task/submit message.",
