@@ -7,21 +7,21 @@ namespace Microsoft.Bot.Connector.Teams.Models
     using System.Linq;
 
     /// <summary>
-    /// Envelope for Task Module.
+    /// Envelope for Task Module Response.
     /// </summary>
-    public partial class TaskModuleEnvelope
+    public partial class TaskModuleResponseEnvelope
     {
         /// <summary>
-        /// Initializes a new instance of the TaskModuleEnvelope class.
+        /// Initializes a new instance of the TaskModuleResponseEnvelope class.
         /// </summary>
-        public TaskModuleEnvelope() { }
+        public TaskModuleResponseEnvelope() { }
 
         /// <summary>
-        /// Initializes a new instance of the TaskModuleEnvelope class.
+        /// Initializes a new instance of the TaskModuleResponseEnvelope class.
         /// </summary>
         /// <param name="task">The JSON for the Adaptive card to appear in the
         /// task module.</param>
-        public TaskModuleEnvelope(TaskModule task = default(TaskModule))
+        public TaskModuleResponseEnvelope(TaskModuleResponseBase task = default(TaskModuleResponseBase))
         {
             Task = task;
         }
@@ -31,7 +31,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// module.
         /// </summary>
         [Newtonsoft.Json.JsonProperty(PropertyName = "task")]
-        public TaskModule Task { get; set; }
+        public TaskModuleResponseBase Task { get; set; }
 
     }
 }

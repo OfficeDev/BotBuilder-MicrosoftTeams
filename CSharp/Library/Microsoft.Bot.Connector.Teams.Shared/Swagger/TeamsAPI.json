@@ -920,7 +920,7 @@
       }
     },
 
-    "TaskModuleInfo": {
+    "TaskModuleTaskInfo": {
       "description": "Metadata for a Task Module.",
       "type": "object",
       "properties": {
@@ -956,14 +956,10 @@
       }
     },
 
-    "TaskModule": {
-      "description": "Container class for Task Module Information",
+    "TaskModuleResponseBase": {
+      "description": "Base class for Task Module responses",
       "type": "object",
       "properties": {
-        "value": {
-          "type": "object",
-          "description": "This could either be simple text message or TaskModuleInfo object based on type."
-        },
         "type": {
           "description": "Choice of action options when responding to the task/submit message.",
           "type": "string",
@@ -972,14 +968,51 @@
       }
     },
 
-    "TaskModuleEnvelope": {
-      "description": "Envelope for Task Module.",
+    "TaskModuleContinueResponse": {
+      "description": "Task Module Response with continue action.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskModuleResponseBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "object",
+              "description": "The JSON for the Adaptive card to appear in the task module.",
+              "$ref": "#/definitions/TaskModuleTaskInfo"
+            }
+          }
+        }
+      ]
+    },
+
+    "TaskModuleMessageResponse": {
+      "description": "Task Module response with message action.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskModuleResponseBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "Teams will display the value of value in a popup message box."
+            }
+          }
+        }
+      ]
+    },
+
+    "TaskModuleResponseEnvelope": {
+      "description": "Envelope for Task Module Response.",
       "type": "object",
       "properties": {
         "task": {
           "type": "object",
           "description": "The JSON for the Adaptive card to appear in the task module.",
-          "$ref": "#/definitions/TaskModule"
+          "$ref": "#/definitions/TaskModuleResponseBase"
         }
       }
     }

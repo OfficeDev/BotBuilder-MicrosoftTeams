@@ -9,15 +9,15 @@ namespace Microsoft.Bot.Connector.Teams.Models
     /// <summary>
     /// Metadata for a Task Module.
     /// </summary>
-    public partial class TaskModuleInfo
+    public partial class TaskModuleTaskInfo
     {
         /// <summary>
-        /// Initializes a new instance of the TaskModuleInfo class.
+        /// Initializes a new instance of the TaskModuleTaskInfo class.
         /// </summary>
-        public TaskModuleInfo() { }
+        public TaskModuleTaskInfo() { }
 
         /// <summary>
-        /// Initializes a new instance of the TaskModuleInfo class.
+        /// Initializes a new instance of the TaskModuleTaskInfo class.
         /// </summary>
         /// <param name="title">Appears below the app name and to the right of
         /// the app icon.</param>
@@ -35,7 +35,7 @@ namespace Microsoft.Bot.Connector.Teams.Models
         /// module feature, this URL is opened in a browser tab.</param>
         /// <param name="completionBotId">If a client does not support the
         /// task module feature, this URL is opened in a browser tab.</param>
-        public TaskModuleInfo(string title = default(string), object height = default(object), object width = default(object), string url = default(string), Attachment card = default(Attachment), string fallbackUrl = default(string), string completionBotId = default(string))
+        public TaskModuleTaskInfo(string title = default(string), object height = default(object), object width = default(object), string url = default(string), Attachment card = default(Attachment), string fallbackUrl = default(string), string completionBotId = default(string))
         {
             Title = title;
             Height = height;

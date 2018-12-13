@@ -7,35 +7,25 @@ namespace Microsoft.Bot.Connector.Teams.Models
     using System.Linq;
 
     /// <summary>
-    /// Container class for Task Module Information
+    /// Base class for Task Module responses
     /// </summary>
-    public partial class TaskModule
+    public partial class TaskModuleResponseBase
     {
         /// <summary>
-        /// Initializes a new instance of the TaskModule class.
+        /// Initializes a new instance of the TaskModuleResponseBase class.
         /// </summary>
-        public TaskModule() { }
+        public TaskModuleResponseBase() { }
 
         /// <summary>
-        /// Initializes a new instance of the TaskModule class.
+        /// Initializes a new instance of the TaskModuleResponseBase class.
         /// </summary>
-        /// <param name="value">This could either be simple text message or
-        /// TaskModuleInfo object based on type.</param>
         /// <param name="type">Choice of action options when responding to the
         /// task/submit message. Possible values include: 'message',
         /// 'continue'</param>
-        public TaskModule(object value = default(object), string type = default(string))
+        public TaskModuleResponseBase(string type = default(string))
         {
-            Value = value;
             Type = type;
         }
-
-        /// <summary>
-        /// Gets or sets this could either be simple text message or
-        /// TaskModuleInfo object based on type.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty(PropertyName = "value")]
-        public object Value { get; set; }
 
         /// <summary>
         /// Gets or sets choice of action options when responding to the
