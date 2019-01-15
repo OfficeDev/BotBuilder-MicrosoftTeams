@@ -53,6 +53,10 @@ export class ComposeExtensionResponse {
 		return new ComposeExtensionResponse("message");
 	}
 
+	public static messagePreview() {
+		return new ComposeExtensionResponse("botMessagePreview");
+	}
+
 	public attachments(list: ComposeExtensionAttachment[]): this {
 		this.data.composeExtension.attachments = [];
 		if (list) {
@@ -77,6 +81,12 @@ export class ComposeExtensionResponse {
 
 	public text(text: string): this {
 		this.data.composeExtension.text = text;
+		return this;
+	}
+
+	public preview(msg: builder.IIsMessage | builder.IMessage): this {
+		this.data.composeExtension.activityPreview =
+			(<builder.IIsMessage> msg).toMessage ? (<builder.IIsMessage> msg).toMessage() : (<builder.IMessage> msg);
 		return this;
 	}
 

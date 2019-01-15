@@ -737,7 +737,7 @@ export interface ComposeExtensionAttachment extends builder.IAttachment {
 }
 
 /** The kind of compose extension result */
-export type ComposeExtensionResultType = 'result' | 'auth' | 'config' | 'message';
+export type ComposeExtensionResultType = 'result' | 'auth' | 'config' | 'message' | 'botMessagePreview';
 
 /**
  * Determines how the set of results is displayed.
@@ -761,6 +761,9 @@ export interface ComposeExtensionResult {
 
   /** The text to display to the user. Used for "message" result. */
   text?: string;
+
+  /** The message activity to preview. Used for "botMessagePreview" results. */
+  activityPreview?: builder.IMessage;
 }
 
 /** Represents the response to a compose extension invoke message */
@@ -796,6 +799,9 @@ export class ComposeExtensionResponse {
   /** Creates a new response representing a message to show the user. */
   static message(): ComposeExtensionResponse;
 
+  /** Creates a new response representing a bot message preview to show the user. */
+  static messagePreview(): ComposeExtensionResponse;
+
   /** Results to send to the user. */
   attachments(list: ComposeExtensionAttachment[]): ComposeExtensionResponse;
 
@@ -804,6 +810,9 @@ export class ComposeExtensionResponse {
 
   /** Text to display for a "message" response. */
   text(text: string): ComposeExtensionResponse;
+
+  /** Message activity to preview for a "botMessagePreview" response. */
+  preview(message: builder.IIsMessage | builder.IMessage): ComposeExtensionResponse ;
 
   /** Returns the corresponding JSON. */
   toResponse(): IComposeExtensionResponse

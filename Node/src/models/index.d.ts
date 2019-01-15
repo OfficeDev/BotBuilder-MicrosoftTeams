@@ -601,6 +601,8 @@ export interface ComposeExtensionAttachment extends builder.IAttachment {
  * @member {array} [suggestedActions] suggestedActions
  *
  * @member {string} [text] text
+ * 
+ * @member {builder.IMessage} [activityPreview] activity (message) to preview 
  */
 
 export interface ComposeExtensionResult {
@@ -609,6 +611,7 @@ export interface ComposeExtensionResult {
   attachments?: ComposeExtensionAttachment[];
   suggestedActions?: builder.ISuggestedActions;
   text?: string;
+  activityPreview?: builder.IMessage;
 }
 
 
