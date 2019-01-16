@@ -634,8 +634,11 @@ export interface ComposeExtensionResult {
 export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
+
 export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
   commandId?: string;
+  botMessagePreviewAction?: 'edit' | 'send';
+  botActivityPreview?: builder.IMessage;
 }
 
 export class ComposeExtensionResponse {
