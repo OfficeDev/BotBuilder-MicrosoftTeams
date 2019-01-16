@@ -776,6 +776,12 @@ export interface IComposeExtensionResponse {
 export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
   /** The id of the command. */
   commandId?: string;
+
+  /** Bot message preview action taken by user. */
+  botMessagePreviewAction?: 'edit' | 'send';
+
+  /** Bot message preview action payload associate to the current action taken by user. */
+  botActivityPreview?: builder.IMessage;
 }
 
 /** Response builder class that simplifies constructing the response to a compose extension invoke message. */
