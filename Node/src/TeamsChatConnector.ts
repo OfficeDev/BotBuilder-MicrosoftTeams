@@ -102,7 +102,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchChannelList(serverUrl: string, teamId: string, callback: (err: Error, result: ChannelInfo[]) => void) : void {
-    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var options: msRest.ClientRequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
@@ -124,7 +124,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchTeamInfo(serverUrl: string, teamId: string, callback: (err: Error, result: TeamInfo) => void) : void {
-    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var options: msRest.ClientRequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
@@ -146,7 +146,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchMembers(serverUrl: string, conversationId: string, callback: (err: Error, result: ChannelAccount[]) => void) : void {
-    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var options: msRest.ClientRequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
@@ -236,7 +236,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {function} callback - This callback returns err or result.
   */
   public startReplyChain(serverUrl: string, channelId: string, message: builder.IMessage|builder.IIsMessage, callback?: (err: Error, address: builder.IChatConnectorAddress) => void) : void {
-    var options: msRest.RequestOptions = {customHeaders: {}, jar: false};
+    var options: msRest.ClientRequestOptions = {customHeaders: {}, jar: false};
     var restClient = new RestClient(serverUrl, null);
     var remoteQuery = new RemoteQuery(restClient);
     this.getAccessToken((err, token) => {
