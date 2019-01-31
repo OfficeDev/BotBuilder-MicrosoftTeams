@@ -1,6 +1,6 @@
 {
   "name": "botbuilder-teams",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Microsoft Teams Bot Builder extension SDK",
   "scripts": {
     "prepublish": "cd src && tsc && copy botbuilder-teams.d.ts ..\\lib",
