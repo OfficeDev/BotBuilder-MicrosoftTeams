@@ -535,6 +535,52 @@ describe('TeamsChatConnector', function () {
         done();
       })
     });    
-  });  
+  });
+  
+  describe('#onAppBasedLinkQuery()', function () {
+    it('should receive app based link query events', (done) => {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onAppBasedLinkQuery((event, request, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.appBasedLinkInvokeName,
+          value: { }  
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onAppBasedLinkQuery handler was not called');
+        done();
+      })
+    });
+  
+    it('should call invoke handler if no onAppBasedLinkQuery handler was registered', function (done) {
+      let connector = new lib.TeamsChatConnector({});
+  
+      let wasHandlerCalled = false;
+      connector.onInvoke((event, cb) => {
+        wasHandlerCalled = true;
+        cb(null, {}, 200);
+      });
+  
+      connector.onDispatchEvents([
+        {
+          type: 'invoke',
+          name: lib.TeamsChatConnector.appBasedLinkInvokeName,
+          value: { }
+        }
+      ], (err, body, status) => {
+        assert.ok(!err, 'An error occurred: ' + err);
+        assert.ok(wasHandlerCalled, 'The registered onInvoke handler was not called');
+        done();
+      })
+    });    
+  });   
 });
 

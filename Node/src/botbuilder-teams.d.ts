@@ -910,6 +910,7 @@ export type TaskModuleFetchHandlerType = (event: builder.IEvent, request: ITaskM
 export type TaskModuleSubmitHandlerType = (event: builder.IEvent, request: ITaskModuleInvokeRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit, statusCode?: number) => void) => void;
 export type ComposeExtensionFetchTaskHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfFetch | IComposeExtensionResponse, statusCode?: number) => void) => void;
 export type ComposeExtensionSubmitActionHandlerType = (event: builder.IEvent, request: IComposeExtensionActionCommandRequest, callback: (err: Error, result: ITaskModuleResponseOfSubmit | IComposeExtensionResponse, statusCode?: number) => void) => void;
+export type AppBasedLinkHandlerType = (event: builder.IEvent, query: ComposeExtensionQuery, callback: (err: Error, result: IComposeExtensionResponse, statusCode?: number) => void) => void;
 
 /** Specialization of the ChatConnector for Microsoft Teams. */
 export class TeamsChatConnector extends builder.ChatConnector {
@@ -1071,6 +1072,12 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param handler The function to execute when an invoke to submit action is received.
   */
   public onComposeExtensionSubmitAction(handler: ComposeExtensionSubmitActionHandlerType): void;  
+
+  /**
+  *  Set a handler for app based link invoke request.
+  *  @param handler The function to execute when an app based link invoke request is received.
+  */  
+  public onAppBasedLinkQuery(handler: AppBasedLinkHandlerType): void;
 }
 
 /**
