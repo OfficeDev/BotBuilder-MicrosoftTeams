@@ -377,7 +377,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
     this.composeExtensionSubmitActionHandler = handler;
   }
 
-  public onAppBasedLink(handler: AppBasedLinkHandlerType): void {
+  public onAppBasedLinkQuery(handler: AppBasedLinkHandlerType): void {
     this.appBasedLinkHandler = handler;
   }
 

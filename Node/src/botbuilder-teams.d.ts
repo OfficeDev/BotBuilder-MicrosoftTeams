@@ -1062,7 +1062,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Set a handler for app based link invoke request.
   *  @param handler The function to execute when an app based link invoke request is received.
   */  
-  public onAppBasedLink(handler: AppBasedLinkHandlerType): void;
+  public onAppBasedLinkQuery(handler: AppBasedLinkHandlerType): void;
 }
 
 /**

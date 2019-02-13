@@ -537,12 +537,12 @@ describe('TeamsChatConnector', function () {
     });    
   });
   
-  describe('#onAppBasedLink()', function () {
+  describe('#onAppBasedLinkQuery()', function () {
     it('should receive app based link query events', (done) => {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
-      connector.onAppBasedLink((event, request, cb) => {
+      connector.onAppBasedLinkQuery((event, request, cb) => {
         wasHandlerCalled = true;
         cb(null, {}, 200);
       });
@@ -555,12 +555,12 @@ describe('TeamsChatConnector', function () {
         }
       ], (err, body, status) => {
         assert.ok(!err, 'An error occurred: ' + err);
-        assert.ok(wasHandlerCalled, 'The registered onAppBasedLink handler was not called');
+        assert.ok(wasHandlerCalled, 'The registered onAppBasedLinkQuery handler was not called');
         done();
       })
     });
   
-    it('should call invoke handler if no onAppBasedLink handler was registered', function (done) {
+    it('should call invoke handler if no onAppBasedLinkQuery handler was registered', function (done) {
       let connector = new lib.TeamsChatConnector({});
   
       let wasHandlerCalled = false;
