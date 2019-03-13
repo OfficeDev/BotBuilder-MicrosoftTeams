@@ -635,10 +635,80 @@ export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
 
+export interface IMessageActionsPayload {
+  id: string;
+  replyToId: string;
+  messageType: 'message';
+  createdDateTime: string;
+  lastModifiedDateTime: string;
+  deleted: boolean;
+  subject: string;
+  summary: string;
+  importance: 'normal' | 'high' | 'urgent';
+  locale: string;
+  from: IMessageActionsPayloadFrom;
+  body: {
+    contentType: 'html' | 'text';
+    content: string;
+  };
+  attachmentLayout?: string;
+  attachments: IMessageActionsPayloadAttachment[];
+  mentions: IMessageActionsPayloadMention[];
+  reactions: IMessageActionsPayloadReaction[];
+}
+
+export interface IMessageActionsPayloadFrom {
+  device: null;
+  user: IMessageActionsPayloadUser;
+  application: IMessageActionsPayloadApp;
+  conversation: IMessageActionsPayloadConversation;
+}
+
+export interface IMessageActionsPayloadUser {
+  userIdentityType: 'aadUser' | 'onPremiseAadUser' | 'anonymousGuest' | 'federatedUser';
+  id: string;
+  displayName: string;
+}
+
+export interface IMessageActionsPayloadApp {
+  applicationIdentityType:  'aadApplication' | 'bot' | 'tenantBot' | 'office365Connector' | 'webhook';
+  id: string;
+  displayName: string;
+}
+
+export interface IMessageActionsPayloadConversation {
+  conversationIdentityType: 'team' | 'channel';
+  id: string;
+  displayName: string;
+}
+
+export interface IMessageActionsPayloadMention {
+  id: number;
+  mentionText: string;
+  mentioned: IMessageActionsPayloadFrom;
+}
+
+export interface IMessageActionsPayloadReaction {
+  reactionType: 'like' | 'heart' | 'laugh' | 'surprised' | 'sad' | 'angry';
+  createdDateTime: string;
+  user: IMessageActionsPayloadFrom;
+}
+
+export interface IMessageActionsPayloadAttachment {
+  id: string;
+  contentType: string;
+  contentUrl?: string;
+  content?: any;
+  name?: string;
+  thumbnailUrl?: string;
+}
+
 export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
   commandId?: string;
+  commandContext?: 'message' | 'compose' | 'commandbox';
   botMessagePreviewAction?: 'edit' | 'send';
   botActivityPreview?: builder.IMessage;
+  messageActionsPayload?: IMessageActionsPayload;
 }
 
 export class ComposeExtensionResponse {

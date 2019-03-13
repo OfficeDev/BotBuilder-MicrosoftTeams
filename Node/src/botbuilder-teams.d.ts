@@ -772,16 +772,175 @@ export interface IComposeExtensionResponse {
   composeExtension?: ComposeExtensionResult;
 }
 
+/** Represents the individual message within a chat or channel where a message actions is taken. */
+export interface IMessageActionsPayload {
+  /** Unique id of the message. */
+  id: string; 
+
+  /** Id of the parent/root message of the thread. */
+  replyToId: string;
+
+  /** Type of message - automatically set to message. */
+  messageType: 'message';
+
+  /** Timestamp of when the message was created. */
+  createdDateTime: string;
+
+  /** Timestamp of when the message was edited or updated. */
+  lastModifiedDateTime: string;
+
+  /** Indicates whether a message has been soft deleted. */
+  deleted: boolean; 
+
+  /** Subject line of the message.  */
+  subject: string;
+
+  /** Summary text of the message that could be used for notifications. */
+  summary: string;
+
+  /** The importance of the message. */
+  importance: 'normal' | 'high' | 'urgent';
+
+  /** Locale of the message set by the client. */
+  locale: string;
+  
+  /** Sender of the message. */
+  from: IMessageActionsPayloadFrom;
+
+  /** Plaintext/HTML representation of the content of the message. */
+  body: {
+    /** Type of the content. */
+    contentType: 'html' | 'text';
+
+    /** The content of the body. */
+    content: string;
+  };
+
+  /** How the attachment(s) are displayed in the message. */
+  attachmentLayout?: string;
+
+  /** Attachments in the message - card, image, file, etc. */
+  attachments: IMessageActionsPayloadAttachment[];
+
+  /** List of entities mentioned in the message. */
+  mentions: IMessageActionsPayloadMention[];
+
+  /** Reactions for the message. */
+  reactions: IMessageActionsPayloadReaction[];
+ }
+
+/** Represents a user, application, or conversation type that either sent or was referenced in a message. */
+export interface IMessageActionsPayloadFrom {
+  /** The device from which the action was taken, automatically set to null. */
+  device: null;
+
+  /** Represents details of the user. */
+  user: IMessageActionsPayloadUser;
+
+  /** Represents details of the app. */
+  application: IMessageActionsPayloadApp;
+
+  /** Represents details of the converesation. */
+  conversation: IMessageActionsPayloadConversation;
+}
+
+/** Represents a user entity. */
+export interface IMessageActionsPayloadUser {
+  /** The identity type of the user. */
+  userIdentityType: 'aadUser' | 'onPremiseAadUser' | 'anonymousGuest' | 'federatedUser';
+
+  /** The id of the user. */
+  id: string;
+
+  /** The plaintext display name of the user. */
+  displayName: string;
+}
+
+/** Represents an application entity. */
+export interface IMessageActionsPayloadApp {
+  /** The type of application. */
+  applicationIdentityType:  'aadApplication' | 'bot' | 'tenantBot' | 'office365Connector' | 'webhook';
+
+  /** The id of the application. */
+  id: string;
+
+  /** The plaintext display name of the application. */
+  displayName: string;
+}
+
+/** Represents a team or channel entity. */
+export interface IMessageActionsPayloadConversation {
+  /** The type of conversation, whether a team or channel. */
+  conversationIdentityType: 'team' | 'channel';
+
+  /** The id of the team or channel. */
+  id: string;
+  
+  /** The plaintext display name of the team or channel entity. */
+  displayName: string;
+}
+
+/** Represents the entity that was mentioned in the message. */
+export interface IMessageActionsPayloadMention {
+  /** The id of the mentioned entity. */
+  id: number;
+
+  /** The plaintext display name of the mentioned entity. */
+  mentionText: string;
+
+  /** Provides more details on the mentioned entity.  */
+  mentioned: IMessageActionsPayloadFrom;
+}
+
+/** Represents the reaction of a user to a message. */
+export interface IMessageActionsPayloadReaction {
+  /** The type of reaction given to the message. */
+  reactionType: 'like' | 'heart' | 'laugh' | 'surprised' | 'sad' | 'angry';
+
+  /** Timestamp of when the user reacted to the message. */
+  createdDateTime: string;
+
+  /** The user with which the reaction is associated. */
+  user: IMessageActionsPayloadFrom;
+}
+
+/** Represents the attachment in a message. */
+export interface IMessageActionsPayloadAttachment {
+  /** The id of the attachment. */
+  id: string;
+  
+  /** The type of the attachment. */
+  contentType: string;
+
+  /** The url of the attachment, in case of a external link. */
+  contentUrl?: string;
+
+  /** The content of the attachment, in case of a code snippet, email, or file. */
+  content?: any;
+
+  /** The plaintext display name of the attachment. */
+  name?: string;
+
+  /** The url of a thumbnail image that might be embedded in the attachment, in case of a card.  */
+  thumbnailUrl?: string;
+}
+
 /** Represents the value of the invoke activity of compose extension action command request */
 export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvokeRequest {
   /** The id of the command. */
   commandId?: string;
+
+  /** The context from which the command originates. */
+  commandContext: 'message' | 'compose' | 'commandbox';
 
   /** Bot message preview action taken by user. */
   botMessagePreviewAction?: 'edit' | 'send';
 
   /** Bot message preview action payload associate to the current action taken by user. */
   botActivityPreview?: builder.IMessage;
+
+  /** Message content sent as part of the command request. */
+  messageActionsPayload?: IMessageActionsPayload;
 }
 
 /** Response builder class that simplifies constructing the response to a compose extension invoke message. */
