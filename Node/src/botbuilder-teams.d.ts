@@ -931,7 +931,7 @@ export interface IComposeExtensionActionCommandRequest extends ITaskModuleInvoke
   commandId?: string;
 
   /** The context from which the command originates. */
-  commandContext: 'message' | 'compose' | 'commandbox';
+  commandContext?: 'message' | 'compose' | 'commandbox';
 
   /** Bot message preview action taken by user. */
   botMessagePreviewAction?: 'edit' | 'send';
