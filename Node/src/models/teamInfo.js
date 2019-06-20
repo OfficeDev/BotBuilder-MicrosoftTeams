@@ -47,15 +47,12 @@
  * @member {string} [aadGroupId] AAD group ID
  */
 class TeamInfo {
-  constructor(name, id) {
-    this.id = id;
-    this.name = name;
-  }
-
   constructor(name, id, aadGroupId) {
     this.id = id;
     this.name = name;
-    this.aadGroupId = aadGroupId
+    if (!!aadGroupId) {
+      this.aadGroupId = aadGroupId;
+    }
   }
 
   /**
