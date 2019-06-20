@@ -40,7 +40,6 @@
 
 var util = require('util');
 var msRest = require('ms-rest');
-var ServiceClient = msRest.ServiceClient;
 
 var models = require('../models');
 
@@ -61,24 +60,21 @@ var models = require('../models');
  * @param {boolean} [options.noRetryPolicy] - If set to true, turn off default retry policy
  *
  */
-function RestClient(baseUri, options) {
+class RestClient extends msRest.ServiceClient {
+  constructor (baseUri, options) {
+    if (!options) options = {};
 
-  if (!options) options = {};
-
-  RestClient['super_'].call(this, null, options);
-  this.baseUri = baseUri;
-  if (!this.baseUri) {
-    this.baseUri = 'https://api.botframework.com';
+    super(null, options);
+    this.baseUri = baseUri;
+    if (!this.baseUri) {
+      this.baseUri = 'https://api.botframework.com';
+    }
+  
+    var packageInfo = this.getPackageJsonInfo(__dirname);
+    this.addUserAgentInfo(util.format('%s/%s', packageInfo.name, packageInfo.version));
+    this.models = models;
+    msRest.addSerializationMixin(this);  
   }
-
-  var packageInfo = this.getPackageJsonInfo(__dirname);
-  this.addUserAgentInfo(util.format('%s/%s', packageInfo.name, packageInfo.version));
-  this.models = models;
-  msRest.addSerializationMixin(this);
-
-  return this;
 }
-
-util.inherits(RestClient, ServiceClient);
 
 module.exports = RestClient;

@@ -134,7 +134,7 @@ describe('TeamsMessage', function () {
         name: 'test'
       };
 
-      let mention = tm.UserMention(user);
+      let mention = new tm.UserMention(user);
       var message = new TeamsMessage(null);
       var msg = message.addEntity(mention);
       assert([
@@ -156,7 +156,7 @@ describe('TeamsMessage', function () {
         name: 'test'
       };
 
-      let mention = tm.ChannelMention(channel);
+      let mention = new tm.ChannelMention(channel);
       var message = new TeamsMessage(null);
       var msg = message.addEntity(mention);
       assert([
@@ -178,7 +178,7 @@ describe('TeamsMessage', function () {
         name: 'test'
       };
 
-      let mention = tm.ChannelMention(team);
+      let mention = new tm.ChannelMention(team);
       var message = new TeamsMessage(null);
       var msg = message.addEntity(mention);
       assert([
