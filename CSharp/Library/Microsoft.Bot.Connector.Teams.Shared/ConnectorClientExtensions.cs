@@ -36,7 +36,6 @@
 namespace Microsoft.Bot.Connector
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Teams;

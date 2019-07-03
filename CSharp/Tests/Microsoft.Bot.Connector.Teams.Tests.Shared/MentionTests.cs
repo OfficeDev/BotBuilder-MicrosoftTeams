@@ -39,7 +39,6 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.IO;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Newtonsoft.Json;
-    using Rest;
 
     /// <summary>
     /// @Mention tests.

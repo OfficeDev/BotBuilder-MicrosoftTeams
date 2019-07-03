@@ -45,7 +45,6 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector.Teams.Models;
-    using Microsoft.Bot.Connector.Teams.SampleBot.Controllers;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 

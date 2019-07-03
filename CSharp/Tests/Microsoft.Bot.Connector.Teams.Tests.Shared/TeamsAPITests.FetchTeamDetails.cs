@@ -41,7 +41,6 @@ namespace Microsoft.Bot.Connector.Teams.Tests
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Bot.Connector.Teams.Models;
     using Microsoft.Rest;
