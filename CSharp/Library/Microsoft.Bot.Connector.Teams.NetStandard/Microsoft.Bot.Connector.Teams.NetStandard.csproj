@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.3" />
     <PackageReference Include="Microsoft.Bot.Connector.Common" Version="3.6.0-alpha" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
