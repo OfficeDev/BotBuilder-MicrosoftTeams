@@ -1,3 +1,9 @@
+# This functionality is now in the core Bot Framework SDK
+
+This functionality has been moved into the core Bot Framework SDK. You should update your Bot Framework SDK to version 4.6 rather than using this SDK.
+
+This SDK will be deprecated, and will not receive further updates.
+
 # Bot Builder Microsoft Teams Extensions
 
  [![Build status](https://ci.appveyor.com/api/projects/status/504dr2qv99ee2ide/branch/master?svg=true)](https://ci.appveyor.com/project/RamjotSingh/botbuilder-microsoftteams/branch/master)
