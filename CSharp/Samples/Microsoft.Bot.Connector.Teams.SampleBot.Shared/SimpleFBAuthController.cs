@@ -87,7 +87,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
             var html = $@"
                 <html>
                     <head>
-                        <script src='https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js'></script>
+                        <script src='https://statics.teams.cdn.office.net/sdk/v1.5.2/js/MicrosoftTeams.min.js'></script>
                     </head>
                     <body>
                         <script>
