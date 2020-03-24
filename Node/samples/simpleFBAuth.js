@@ -216,7 +216,7 @@ var SimpleFBAuth = /** @class */ (function () {
     SimpleFBAuth.AuthStartPath = "/auth/start";
     SimpleFBAuth.AuthStartOAuthPath = "/auth/oauth";
     SimpleFBAuth.AuthCallbackPath = "/auth/callback";
-    SimpleFBAuth.TeamsSDK = 'https://statics.teams.cdn.office.net/sdk/v1.5.2/js/MicrosoftTeams.min.js';
+    SimpleFBAuth.TeamsSDK = 'https://statics.teams.cdn.office.net/sdk/v1.6.0/js/MicrosoftTeams.min.js';
     return SimpleFBAuth;
 }());
 exports.SimpleFBAuth = SimpleFBAuth;
