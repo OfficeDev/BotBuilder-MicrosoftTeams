@@ -9,7 +9,7 @@ This SDK will be deprecated, and will not receive further updates.
  [![Build status](https://ci.appveyor.com/api/projects/status/504dr2qv99ee2ide/branch/master?svg=true)](https://ci.appveyor.com/project/RamjotSingh/botbuilder-microsoftteams/branch/master)
 
 
-The Microsoft Bot Builder SDK Teams Extensions allow you to build bots for Microsoft Teams quickly and easily. **[Review the documentation](https://msdn.microsoft.com/en-us/microsoft-teams/bots)** to get started!
+The Microsoft Bot Builder SDK Teams Extensions allow you to build bots for Microsoft Teams quickly and easily. **[Review the documentation](https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/bots/bots-overview)** to get started!
 
 > Note that the Bot Builder Extensions does **NOT** yet work with Bot Framework SDK 4.x. It currently only works with Bot Framework SDK 3.x.
 
@@ -37,7 +37,7 @@ If you are using Node, grab the [botbuilder-teams](https://www.npmjs.com/package
 * Sample bot [Node](https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/tree/master/Node/samples)
 
 # Questions, bugs, feature requests, and contributions
-Please review the information [here](https://msdn.microsoft.com/en-us/microsoft-teams/feedback).
+Please review the information [here](https://docs.microsoft.com/en-us/microsoftteams/platform/feedback).
 
 # Contributing
 
