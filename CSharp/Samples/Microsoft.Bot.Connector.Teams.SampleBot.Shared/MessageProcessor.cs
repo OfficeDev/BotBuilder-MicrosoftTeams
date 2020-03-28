@@ -136,7 +136,7 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     },
                 };
 
-                await connectorClient.Conversations.SendToConversationAsync(newActivity, response.Id);
+                await connectorClient.Conversations.SendToConversationAsync(response.Id, newActivity);
             }
             else if (activity.Text.Contains("GetMembers"))
             {

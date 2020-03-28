@@ -25,7 +25,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ConversationUpdate\TeamRenamedEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileInfoCardEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RetryHelpers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TeamsAPI\**\*.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsChannelAccountEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TeamsConnectorClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TenantFiltering.cs" />
@@ -34,5 +33,8 @@
     <None Include="$(MSBuildThisFileDirectory)App.config" />
     <None Include="$(MSBuildThisFileDirectory)generateClient.cmd" />
     <None Include="$(MSBuildThisFileDirectory)Swagger\TeamsAPI.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)TeamsAPI\Models\" />
   </ItemGroup>
 </Project>

@@ -95,5 +95,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleTaskModuleMessagePayload.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Jsons\SampleResponseGetTeamsPaginatedConversationMembers.json" />
   </ItemGroup>
 </Project>
