@@ -107,6 +107,37 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         }
 
         /// <summary>
+        /// Get paged teams conversation members test
+        /// </summary>
+        /// <returns>Task tracking operation.</returns>
+        [TestMethod]
+        public async Task ConnectorExtensions_GetTeamsPagedConversationMembersAsync()
+        {
+            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
+            {
+                Assert.IsFalse(request.Headers.Contains("X-MsTeamsTenantId"));
+
+                StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseGetTeamsPaginatedConversationMembers.json"));
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = stringContent
+                };
+                return Task.FromResult(response);
+            });
+
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
+
+            var memberPagedResult = await conClient.Conversations.GetTeamsPagedConversationMembersAsync("TestConversationId", 2);
+            var members = memberPagedResult.Members;
+
+            Assert.IsTrue(members.Count() == 2);
+            Assert.IsFalse(string.IsNullOrEmpty(memberPagedResult.ContinuationToken));
+            Assert.IsFalse(members.Any(member => string.IsNullOrEmpty(member.ObjectId)));
+            Assert.IsFalse(members.Any(member => string.IsNullOrEmpty(member.Id)));
+            Assert.IsFalse(members.Any(member => string.IsNullOrEmpty(member.Name)));
+        }
+
+        /// <summary>
         /// Get teams conversation members async test.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
@@ -118,8 +149,10 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 Assert.IsFalse(request.Headers.Contains("X-MsTeamsTenantId"));
 
                 StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseGetTeamsConversationMembers.json"));
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = stringContent;
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = stringContent
+                };
                 return Task.FromResult(response);
             });
 

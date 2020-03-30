@@ -61,9 +61,28 @@ namespace Microsoft.Bot.Connector.Teams
         {
             using (var memberList = await conversations.GetConversationMembersWithHttpMessagesAsync(conversationId).ConfigureAwait(false))
             {
-                var members = await memberList.HandleErrorAsync<ChannelAccount[]>().ConfigureAwait(false);
+                var members = memberList.Body;
                 return members.Select(member => member.AsTeamsChannelAccount()).ToArray();
             }
+        }
+
+        /// <summary>
+        /// GET Paged teams conversation members asynchronously.
+        /// </summary>
+        /// <param name="conversations">Conversation instance.</param>
+        /// <param name="conversationId">Conversation Id.</param>
+        /// <param name="pageSize">Requested Page size</param>
+        /// <param name="continuationToken">Continuation token to fetch more pages</param>
+        /// <returns>Paged list of members who are part of conversation.</returns>
+        public static async Task<TeamsPagedMembersResult> GetTeamsPagedConversationMembersAsync(this IConversations conversations, string conversationId, int? pageSize, string continuationToken = null)
+        {
+            var pagedMembersResult = await conversations.GetConversationPagedMembersAsync(conversationId, pageSize: pageSize, continuationToken: continuationToken).ConfigureAwait(false);
+            var teamsPagedMembersResult = new TeamsPagedMembersResult
+            {
+                Members = pagedMembersResult.Members.Select(member => member.AsTeamsChannelAccount()).ToArray(),
+                ContinuationToken = pagedMembersResult.ContinuationToken
+            };
+            return teamsPagedMembersResult;
         }
 
         /// <summary>
