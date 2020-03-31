@@ -69,7 +69,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -106,7 +110,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -149,7 +157,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -180,7 +192,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -210,7 +226,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -240,7 +260,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -270,7 +294,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
@@ -300,7 +328,11 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                     count++;
                     var response = new HttpResponseMessage((HttpStatusCode)429);
                     response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
+                    var httpException = new Rest.HttpOperationException
+                    {
+                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
+                    };
+                    throw httpException;
                 }
                 else
                 {
