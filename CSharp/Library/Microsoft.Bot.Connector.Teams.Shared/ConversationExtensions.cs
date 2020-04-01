@@ -121,7 +121,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <exception cref="ValidationException"> Thrown when a required parameter is null </exception>
         /// <exception cref="System.ArgumentNullException"> Thrown when a required parameter is null </exception>
         /// <return> A response object containing the response body and response headers. </return>
-        public static async Task<HttpOperationResponse<ChannelAccount>> GetConversationMemberAsync(this ConnectorClient Client, string userId, string conversationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        private static async Task<HttpOperationResponse<ChannelAccount>> GetConversationMemberAsync(this ConnectorClient Client, string userId, string conversationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (conversationId == null)
             {
