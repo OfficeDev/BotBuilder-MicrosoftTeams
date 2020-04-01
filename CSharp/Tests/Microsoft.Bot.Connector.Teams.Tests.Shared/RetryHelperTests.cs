@@ -61,32 +61,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         {
             DateTime dateTime = DateTime.MinValue;
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    dateTime = DateTime.Now;
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    if (!(DateTime.Now - dateTime > TimeSpan.FromSeconds(2) && (DateTime.Now - dateTime < TimeSpan.FromSeconds(20))))
-                    {
-                        Assert.Fail("Invalid backoff time detected for default retry strategy" + (DateTime.Now - dateTime));
-                    }
-
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -102,32 +77,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         {
             DateTime dateTime = DateTime.MinValue;
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    dateTime = DateTime.Now;
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    if (!(DateTime.Now - dateTime > TimeSpan.FromSeconds(5) && (DateTime.Now - dateTime < TimeSpan.FromSeconds(20))))
-                    {
-                        Assert.Fail("Invalid backoff time detected for default retry strategy" + (DateTime.Now - dateTime));
-                    }
-
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -150,26 +100,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_SendActivityWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -185,26 +116,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_SendActivityWithCustomConvIdWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -219,26 +131,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_SendToConversationWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -253,26 +146,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_SendToConversationWithCustomConvIdWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -287,26 +161,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_UpdateActivityWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
-            {
-                if (count < 3)
-                {
-                    count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    var httpException = new Rest.HttpOperationException
-                    {
-                        Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
-                    };
-                    throw httpException;
-                }
-                else
-                {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
-                    return Task.FromResult(response);
-                }
-            });
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
 
             Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
@@ -321,13 +176,24 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         public async Task RetryHelpers_UpdateActivityWithCustomConvIdWithRetries()
         {
             int count = 0;
-            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
+            TestDelegatingHandler testDelegatingHandler = GenerateTestHandler(count);
+
+            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
+            await conClient.Conversations.UpdateActivityWithRetriesAsync(sampleActivity.Conversation.Id, sampleActivity.Id, sampleActivity);
+        }
+
+        private TestDelegatingHandler GenerateTestHandler(int count)
+        {
+            return new TestDelegatingHandler((request) =>
             {
                 if (count < 3)
                 {
                     count++;
-                    var response = new HttpResponseMessage((HttpStatusCode)429);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
+                    var response = new HttpResponseMessage((HttpStatusCode)429)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")))
+                    };
                     var httpException = new Rest.HttpOperationException
                     {
                         Response = new Rest.HttpResponseMessageWrapper(response, "Failed")
@@ -336,15 +202,14 @@ namespace Microsoft.Bot.Connector.Teams.Tests
                 }
                 else
                 {
-                    var response = new HttpResponseMessage((HttpStatusCode)200);
-                    response.Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")));
+                    var response = new HttpResponseMessage((HttpStatusCode)200)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(new ResourceResponse("ID")))
+                    };
                     return Task.FromResult(response);
                 }
             });
 
-            Activity sampleActivity = JsonConvert.DeserializeObject<Activity>(File.ReadAllText(@"Jsons\SampleActivityNoMentions.json"));
-            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
-            await conClient.Conversations.UpdateActivityWithRetriesAsync(sampleActivity.Conversation.Id, sampleActivity.Id, sampleActivity);
         }
     }
 }

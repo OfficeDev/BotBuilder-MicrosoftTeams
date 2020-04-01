@@ -101,7 +101,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <returns>Returns the request member.</returns>
         public static async Task<TeamsChannelAccount> GetTeamsConversationMemberAsync(this IConversations conversations, ConnectorClient client, string userId, string conversationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            using (var getMemberResponse = await GetConversationMemberWithHttpMessagesAsync(client, userId, conversationId, customHeaders: customHeaders, cancellationToken: cancellationToken).ConfigureAwait(false))
+            using (var getMemberResponse = await GetConversationMemberAsync(client, userId, conversationId, customHeaders: customHeaders, cancellationToken: cancellationToken).ConfigureAwait(false))
             {
                 var member = getMemberResponse.Body;
                 return member.AsTeamsChannelAccount();
@@ -121,7 +121,7 @@ namespace Microsoft.Bot.Connector.Teams
         /// <exception cref="ValidationException"> Thrown when a required parameter is null </exception>
         /// <exception cref="System.ArgumentNullException"> Thrown when a required parameter is null </exception>
         /// <return> A response object containing the response body and response headers. </return>
-        public static async Task<HttpOperationResponse<ChannelAccount>> GetConversationMemberWithHttpMessagesAsync(this ConnectorClient Client, string userId, string conversationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static async Task<HttpOperationResponse<ChannelAccount>> GetConversationMemberAsync(this ConnectorClient Client, string userId, string conversationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (conversationId == null)
             {
@@ -131,6 +131,71 @@ namespace Microsoft.Bot.Connector.Teams
             {
                 throw new ValidationException(ValidationRules.CannotBeNull, "userId");
             }
+
+            var httpBundle = await SetupAndSendHttpRequestGetConversationMember(Client, conversationId, userId, customHeaders: customHeaders, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var _httpRequest = httpBundle.Item1;
+            var _httpResponse = httpBundle.Item2;
+
+            HttpStatusCode _statusCode = _httpResponse.StatusCode;
+            cancellationToken.ThrowIfCancellationRequested();
+            string _responseContent = null;
+            if ((int)_statusCode != 200)
+            {
+                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
+                try
+                {
+                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    ErrorResponse _errorBody = Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
+                    if (_errorBody != null)
+                    {
+                        ex.Body = _errorBody;
+                    }
+                }
+                catch (JsonException)
+                {
+                    // Ignore the exception
+                }
+                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _httpRequest.Content.ToString());
+                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
+
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw ex;
+            }
+            // Create Result
+            var _result = await GenerateChannelAccountFromHttpResponse(_httpResponse, _httpRequest, Client.DeserializationSettings).ConfigureAwait(false);
+            return _result;
+        }
+
+
+        /// <summary>
+        /// Gets teams channel account data.
+        /// </summary>
+        /// <param name="channelAccount">Channel account instance.</param>
+        /// <returns>Teams channel account data.</returns>
+        public static TeamsChannelAccount AsTeamsChannelAccount(this ChannelAccount channelAccount)
+        {
+            return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
+        }
+
+        /// <summary>
+        /// Resolves channel account collection to extended teams channel account collection.
+        /// </summary>
+        /// <param name="channelAccountList">Collection of Channel account.</param>
+        /// <returns>Teams channel account collection.</returns>
+        public static IEnumerable<TeamsChannelAccount> AsTeamsChannelAccounts(this IEnumerable<ChannelAccount> channelAccountList)
+        {
+            foreach (ChannelAccount channelAccount in channelAccountList)
+            {
+                yield return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
+            }
+        }
+
+        private static async Task<Tuple<HttpRequestMessage, HttpResponseMessage>> SetupAndSendHttpRequestGetConversationMember(ConnectorClient Client, string conversationId, string userId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
             // Construct URL
             var _baseUrl = Client.BaseUri.AbsoluteUri;
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "v3/conversations/{conversationId}/members/{userId}").ToString();
@@ -164,47 +229,21 @@ namespace Microsoft.Bot.Connector.Teams
 
             cancellationToken.ThrowIfCancellationRequested();
             _httpResponse = await Client.HttpClient.SendAsync(_httpRequest, cancellationToken).ConfigureAwait(false);
+            return new Tuple<HttpRequestMessage, HttpResponseMessage>(_httpRequest, _httpResponse);
+        }
 
-            HttpStatusCode _statusCode = _httpResponse.StatusCode;
-            cancellationToken.ThrowIfCancellationRequested();
-            string _responseContent = null;
-            if ((int)_statusCode != 200)
-            {
-                var ex = new ErrorResponseException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
-                try
-                {
-                    _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    ErrorResponse _errorBody = Rest.Serialization.SafeJsonConvert.DeserializeObject<ErrorResponse>(_responseContent, Client.DeserializationSettings);
-                    if (_errorBody != null)
-                    {
-                        ex.Body = _errorBody;
-                    }
-                }
-                catch (JsonException)
-                {
-                    // Ignore the exception
-                }
-                ex.Request = new HttpRequestMessageWrapper(_httpRequest, _requestContent);
-                ex.Response = new HttpResponseMessageWrapper(_httpResponse, _responseContent);
-
-                _httpRequest.Dispose();
-                if (_httpResponse != null)
-                {
-                    _httpResponse.Dispose();
-                }
-                throw ex;
-            }
-            // Create Result
+        private static async Task<HttpOperationResponse<ChannelAccount>> GenerateChannelAccountFromHttpResponse(HttpResponseMessage _httpResponse, HttpRequestMessage _httpRequest, JsonSerializerSettings jsonSerializerSettings)
+        {
             var _result = new HttpOperationResponse<ChannelAccount>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 200)
+            if ((int)_httpResponse.StatusCode == 200)
             {
-                _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ChannelAccount>(_responseContent, Client.DeserializationSettings);
+                    _result.Body = Rest.Serialization.SafeJsonConvert.DeserializeObject<ChannelAccount>(_responseContent, jsonSerializerSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -216,32 +255,7 @@ namespace Microsoft.Bot.Connector.Teams
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
-
             return _result;
-        }
-
-
-        /// <summary>
-        /// Gets teams channel account data.
-        /// </summary>
-        /// <param name="channelAccount">Channel account instance.</param>
-        /// <returns>Teams channel account data.</returns>
-        public static TeamsChannelAccount AsTeamsChannelAccount(this ChannelAccount channelAccount)
-        {
-            return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
-        }
-
-        /// <summary>
-        /// Resolves channel account collection to extended teams channel account collection.
-        /// </summary>
-        /// <param name="channelAccountList">Collection of Channel account.</param>
-        /// <returns>Teams channel account collection.</returns>
-        public static IEnumerable<TeamsChannelAccount> AsTeamsChannelAccounts(this IEnumerable<ChannelAccount> channelAccountList)
-        {
-            foreach (ChannelAccount channelAccount in channelAccountList)
-            {
-                yield return JObject.FromObject(channelAccount).ToObject<TeamsChannelAccount>();
-            }
         }
     }
 }
