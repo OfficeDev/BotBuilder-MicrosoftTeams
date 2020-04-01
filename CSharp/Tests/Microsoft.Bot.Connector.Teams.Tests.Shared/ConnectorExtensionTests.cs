@@ -138,6 +138,35 @@ namespace Microsoft.Bot.Connector.Teams.Tests
         }
 
         /// <summary>
+        /// Get paged teams conversation members test
+        /// </summary>
+        /// <returns>Task tracking operation.</returns>
+        [TestMethod]
+        public async Task ConnectorExtensions_GetTeamsSingleConversationMemberTest()
+        {
+            TestDelegatingHandler testDelegatingHandler = new TestDelegatingHandler((request) =>
+            {
+                Assert.IsFalse(request.Headers.Contains("X-MsTeamsTenantId"));
+
+                StringContent stringContent = new StringContent(File.ReadAllText(@"Jsons\SampleResponseTeamsGetConversationMember.json"));
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = stringContent
+                };
+                return Task.FromResult(response);
+            });
+
+            ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
+
+            var member = await conClient.Conversations.GetTeamsConversationMemberAsync(conClient, userId: "test2", conversationId: "TestConversationId");
+
+
+            Assert.IsFalse(string.IsNullOrEmpty(member.ObjectId));
+            Assert.IsFalse(string.IsNullOrEmpty(member.Id));
+            Assert.IsFalse(string.IsNullOrEmpty(member.Name));
+        }
+
+        /// <summary>
         /// Get teams conversation members async test.
         /// </summary>
         /// <returns>Task tracking operation.</returns>
