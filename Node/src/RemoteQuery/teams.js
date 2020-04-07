@@ -67,6 +67,7 @@ class Teams {
   fetchMemberList(conversationId, options, callback);
   fetchTeamInfo(teamsId, options, callback);
   beginReplyChainInChannel(channelId, message, options, callback);
+  fetchMember(conversationId, memberId, options, callback);
 }
 
 /**
