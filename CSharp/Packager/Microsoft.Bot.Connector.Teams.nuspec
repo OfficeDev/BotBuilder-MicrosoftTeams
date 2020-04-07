@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Microsoft.Bot.Connector.Teams</id>
-    <version>0.9.0</version>
+    <version>0.10.0</version>
     <authors>Microsoft</authors>
     <licenseUrl>https://github.com/OfficeDev/BotBuilder-MicrosoftTeams/blob/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <projectUrl>https://github.com/OfficeDev/BotBuilder-MicrosoftTeams</projectUrl>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
-    <description>Extends Microsoft.Bot.Builder functionality to include Microsoft Teams specific constructs.</description>
+    <description>Adds functionality for Get Paged Conversation Members and Get Single Conversation Member</description>
     <dependencies>
       <!--<group targetFramework=".NETStandard1.6">
         <dependency id="Microsoft.Bot.Connector.Common" version="3.6.0-alpha" exclude="Build,Analyzers" />
