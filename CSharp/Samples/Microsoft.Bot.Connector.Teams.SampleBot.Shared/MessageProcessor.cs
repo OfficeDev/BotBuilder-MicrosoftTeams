@@ -146,6 +146,29 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                 replyActivity.Text = string.Join("</p><p>", response.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
                 await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
             }
+            else if (activity.Text.Contains("GetPagedConversationMembers"))
+            {
+                var response = await connectorClient.Conversations.GetTeamsPagedConversationMembersAsync(activity.Conversation.Id, 20);
+                StringBuilder stringBuilder = new StringBuilder();
+                Activity replyActivity = activity.CreateReply();
+                replyActivity.Text = string.Join("</p><p>", response.Members?.ToList().Select(info => info.GivenName + " " + info.Surname + " --> " + info.ObjectId));
+                replyActivity.Text = replyActivity.Text + "/n" + string.Format("</p>Continuation Token: {0} <p>", response.ContinuationToken ?? "continutation token is null");
+               await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+            }
+            else if (activity.Text.Contains("GetConversationMember"))
+            {
+                var tokens = activity.Text.Split(' ')?.ToList();
+                var userId = activity.From.Id;
+                if (tokens?.Count() == 3)
+                {
+                    userId = tokens[2];
+                }
+                var response = (await connectorClient.Conversations.GetTeamsConversationMemberAsync(connectorClient, userId, activity.Conversation.Id));
+                Activity replyActivity = activity.CreateReply();
+                replyActivity.Text = "</p>Name:" + response.GivenName + " " + response.Surname + " --> " + response.ObjectId;
+
+                await connectorClient.Conversations.ReplyToActivityWithRetriesAsync(replyActivity);
+            }
             else if (activity.Text.Contains("TestRetry"))
             {
                 for (int i = 0; i < 15; i++)
@@ -227,6 +250,8 @@ namespace Microsoft.Bot.Connector.Teams.SampleBot.Shared
                     "<p>Type GetTenantId to get Tenant Id </p>" +
                     "<p>Type Create1on1 to create one on one conversation. </p>" +
                     "<p>Type GetMembers to get list of members in a conversation (team or direct conversation). </p>" +
+                    "<p>Type GetPagedConversationMembers to get paged list of members in a conversation (team or direct conversation) </p>" +
+                    "<p>Type GetConversationMember <memberId> To fetch a specific member (defaults to caller ID)</p>" +
                     "<p>Type TestRetry to get multiple messages from Bot in throttled and retried mechanism. </p>" +
                     "<p>Type O365Card to get a O365 actionable connector card. </p>" +
                     "<p>Type Signin to issue a Signin card to sign in a Facebook app. </p>" +
