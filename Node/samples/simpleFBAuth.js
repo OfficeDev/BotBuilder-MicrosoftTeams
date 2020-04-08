@@ -8,7 +8,7 @@ var SimpleFBAuth = /** @class */ (function () {
     function SimpleFBAuth(server) {
         var _this = this;
         this.userIdFacebookTokenCache = {};
-        server.use(restify.queryParser());
+        server.use(restify.plugins.queryParser());
         server.get(SimpleFBAuth.AuthStartPath + '/:userId', function (req, res, next) { return _this.authStart(req, res, next); });
         server.get(SimpleFBAuth.AuthCallbackPath, function (req, res, next) { return _this.authCallback(req, res, next); });
         server.get(SimpleFBAuth.AuthStartOAuthPath, function (req, res, next) { return _this.authStartOAuth(req, res, next); });

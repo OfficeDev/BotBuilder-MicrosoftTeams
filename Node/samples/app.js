@@ -32,8 +32,9 @@ server.listen(3978, function () {
 connector.setAllowedTenants([]);
 // this will reset and allow to receive from any tenants
 connector.resetAllowedTenants();
-server.post('/api/v1/bot/messages', connector.listen());
-var bot = new builder.UniversalBot(connector);
+server.post('/api/messages', connector.listen());
+var inMemoryStorage = new builder.MemoryBotStorage();
+var bot = new builder.UniversalBot(connector).set('storage', inMemoryStorage);
 // create the bot auth agent
 var botSigninSettings = {
     baseUrl: 'https://...',
@@ -50,7 +51,7 @@ var stripBotAtMentions = new teams.StripBotAtMentions();
 bot.use(stripBotAtMentions);
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message');
+        builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message|FetchConversationMember');
     },
     function (session, results) {
         switch (results.response.index) {
@@ -96,6 +97,9 @@ bot.dialog('/', [
             case 13:
                 session.beginDialog('BotDeleteMessage');
                 break;
+            case 14:
+                session.beginDialog('FetchConversationMember');
+                break;
             default:
                 session.endDialog();
                 break;
@@ -120,6 +124,18 @@ bot.dialog('FetchChannelList', function (session) {
 bot.dialog('FetchMemberList', function (session) {
     var conversationId = session.message.address.conversation.id;
     connector.fetchMembers(session.message.address.serviceUrl, conversationId, function (err, result) {
+        if (err) {
+            session.endDialog('There is some error');
+        }
+        else {
+            session.endDialog('%s', JSON.stringify(result));
+        }
+    });
+});
+bot.dialog('FetchConversationMember', function (session) {
+    var conversationId = session.message.address.conversation.id;
+    var memberId = session.message.user.id;
+    connector.fetchMember(session.message.address.serviceUrl, conversationId, memberId, function (err, result) {
         if (err) {
             session.endDialog('There is some error');
         }

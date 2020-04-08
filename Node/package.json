@@ -15,7 +15,8 @@
     "botbuilder": "^3.30.0",
     "crypto": "^1.0.1",
     "ms-rest": "^2.5.0",
-    "sprintf-js": "^1.1.1"
+    "sprintf-js": "^1.1.1",
+    "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@types/node": "^13.11.0",
@@ -23,6 +24,6 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
     "restify": "^4.3.1",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.8.3"
   }
 }

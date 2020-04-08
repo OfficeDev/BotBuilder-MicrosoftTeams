@@ -58,7 +58,7 @@ bot.use(stripBotAtMentions);
 
 bot.dialog('/', [
   function (session) {
-    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message');
+    builder.Prompts.choice(session, "Choose an option:", 'Fetch channel list|Mention user|Start new 1 on 1 chat|Route message to general channel|FetchMemberList|Send O365 actionable connector card|FetchTeamInfo(at Bot in team)|Start New Reply Chain (in channel)|Issue a Signin card to sign in a Facebook app|Logout Facebook app and clear cached credentials|MentionChannel|MentionTeam|NotificationFeed|Bot Delete Message|FetchConversationMember');
   },
   function (session, results) {
     switch (results.response.index) {
@@ -104,6 +104,9 @@ bot.dialog('/', [
       case 13:
         session.beginDialog('BotDeleteMessage');
         break
+      case 14:
+        session.beginDialog('FetchConversationMember');
+        break;
       default:
         session.endDialog();
         break;
@@ -146,6 +149,19 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
       }
     }
   );
+});
+
+bot.dialog('FetchConversationMember', function (session) {
+  var conversationId = session.message.address.conversation.id;
+  var memberId = session.message.user.id;
+  connector.fetchMember((<builder.IChatConnectorAddress>session.message.address).serviceUrl, conversationId, memberId, function (err, result) {
+      if (err) {
+          session.endDialog('There is some error');
+      }
+      else {
+          session.endDialog('%s', JSON.stringify(result));
+      }
+  });
 });
 
 bot.dialog('FetchTeamInfo', function (session: builder.Session) {
