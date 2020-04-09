@@ -155,7 +155,7 @@ bot.dialog('FetchMemberList', function (session: builder.Session) {
 bot.dialog('FetchConversationMember', function (session) {
   var conversationId = session.message.address.conversation.id;
   var memberId = session.message.user.id;
-  connector.fetchMember((<builder.IChatConnectorAddress>session.message.address).serviceUrl, conversationId, memberId, function (err, result) {
+  connector.fetchMember((<builder.IChatConnectorAddress>session.message.address).serviceUrl, conversationId, memberId, (err, result) => {
       if (err) {
           session.endDialog('There is some error');
       }
