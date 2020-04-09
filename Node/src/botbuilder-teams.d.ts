@@ -1112,17 +1112,19 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  Return a list of members in team or chat.
   *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
   *  @param {string} conversationId - The team id or chat conversation id.
-  * @param {string} memberId - Member Id
+  *  @param {string} memberId - Member Id
   *  @param {function} callback - Function to invoke with the list of members.
   */
- public fetchMember(serviceUrl: string, conversationId: string, memberId: string,  callback: (err: Error, result: ChannelAccount[]) => void) : void;
 
-  /**
-  *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
-  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
-  *  @param {string} conversationId - The team id or chat conversation id.
-  *  @param {function} callback - Function to invoke with the list of members.
-  */
+ public fetchMember(serviceUrl: string, conversationId: string, memberId: string,  callback: (err: Error, result: ChannelAccount) => void) : void;
+
+    /**
+    *  Return a list of members in team or chat. The result is paginated if necessary. By default page size is 200.
+    *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+    *  @param {string} conversationId - The team id or chat conversation id.
+    *  @param {function} callback - Function to invoke with the list of members.
+    */
+
  public fetchMembersWithPaging(serviceUrl: string, conversationId: string, callback: (err: Error, result: TeamsChannelAccountsResult) => void) : void;
 
    /**

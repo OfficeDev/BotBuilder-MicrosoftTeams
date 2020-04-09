@@ -37,8 +37,9 @@ connector.setAllowedTenants([]);
 // this will reset and allow to receive from any tenants
 connector.resetAllowedTenants();
 
-server.post('/api/v1/bot/messages', connector.listen());
-var bot = new builder.UniversalBot(connector);
+server.post('/api/messages', connector.listen());
+var inMemoryStorage = new builder.MemoryBotStorage();
+var bot = new builder.UniversalBot(connector).set('storage', inMemoryStorage);
 
 // create the bot auth agent
 let botSigninSettings: IFacebookAppSigninSettings = {
