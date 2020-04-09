@@ -441,7 +441,7 @@ namespace Microsoft.Bot.Connector.Teams.Tests
 
             ConnectorClient conClient = new ConnectorClient(new Uri("https://testservice.com"), "Test", "Test", testDelegatingHandler);
 
-            Assert.IsTrue(conClient.Conversations.SendToConversation(activity, "Test").Id == "TestId");
+            Assert.IsTrue(conClient.Conversations.SendToConversation("Test", activity).Id == "TestId");
         }
     }
 }

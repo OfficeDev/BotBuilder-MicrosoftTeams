@@ -178,7 +178,7 @@ namespace Microsoft.Bot.Connector
             string conversationId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteWithRetries(() => conversation.SendToConversationAsync(activity, conversationId, cancellationToken), conversation);
+            return await ExecuteWithRetries(() => conversation.SendToConversationAsync(conversationId, activity, cancellationToken), conversation);
         }
 
         /// <summary>
