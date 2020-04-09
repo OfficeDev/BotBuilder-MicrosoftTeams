@@ -67,6 +67,7 @@ class Teams {
   fetchMemberList(conversationId, options, callback);
   fetchTeamInfo(teamsId, options, callback);
   beginReplyChainInChannel(channelId, message, options, callback);
+  fetchMember(conversationId, memberId, options, callback);
 }
 
 /**
@@ -312,6 +313,131 @@ Teams.prototype.fetchMemberList = function(conversationId, options, callback) {
     }
     return callback(null, result, httpRequest, response);
   });
+}
+
+/**
+ * @summary Fetches a specific member from the conversation thread
+ * @param {string} conversationId Conversation Id
+ * 
+ * @param {string} memberId Member Id
+ * 
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ChannelAccount} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Teams.prototype.fetchMember = function(conversationId, memberId, options, callback) {
+  /* jshint validthis: true */
+ let client = this.client;
+ if(!callback && typeof options === 'function') {
+   callback = options;
+   options = null;
+ }
+ if (!callback) {
+   throw new Error('callback cannot be null.');
+ }
+ // Validate
+ try {
+   if (conversationId === null || conversationId === undefined || typeof conversationId.valueOf() !== 'string') {
+     throw new Error('conversationId cannot be null or undefined and it must be of type string.');
+   }
+   if (memberId === null || memberId === undefined || typeof memberId.valueOf() !== 'string') {
+    throw new Error('memberId cannot be null or undefined and it must be of type string.');
+  }
+ } catch (error) {
+   return callback(error);
+ }
+
+ // Construct URL
+ let baseUrl = this.client.baseUri;
+ let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v3/conversations/{conversationId}/members/{memberId}';
+ requestUrl = requestUrl.replace('{conversationId}', encodeURIComponent(conversationId));
+ requestUrl = requestUrl.replace('{memberId}', encodeURIComponent(memberId));
+
+ // Create HTTP transport objects
+ let httpRequest = new WebResource();
+ httpRequest.method = 'GET';
+ httpRequest.headers = {};
+ httpRequest.url = requestUrl;
+ // Set Headers
+ if(options) {
+   for(let headerName in options['customHeaders']) {
+     if (options['customHeaders'].hasOwnProperty(headerName)) {
+       httpRequest.headers[headerName] = options['customHeaders'][headerName];
+     }
+   }
+ }
+ httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+ httpRequest.body = null;
+ // Send Request
+ return client.pipeline(httpRequest, (err, response, responseBody) => {
+   if (err) {
+     return callback(err);
+   }
+   let statusCode = response.statusCode;
+   if (statusCode !== 200) {
+     let error = new Error(responseBody);
+     error.statusCode = response.statusCode;
+     error.request = msRest.stripRequest(httpRequest);
+     error.response = msRest.stripResponse(response);
+     if (responseBody === '') responseBody = null;
+     let parsedErrorResponse;
+     try {
+       parsedErrorResponse = JSON.parse(responseBody);
+       if (parsedErrorResponse) {
+         let internalError = null;
+         if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+         error.code = internalError ? internalError.code : parsedErrorResponse.code;
+         error.message = internalError ? internalError.message : parsedErrorResponse.message;
+       }
+     } catch (defaultError) {
+       error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                        `- "${responseBody}" for the default response.`;
+       return callback(error);
+     }
+     return callback(error);
+   }
+   // Create Result
+   let result = null;
+   if (responseBody === '') responseBody = null;
+   // Deserialize Response
+   if (statusCode === 200) {
+     let parsedResponse = null;
+     try {
+       parsedResponse = JSON.parse(responseBody);
+       result = JSON.parse(responseBody);
+       if (parsedResponse !== null && parsedResponse !== undefined) {
+         var resultMapper = {
+           required: false,
+           serializedName: 'parsedResponse',
+           type: {
+             name: 'Object'
+           }
+         };
+         result = client.deserialize(resultMapper, parsedResponse, 'result');
+       }
+     } catch (error) {
+       let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+       deserializationError.request = msRest.stripRequest(httpRequest);
+       deserializationError.response = msRest.stripResponse(response);
+       return callback(deserializationError);
+     }
+   }
+   return callback(null, result, httpRequest, response);
+ });
 }
 
 /**

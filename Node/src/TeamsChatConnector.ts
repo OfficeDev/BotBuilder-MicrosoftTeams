@@ -165,6 +165,29 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
+  *  Return a list of members in a team or channel
+  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
+  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
+  *  @param {string} memberId - Member Id to look up a specific member
+  *  @param {function} callback - This callback returns err or result.
+  */
+  public fetchMember(serverUrl: string, conversationId: string, memberId: string, callback: (err: Error, result: ChannelAccount) => void) : void {
+    var options = {customHeaders: {}, jar: false};
+    var restClient = new RestClient(serverUrl, null);
+    var remoteQuery = new RemoteQuery(restClient);
+    this.getAccessToken((err, token) => {
+        if (!err && token) {
+          options.customHeaders = {
+            'Authorization': 'Bearer ' + token
+          };
+          remoteQuery.fetchMember(conversationId, memberId, options, callback);
+        } else {
+          return callback(new Error('Failed to authorize request'), null);
+        }
+    });
+  }
+
+  /**
   *  Return members in a team or channel with pagination
   *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
   *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
