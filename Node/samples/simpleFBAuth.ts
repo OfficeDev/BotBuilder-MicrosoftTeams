@@ -23,7 +23,7 @@ export class SimpleFBAuth
   private static readonly AuthStartPath: string = "/auth/start";
   private static readonly AuthStartOAuthPath: string = "/auth/oauth";
   private static readonly AuthCallbackPath: string = "/auth/callback";
-  private static readonly TeamsSDK: string = 'https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js';
+  private static readonly TeamsSDK: string = 'https://statics.teams.cdn.office.net/sdk/v1.6.0/js/MicrosoftTeams.min.js';
 
   private static instance: SimpleFBAuth;
   private settings: IFacebookAppSigninSettings;
