@@ -1113,7 +1113,7 @@ export class TeamsChatConnector extends builder.ChatConnector {
   *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
   *  @param {string} conversationId - The team id or chat conversation id.
   *  @param {string} memberId - Member Id
-  *  @param {function} callback - Function to invoke with the list of members.
+  *  @param {function} callback - This callback returns err or result
   */
 
  public fetchMember(serviceUrl: string, conversationId: string, memberId: string,  callback: (err: Error, result: ChannelAccount) => void) : void;

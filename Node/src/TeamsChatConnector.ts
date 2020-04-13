@@ -165,10 +165,10 @@ export class TeamsChatConnector extends builder.ChatConnector {
   }
 
   /**
-  *  Return a list of members in a team or channel
-  *  @param {string} serverUrl - Server url is composed of baseUrl and cloud name, remember to find your correct cloud name in session or the function will not find the team.
-  *  @param {string} conversationId - The conversation id or channel id, you can look it up in session object.
-  *  @param {string} memberId - Member Id to look up a specific member
+  *  Return a specific member from a team or a chat.
+  *  @param {string} serviceUrl - The service url for the team or chat, which should be taken from a previous message received from that team or chat. If the wrong service url is used, the method wil fail.
+  *  @param {string} conversationId - The team id or chat conversation id.
+  *  @param {string} memberId - Member Id
   *  @param {function} callback - This callback returns err or result.
   */
   public fetchMember(serverUrl: string, conversationId: string, memberId: string, callback: (err: Error, result: ChannelAccount) => void) : void {
