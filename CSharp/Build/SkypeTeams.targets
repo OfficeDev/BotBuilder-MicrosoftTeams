@@ -1,8 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <BuildRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), RootMarker))</BuildRoot>
-    <NugetExePath>$(BuildRoot)\Build\Tools\Nuget\NuGet.exe</NugetExePath>
-  </PropertyGroup>
-  <!-- <Import Project="$(BuildRoot)\Build\SkypeTeams.StyleCop.targets"/> -->
-  <Import Project="$(BuildRoot)\Build\SkypeTeams.Tests.targets" Condition="'$(TestProjectType)' == 'UnitTest'"/>
-</Project>
