@@ -1,9 +1,0 @@
-{
-  "globalDependencies": {
-    "core-js": "registry:dt/core-js#0.9.0+20170324193834",
-    "node": "registry:env/node#6.0.0+20170213133316"
-  },
-  "globalDevDependencies": {
-    "node": "registry:dt/node#7.0.0+20170322231424"
-  }
-}
